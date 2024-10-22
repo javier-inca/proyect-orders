@@ -1,0 +1,97 @@
+<script setup>
+import { computed } from 'vue';
+
+const props = defineProps({
+    name: {
+        type: String,
+        default: 'name'
+    },
+
+    type: {
+        type: String,
+        default: "default",
+    },
+
+    disabled:{
+        type:Boolean,
+        default:false
+    },
+
+    rounded: {
+        type: Boolean,
+        default: true
+    },
+
+    roundedSize: {
+        type: String,
+        default: ''
+    },
+
+    ringSize: {
+        type: String,
+        default: ''
+    },
+
+    xSize:{
+        type:String,
+        default: ''
+    },
+});
+
+const ringSizes = {
+    'sm' : 'ring-1',
+    'md' : 'ring-4',
+    'lg' : 'ring-8',
+}
+
+const roundedSizes = {
+    'sm' : 'rounded-md',
+    'md' : 'rounded-lg',
+    'lg' : 'rounded-3xl',
+}
+const xSizes = {
+    'sm' : 'w-1/4',
+    'md' : 'w-2/3',
+    'lg' : 'w-full',
+}
+
+const ringSize = computed(() => {
+    return ringSizes[props.ringSize] ? ringSizes[props.ringSize] : 'ring-2'
+})
+
+const sizeRounded = computed(() => {
+    return roundedSizes[props.roundedSize] ? roundedSizes[props.roundedSize] : 'rounded'
+})
+
+const xSize = computed(() => {
+    return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-auto'
+})
+</script>
+
+<template>
+    <button :class="[,
+        transition,
+        time,
+        xSize,
+        sizeRounded,
+        ringSize,
+        {
+            'hover:bg-red-600 ring-red-600 hover:ring-red-800': type === 'danger',
+
+            'hover:bg-green-600 ring-green-600 hover:ring-green-800': type === 'accept',
+
+            'hover:bg-yellow-400 ring-yellow-400 hover:ring-yellow-600': type === 'warning',
+
+            'hover:bg-blue-600 ring-blue-600 hover:ring-blue-800': type === 'default',
+
+            'hover:bg-slate-300 hover:ring-slate-700 ring-slate-700 bg-slate-300':disabled,
+
+            'hover:text-white':!disabled,
+            
+            'rounded': rounded,
+        }]" 
+        class="py-2 px-4 "
+        :disabled="disabled">
+        {{ name }}
+    </button>
+</template>
