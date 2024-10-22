@@ -147,7 +147,6 @@ const clickRegister = ()=>{
                 'fixed':viewNotification
             }"
             class="z-0 w-full">
-
             <Navbar/>
 
             <Notification
