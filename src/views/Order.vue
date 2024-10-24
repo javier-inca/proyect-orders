@@ -3,34 +3,18 @@ import Navbar from './Navbar.vue'
 import Title from '../components/Title.vue'
 import Button from '../components/Button.vue'
 import Input from '../components/Input.vue';
-import Select from '../components/Select.vue';
-import { ref, watch } from 'vue';
-import { TrashIcon } from '@heroicons/vue/24/outline';
-import ProductSelect from '../components/ProductSelect.vue';
-
-const idUserSelect = ref('0')
-const idProductSelect = ref('0')
+import { ref } from 'vue';
+import UserRequest from './components/UserRequest.vue';
+import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const viewCreate = ref(true)
-const viewProductSection = ref(false)
-const viewProductDetails = ref(false)
+const orders = ref([])
+const viewTable = ref(false)
 
-
-if (!localStorage.getItem('orderArray')) {
-    localStorage.setItem('orderArray', JSON.stringify([]))
+const orderRegister = (order)=> {
+    orders.value.push(order)
+    viewTable.value = orders.value.length > 0 ? true : false    
 }
-
-const getUsers = ref(JSON.parse(localStorage.getItem('userArray')))
-
-const getProducts = ref(JSON.parse(localStorage.getItem('productArray')))
-
-watch(idUserSelect , () =>{
-    idUserSelect.value > 0 ? viewProductSection.value=true : viewProductSection.value=false
-})
-
-watch(idProductSelect, () => {
-    idProductSelect.value > 0 ? viewProductDetails.value=true : viewProductDetails.value=false
-})
 </script>
 
 <template>
@@ -42,7 +26,7 @@ watch(idProductSelect, () => {
             <div class=" bg-blue-100 m-5 w-5/6 p-5 rounded-md">
                 <Title 
                     class="mb-5"
-                    title="New Order"
+                    title="New Orders"
                     size="md"/>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -57,40 +41,52 @@ watch(idProductSelect, () => {
                         placeholder="Description"/>
                 </div>
 
-                <div class="my-5 border-2 border-blue-800 rounded p-2">
-                    <div class="flex justify-between">
-                        <Select
-                            v-model="idUserSelect"
-                            size="md"
-                            :disabled="false">
-                            <option
-                                value="0"
-                                disabled>
-                                Select User
-                            </option>
+                <div 
+                    class=" h-52 overflow-x-auto my-2 border-2 border-blue-600 rounded"
+                    v-if="viewTable">
+                    <table class="w-full text-sm text-left rtl:text-right">
+                        <thead class="text-xs uppercase bg-gray-200 sticky top-0 z-10">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
 
-                            <option 
-                                :value="user.id"
-                                v-for="user in getUsers" 
-                                :key="user.id">
-                                {{ user.name }}
-                            </option>
-                        </Select>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    Options
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b"
+                                v-for="order in orders"
+                                :key="order.id">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900">
+                                    {{ order.userName }}
+                                </th>
 
-                        <button
-                            v-if="viewProductSection">
-                            <TrashIcon
-                                class="size-7 text-blue-800 hover:text-red-800"/>
-                        </button>
-                    </div>
+                                <td class="px-6 py-4 flex justify-center gap-3">
+                                    <button>
+                                        <EyeIcon
+                                            class="size-6 text-blue-700"/>
+                                    </button>
 
-                    <div
-                        v-if="viewProductSection" 
-                        class="border-2 border-blue-800 my-2 p-2 rounded bg-white">
-                        <ProductSelect 
-                            :products="getProducts"/>
-                    </div>
+                                    <button>
+                                        <PencilIcon
+                                            class="size-6 text-blue-700"/>
+                                    </button>
+
+                                    <button>
+                                        <TrashIcon
+                                            class="size-6 text-blue-700"/>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                <UserRequest
+                    @orderRegister="(order => orderRegister(order))"/>
             </div>
         </div>
 

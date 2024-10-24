@@ -121,7 +121,7 @@ const deleteProduct = ()=>{
             <div 
                 class=" grid grid-cols-1 bg-blue-50 p-5 my-5 w-2/3 gap-2 rounded-lg shadow-md">
                 <Title 
-                    :title="clickUpdate ? 'Update Product' : 'Register Product'" 
+                    :title="clickUpdate ? 'Product Update' : 'Product Register'" 
                     size="md" />
 
                 <Input 
