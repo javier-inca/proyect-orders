@@ -24,6 +24,8 @@ if (!localStorage.getItem('userArray')) {
     localStorage.setItem('userArray', JSON.stringify([]))
 }
 
+const getUsers = ref(JSON.parse(localStorage.getItem('userArray')))
+
 const create = () => {
     const userId = globalId !== null ? globalId : (getUsers.value.length ? getUsers.value[getUsers.value.length - 1].id + 1 : 1);
     

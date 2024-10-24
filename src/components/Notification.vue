@@ -26,9 +26,9 @@ const type = computed(()=>{
 
 <template>
     <div 
-        class="flex justify-end">
+        class="flex justify-center">
         <div 
-            class="absolute w-1/4 my-4 p-4 rounded-l-xl text-center text-lg"
+            class="absolute w-1/2 my-4 p-4 rounded-xl text-center text-lg"
             :class="[
                 type,
             ]">

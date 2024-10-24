@@ -124,7 +124,6 @@ const deleteProduct = ()=>{
                     :title="clickUpdate ? 'Update Product' : 'Register Product'" 
                     size="md" />
 
-                
                 <Input 
                     v-model="name"
                     class="mt-5 flex justify-center" 

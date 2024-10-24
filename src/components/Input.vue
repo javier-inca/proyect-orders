@@ -30,6 +30,11 @@ const props=defineProps({
     modelValue:{
         type:String,
         default:''
+    },
+
+    disabled :{
+        type:Boolean,
+        default: false
     }
 })
 
@@ -57,12 +62,15 @@ const modelInput = computed({
         <input :class="[
             xSize,
             {
-                ' ring-blue-500 bg-slate-50 focus:bg-white focus:ring-blue-700 ': !error,
+                ' border-blue-500 bg-white focus:border-blue-700 ': !error && !disabled,
                 
-                ' ring-red-600 bg-red-100 focus:ring-red-600': error
+                ' border-red-600 bg-red-100 focus:border-red-600': error&& !disabled,
+
+                ' border-blue-500 bg-gray-200': disabled,
             }
         ]"
-        class="p-2 rounded ring-2 h-10"
+        class="p-2 rounded border-2 h-10"
+        :disabled="disabled"
         :placeholder="placeholder"
         :type="type"
         v-model="modelInput">
