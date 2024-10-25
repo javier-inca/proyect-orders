@@ -3,6 +3,7 @@ import Select from '../../components/Select.vue'
 import Input from '../../components/Input.vue'
 import Button from '../../components/Button.vue'
 import { ref, watch } from 'vue'
+import InputSelect from '../../components/InputSelect.vue'
 
 const idProduct = ref(0)
 const price = ref()
@@ -11,6 +12,8 @@ const cash = ref()
 const totalPrice = ref()
 const change = ref()
 const description = ref()
+
+const nameProduct = ref()
 
 const viewProductDetails = ref(false)
 const viewPrices = ref(false)
@@ -21,8 +24,9 @@ const products = ref(JSON.parse(localStorage.getItem('productArray')))
 const emit = defineEmits('productRegister')
 
 watch([idProduct,amount,cash],()=>{
+    const findProduct = products.value.find(product => product.id === idProduct.value)
     viewProductDetails.value = idProduct.value > 0 ? true : false
-    price.value = idProduct.value > 0 ? products.value.find(product => product.id === idProduct.value).price : 0 
+    price.value = idProduct.value > 0 ? (findProduct ? findProduct.price : price.value) : 0 
     viewPrices.value = amount.value > 0 && viewProductDetails.value ? true : false
     totalPrice.value = (amount.value * price.value)
     change.value = cash.value >= totalPrice.value  && viewPrices.value ? (cash.value - totalPrice.value) : null
@@ -48,26 +52,32 @@ const registerProduct = () => {
     emit('productRegister', product)
     cancelClick()
 }
+
+const productName =(newProduct)=>{
+    if(newProduct.name !== ''){
+        const product= products.value.find(findProduct => findProduct.name === newProduct.name)
+        idProduct.value = product !== undefined ? product.id : 0
+    }
+    
+    if(newProduct.name.length > 0 && newProduct.price > 0){
+        idProduct.value = 99
+        price.value = newProduct.price
+        amount.value = ''
+        description.value =''
+        viewProductDetails.value = true
+    }
+    
+    if(newProduct.price === ''){
+        cancelClick()
+        viewProductDetails.value = false
+    }
+}
 </script>
 
 <template>
-    <div class="grid grid-cols-2 gap-3">
-        <Select
-            v-model="idProduct">
-            <option 
-                value="0" 
-                selected 
-                disabled>
-                Select Product
-            </option>
-
-            <option 
-                :value="product.id"
-                v-for="product in products"
-                :key="product.id">
-                {{ product.name }}
-            </option>
-        </Select>
+    <div class="grid grid-cols-2 gap-3">{{ nameProduct }}
+        <InputSelect 
+            :options="products"/>
 
         <Input
             v-if="viewProductDetails"
