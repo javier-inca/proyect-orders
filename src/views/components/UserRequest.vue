@@ -5,14 +5,18 @@ import ProductSelect from './ProductSelect.vue';
 import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { PencilIcon } from '@heroicons/vue/24/outline';
 import Button from '../../components/Button.vue';
+import Modal from '../../components/Modal.vue';
+import EditProduct from './EditProduct.vue';
 
 const idUserSelect = ref('0')
 const findOrder =ref()
 const products = ref([])
+const product = ref({})
 
 const viewProductSection = ref(false)
 const viewTable = ref(false)
 const viewOrderDetails = ref(false)
+const viewEditProduct = ref(false)
 
 
 if (!localStorage.getItem('orderArray')) {
@@ -33,8 +37,13 @@ const viewOrder = (id) => {
     findOrder.value = products.value.find(product => product.id === id)
 }
 
-watch(idUserSelect, () => {
-    idUserSelect.value > 0 ? viewProductSection.value = true : viewProductSection.value = false
+const editProduct = (getId)=>{
+    product.value = products.value.find(product => product.id === getId)
+    viewEditProduct.value = true
+}
+
+watch(idUserSelect,() => {
+    idUserSelect.value > 0 ? viewProductSection.value = true : viewProductSection.value = false  
 })
 
 const emit = defineEmits('orderRegister')
@@ -50,11 +59,26 @@ const registerOrder =()=>{
     products.value=[]
     viewTable.value=false
 }
+
+const deleteProduct = (getId)=>{
+    const index = products.value.findIndex(product => product.id === getId)
+    products.value.splice(index,1)
+    viewTable.value = (products.value.length > 0) ? true : false     
+}
+
+const editAction =(action)=>{
+    if(action.type === 'update'){
+        const index = products.value.findIndex(product => product.id === action.order.id)
+        products.value.splice(index,1,action.order)
+    }
+    viewEditProduct.value = false
+}
 </script>
 
 <template>
+
     <div class="relative">
-        <div class="my-5 border-2 border-blue-800 rounded p-2 z-0">
+        <div class="my-5 border-2 border-blue-800 rounded p-2">
             <div class="flex justify-between">
                 <Select 
                     v-model="idUserSelect" 
@@ -109,7 +133,7 @@ const registerOrder =()=>{
                             v-for="product in products"
                             :key="product.id">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900">
-                                {{ product.product }}
+                                {{ product.name }}
                             </th>
 
                             <td class="px-6 py-4">
@@ -121,18 +145,20 @@ const registerOrder =()=>{
                             </td>
 
                             <td class="px-6 py-4 flex justify-center gap-3">
-                                <button>
+                                <button
+                                    @click="viewOrder(product.id)">
                                     <EyeIcon
-                                        @click="viewOrder(product.id)"
                                         class="size-6 text-blue-700"/>
                                 </button>
 
-                                <button>
+                                <button
+                                    @click="editProduct(product.id)">
                                     <PencilIcon
                                         class="size-6 text-blue-700"/>
                                 </button>
 
-                                <button>
+                                <button
+                                    @click="deleteProduct(product.id)">
                                     <TrashIcon
                                         class="size-6 text-blue-700"/>
                                 </button>
@@ -174,7 +200,7 @@ const registerOrder =()=>{
                     </p>
 
                     <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.product }}
+                        {{ findOrder.name }}
                     </p>
 
                     <p class=" text-start border-b-2 border-b-gray-200">
@@ -225,6 +251,13 @@ const registerOrder =()=>{
                         type="danger"/>
                 </div>
             </div>
+        </div>
+        <div 
+            v-if="viewEditProduct"
+            class="absolute z-20 inset-0 flex justify-center items-center m-2">
+            <EditProduct 
+                @buttonClick="(action => editAction (action))"
+                :product="product"/>
         </div>
     </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed, toRef } from 'vue'
 import Input from './Input.vue'
 /* 
 vue autocomplete 
@@ -11,14 +11,21 @@ solicitudes axios
 const viewOptions = ref(false)
 const viewPrice = ref(false)
 
-const name = ref(null)
-const price = ref(null)
+const name = ref('')
+const price = ref()
+
+const emit = defineEmits('sentProduct')
 
 const props = defineProps({
     options: {
         type: Array,
         default: []
     },
+
+    reset :{
+        type:Boolean,
+        default : false
+    }
 })
 
 const handleClickOutside = (event) => {
@@ -28,14 +35,17 @@ const handleClickOutside = (event) => {
     }
 }
 
-const selectOption = (productName)=>{
+const selectOption = (productName , productPrice)=>{
     name.value = productName
+    price.value = productPrice
     viewOptions.value = false
 }
 
 const inputClick = () => {
     viewOptions.value = true
-    name.value = null
+    viewPrice.value = false
+    name.value = ''
+    price.value = null
 }
 
 watch(name,()=>{
@@ -45,7 +55,16 @@ watch(name,()=>{
     }
     if(name.value === ''){
         viewOptions.value = true
+        viewPrice.value = false
+        price.value = null
     }
+})
+
+watch ([name, price],()=>{
+    emit ('sentProduct',{
+        name:(name.value.length > 0)? name.value : '' ,
+        price:(price.value > 0)? price.value : ''
+    })   
 })
 
 onMounted(() => {
@@ -70,7 +89,7 @@ onBeforeUnmount(() => {
             <div 
                 v-for="option in options"
                 :key="option.id"
-                @click="selectOption(option.name)">
+                @click="selectOption(option.name , option.price)">
                 {{ option.name }}
             </div>
         </div>
@@ -82,6 +101,6 @@ onBeforeUnmount(() => {
         <Input
             placeholder="Insert price"
             type="number"
-            v-model="newPrice"/>
+            v-model="price"/>
     </div>
 </template>

@@ -87,9 +87,10 @@ const orderRegister = (order)=> {
 
                 <UserRequest
                     @orderRegister="(order => orderRegister(order))"/>
+
             </div>
         </div>
-
+        
         <div class=" fixed z-0 w-full">       
             <Navbar/>
 

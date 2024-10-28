@@ -5,79 +5,77 @@ import Button from '../../components/Button.vue'
 import { ref, watch } from 'vue'
 import InputSelect from '../../components/InputSelect.vue'
 
-const idProduct = ref(0)
 const price = ref()
 const amount = ref()
 const cash = ref()
 const totalPrice = ref()
 const change = ref()
 const description = ref()
-
 const nameProduct = ref()
 
 const viewProductDetails = ref(false)
 const viewPrices = ref(false)
 const viewButtons = ref(false)
 
+const resetInput = ref(false)
+
 const products = ref(JSON.parse(localStorage.getItem('productArray')))
 
 const emit = defineEmits('productRegister')
 
-watch([idProduct,amount,cash],()=>{
-    const findProduct = products.value.find(product => product.id === idProduct.value)
-    viewProductDetails.value = idProduct.value > 0 ? true : false
-    price.value = idProduct.value > 0 ? (findProduct ? findProduct.price : price.value) : 0 
-    viewPrices.value = amount.value > 0 && viewProductDetails.value ? true : false
-    totalPrice.value = (amount.value * price.value)
-    change.value = cash.value >= totalPrice.value  && viewPrices.value ? (cash.value - totalPrice.value) : null
-    viewButtons.value = change.value >= 0 && change.value != null ? true : false
+watch([nameProduct,amount,cash],()=>{
+    totalPrice.value =( amount.value > 0 && price.value > 0) ? (amount.value * price.value) : ''
+    viewPrices.value = (amount.value > 0) ? true:false
+    change.value = (cash.value >= totalPrice.value) ? (cash.value - totalPrice.value) : ''
+    viewButtons.value = (cash.value >= totalPrice.value && amount.value > 0 )? true : false
 })
 
-const cancelClick =()=>{
-    idProduct.value = 0
-    amount.value = null
-    cash.value = null
-    description.value = ''
-}
-
 const registerProduct = () => {
+    if(!(products.value.find(product => product.name === nameProduct.value))){
+        products.value.push({
+            id : (products.value[products.value.length - 1].id) + 1,
+            name : nameProduct.value,
+            price : price.value 
+        })
+        localStorage.setItem('productArray', JSON.stringify(products.value))
+    }
     const product={
-        product: products.value.find(product => product.id === idProduct.value).name,
-        amount: amount.value,
+        name:nameProduct.value,
         description:description.value,
+        amount: amount.value,
         cash:cash.value,
         price:totalPrice.value,
         change:change.value,
     }
-    emit('productRegister', product)
-    cancelClick()
+    emit ('productRegister',product)
+    deleteInput()
 }
 
-const productName =(newProduct)=>{
-    if(newProduct.name !== ''){
-        const product= products.value.find(findProduct => findProduct.name === newProduct.name)
-        idProduct.value = product !== undefined ? product.id : 0
-    }
-    
-    if(newProduct.name.length > 0 && newProduct.price > 0){
-        idProduct.value = 99
-        price.value = newProduct.price
-        amount.value = ''
-        description.value =''
-        viewProductDetails.value = true
-    }
-    
-    if(newProduct.price === ''){
-        cancelClick()
-        viewProductDetails.value = false
-    }
+const deleteInput = ()=>{
+    resetInput.value = true
+    amount.value = ''
+    description.value = ''
+    price.value = ''
+    cash.value =''
+    change.value =''
+    viewProductDetails.value = false
+    resetInput.value = false
+}
+
+const getProduct = (product) =>{
+    nameProduct.value = product.name
+    price.value = product.price
+    amount.value = ''
+    viewProductDetails.value = (product.name.length > 0 && product.price > 0 ) ? true : false
 }
 </script>
 
 <template>
-    <div class="grid grid-cols-2 gap-3">{{ nameProduct }}
+    <div class="grid grid-cols-2 gap-3">
         <InputSelect 
-            :options="products"/>
+            :options="products"
+            :reset="resetInput"
+            @sentProduct="product=> getProduct(product)"/>
 
         <Input
             v-if="viewProductDetails"
@@ -111,7 +109,7 @@ const productName =(newProduct)=>{
         </div>
 
         <Button 
-            @click="cancelClick"
+            @click="deleteInput"
             v-if="viewButtons"
             name="Cancel"
             type="danger"/>
