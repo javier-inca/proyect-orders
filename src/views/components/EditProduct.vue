@@ -53,7 +53,7 @@ const buttonClick = (action)=>{
 </script>
 
 <template>
-    <div class=" w-full h-full bg-white p-2">
+    <div class=" w-full h-full bg-white p-2 overflow-y-auto">
         <Title 
             :title="product.name"
             size="sm"/>

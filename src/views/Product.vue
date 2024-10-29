@@ -63,8 +63,6 @@ const create = ()=>{
     }, 1500)
 }
 
-
-
 const findProduct=(id)=>{
     globalId = id
     const product = getProductArray.value.find(product => product.id === id)

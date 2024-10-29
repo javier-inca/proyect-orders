@@ -18,6 +18,8 @@ const product = ref({})
 const users = ref([])
 const usersFilter = ref(JSON.parse(localStorage.getItem('userArray')))
 const getUsers = ref(JSON.parse(localStorage.getItem('userArray')))
+const idDelete = ref()
+const productName = ref()
 
 const viewProductSection = ref(false)
 const viewAddProductButton = ref (false)
@@ -25,7 +27,7 @@ const viewTable = ref(false)
 const viewOrderDetails = ref(false)
 const viewEditProduct = ref(false)
 const viewButtonOrders = ref(false)
-const viewNotification = ref(true)
+const viewNotification = ref(false)
 
 if (!localStorage.getItem('orderArray')) {
     localStorage.setItem('orderArray', JSON.stringify([]))
@@ -76,11 +78,23 @@ const registerOrder =()=>{
     viewButtonOrders.value = false 
 }
 
-const deleteProduct = (getId)=>{
+const viewDelete = (getId) =>{
+    productName.value = products.value.find(product => product.id === getId).name
+    viewNotification.value = true
+    idDelete.value = getId
+}
 
-/*     const index = products.value.findIndex(product => product.id === getId)
-    products.value.splice(index,1)
-    viewTable.value = (products.value.length > 0) ? true : false    */  
+const deleteProduct = (type)=>{
+    if(type === 'delete'){
+        const index = products.value.findIndex(product => product.id === idDelete.value)
+        products.value.splice(index,1)
+        viewTable.value = (products.value.length > 0) ? true : false  
+
+        viewProductSection.value = products.value.length === 0 ? true : false
+        viewAddProductButton.value = products.value.length === 0 ? false : true
+        viewButtonOrders.value = products.value.length === 0 ? false : true
+    }
+    viewNotification.value = false
 }
 
 const editAction =(action)=>{
@@ -113,7 +127,6 @@ const onProductCancel = (state)=>{
 </script>
 
 <template>
-{{ order }}
     <div class="relative">
         <div class="my-5 border-2 border-blue-800 rounded p-2">
             <div class="flex justify-between">
@@ -208,7 +221,7 @@ const onProductCancel = (state)=>{
                                 </button>
 
                                 <button
-                                    @click="deleteProduct(product.id)">
+                                    @click="viewDelete(product.id)">
                                     <TrashIcon
                                         class="size-6 text-blue-700"/>
                                 </button>
@@ -319,5 +332,13 @@ const onProductCancel = (state)=>{
                 @buttonClick="(action => editAction (action))"
                 :product="product"/>
         </div>
+    </div>
+    
+    <div 
+        v-if="viewNotification"
+        class="absolute z-20 inset-0 w-full h-full">
+        <Modal
+            :message="'Delete '+ productName "
+            @buttonClick="(type => deleteProduct(type))"/>
     </div>
 </template>
