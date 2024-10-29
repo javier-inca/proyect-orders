@@ -12,16 +12,15 @@ const totalPrice = ref()
 const change = ref()
 const description = ref()
 const nameProduct = ref()
-
 const viewProductDetails = ref(false)
 const viewPrices = ref(false)
 const viewButtons = ref(false)
-
 const resetInput = ref(false)
-
+const filterProduct = ref(JSON.parse(localStorage.getItem('productArray')))
+const selectedProducts = ref([])
 const products = ref(JSON.parse(localStorage.getItem('productArray')))
 
-const emit = defineEmits('productRegister')
+const emit = defineEmits(['productRegister', 'hideButton'])
 
 watch([nameProduct,amount,cash],()=>{
     totalPrice.value =( amount.value > 0 && price.value > 0) ? (amount.value * price.value) : ''
@@ -31,6 +30,8 @@ watch([nameProduct,amount,cash],()=>{
 })
 
 const registerProduct = () => {
+    selectedProducts.value.push(nameProduct.value)
+    filterProduct.value = products.value.filter(product => !selectedProducts.value.includes(product.name))    
     if(!(products.value.find(product => product.name === nameProduct.value))){
         products.value.push({
             id : (products.value[products.value.length - 1].id) + 1,
@@ -60,6 +61,7 @@ const deleteInput = ()=>{
     change.value =''
     viewProductDetails.value = false
     resetInput.value = false
+    emit ('productCancel')
 }
 
 const getProduct = (product) =>{
@@ -73,7 +75,7 @@ const getProduct = (product) =>{
 <template>
     <div class="grid grid-cols-2 gap-3">
         <InputSelect 
-            :options="products"
+            :options="filterProduct"
             :reset="resetInput"
             @sentProduct="product=> getProduct(product)"/>
 

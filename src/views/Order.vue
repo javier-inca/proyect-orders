@@ -8,17 +8,25 @@ import UserRequest from './components/UserRequest.vue';
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const viewCreate = ref(true)
-const orders = ref([])
 const viewTable = ref(false)
+const viewButtons = ref(false)
+const sentOrder = ref({})
+const orders = ref([])
 
 const orderRegister = (order)=> {
-    orders.value.push(order)
-    viewTable.value = orders.value.length > 0 ? true : false    
+    const newId = orders.value.length > 0 ? orders.value[orders.value.length - 1].id + 1 : 1
+    orders.value.push({...order , id:newId})
+    viewTable.value = true
+}
+
+const sentEditOrder = (getId)=>{
+    sentOrder.value = orders.value.find(order => order.id === getId)
+    console.log('sentOrder.value: ', sentOrder.value);
+
 }
 </script>
 
 <template>
-    
     <div class="relative">
         <div
             v-if="viewCreate"
@@ -40,9 +48,12 @@ const orderRegister = (order)=> {
                         class="col-span-2"
                         placeholder="Description"/>
                 </div>
-
+                
                 <div 
-                    class=" h-52 overflow-x-auto my-2 border-2 border-blue-600 rounded"
+                    :class="{
+                        ' h-52 overflow-x-auto ':orders.length > 3
+                    }"
+                    class="my-2 border-2 border-blue-600 rounded"
                     v-if="viewTable">
                     <table class="w-full text-sm text-left rtl:text-right">
                         <thead class="text-xs uppercase bg-gray-200 sticky top-0 z-10">
@@ -70,7 +81,8 @@ const orderRegister = (order)=> {
                                             class="size-6 text-blue-700"/>
                                     </button>
 
-                                    <button>
+                                    <button
+                                        @click="sentEditOrder(order.id)">
                                         <PencilIcon
                                             class="size-6 text-blue-700"/>
                                     </button>
@@ -84,16 +96,16 @@ const orderRegister = (order)=> {
                         </tbody>
                     </table>
                 </div>
-
+                
                 <UserRequest
+                    @hideButton = "stateButtons"
                     @orderRegister="(order => orderRegister(order))"/>
-
             </div>
         </div>
         
         <div class=" fixed z-0 w-full">       
             <Navbar/>
-
+            
             <div class=" mt-5">
                 <div class="w-full bg-blue-50 p-5">
                     <div class="flex justify-between">
