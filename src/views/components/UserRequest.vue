@@ -67,7 +67,7 @@ const registerOrder =()=>{
     const order = {
         idUser : getUsers.value.find(user => user.id === idUserSelect.value).id,
         userName: getUsers.value.find(user => user.id === idUserSelect.value).name,
-        products: [products.value]
+        products: products.value
     }
 
     emit('orderRegister', order)  
@@ -169,10 +169,13 @@ const onProductCancel = (state)=>{
             </div>
 
             <div 
-                class=" overflow-x-auto my-2 border-2 border-blue-600 rounded"
+                :class="{
+                    'h-52 overflow-y-auto' : products.length > 3
+                }"
+                class="my-2 border-2 border-blue-600 rounded"
                 v-if="viewTable">
                 <table class="w-full text-sm text-left rtl:text-right">
-                    <thead class="text-xs uppercase bg-gray-200">
+                    <thead class="text-xs uppercase bg-gray-200 sticky top-0 z-10">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 Product

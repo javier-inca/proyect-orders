@@ -6,12 +6,16 @@ import Input from '../components/Input.vue';
 import { ref } from 'vue';
 import UserRequest from './components/UserRequest.vue';
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import OrdersTableByUser from './components/OrdersTableByUser.vue';
 
 const viewCreate = ref(true)
 const viewTable = ref(false)
+const viewOrderTale = ref(false)
+const viewSelectUser = ref(true)
 const viewButtons = ref(false)
 const sentOrder = ref({})
 const orders = ref([])
+const seeOrderTable = ref()
 
 const orderRegister = (order)=> {
     const newId = orders.value.length > 0 ? orders.value[orders.value.length - 1].id + 1 : 1
@@ -19,10 +23,17 @@ const orderRegister = (order)=> {
     viewTable.value = true
 }
 
-const sentEditOrder = (getId)=>{
-    sentOrder.value = orders.value.find(order => order.id === getId)
-    console.log('sentOrder.value: ', sentOrder.value);
+const viewProducts = (orderId)=>{
+    seeOrderTable.value = orders.value.find(order => order.id === orderId)
+    viewOrderTale.value = true
+    viewTable.value =false
+    viewSelectUser.value = false
+}
 
+const getResponseUserTable = (getType)=>{
+    viewOrderTale.value = false
+    viewTable.value =true
+    viewSelectUser.value = true
 }
 </script>
 
@@ -76,14 +87,9 @@ const sentEditOrder = (getId)=>{
                                 </th>
 
                                 <td class="px-6 py-4 flex justify-center gap-3">
-                                    <button>
-                                        <EyeIcon
-                                            class="size-6 text-blue-700"/>
-                                    </button>
-
                                     <button
-                                        @click="sentEditOrder(order.id)">
-                                        <PencilIcon
+                                        @click="viewProducts(order.id)">
+                                        <EyeIcon
                                             class="size-6 text-blue-700"/>
                                     </button>
 
@@ -96,8 +102,14 @@ const sentEditOrder = (getId)=>{
                         </tbody>
                     </table>
                 </div>
+
+                <OrdersTableByUser
+                    v-if="viewOrderTale"
+                    @buttonClick="(type => getResponseUserTable(type))"
+                    :order="seeOrderTable"/>
                 
                 <UserRequest
+                    v-if="viewSelectUser"
                     @hideButton = "stateButtons"
                     @orderRegister="(order => orderRegister(order))"/>
             </div>
