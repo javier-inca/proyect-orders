@@ -12,10 +12,10 @@ const viewCreate = ref(true)
 const viewTable = ref(false)
 const viewOrderTale = ref(false)
 const viewSelectUser = ref(true)
-const viewButtons = ref(false)
-const sentOrder = ref({})
 const orders = ref([])
 const seeOrderTable = ref()
+
+const currentView = ref(null)
 
 const orderRegister = (order)=> {
     const newId = orders.value.length > 0 ? orders.value[orders.value.length - 1].id + 1 : 1

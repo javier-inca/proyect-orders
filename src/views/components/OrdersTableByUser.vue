@@ -21,18 +21,22 @@ const buttonClick = (type) =>{
 }
 
 const showDetails = (getObject) =>{
-    console.log('getObject: ', getObject);
-
     sentObject.value = getObject
     viewDetails.value = true
+}
+
+const closeView = ()=>{
+    viewDetails.value = false
+    sentObject.value = null
 }
 </script>
 
 <template>
-    {{ order }}
     <div 
         class="my-2 border-2 border-blue-600 rounded bg-white">
-        <div class="flex justify-between m-2 items-center">
+        <div 
+            v-if="!viewDetails"
+            class="flex justify-between m-2 items-center">
             <Title
                 :title="`${order.userName}'s products`"
                 size="sm"/>
@@ -43,6 +47,7 @@ const showDetails = (getObject) =>{
         </div>
 
         <div
+            v-if="!viewDetails"
             :class="{
                 'h-52 overflow-y-auto' : getProducts.length > 3
             }">
@@ -127,6 +132,8 @@ const showDetails = (getObject) =>{
         </div>
 
         <View
+            type="product"
+            @buttonClosed="closeView"
             :content="sentObject"
             v-if="viewDetails"/>
     </div>

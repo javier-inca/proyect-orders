@@ -8,6 +8,7 @@ import Button from '../../components/Button.vue'
 import Modal from '../../components/Modal.vue'
 import EditProduct from './EditProduct.vue'
 import Title from '../../components/Title.vue'
+import View from './View.vue'
 
 
 const idUserSelect = ref('0')
@@ -270,64 +271,13 @@ const onProductCancel = (state)=>{
             class=" absolute z-20 inset-0 flex justify-center items-center m-2"
             v-if="viewOrderDetails">
             <div class="bg-white rounded w-full h-full border-2 border-blue-800 overflow-y-auto">
-                <div class="m-2 mx-10 grid grid-cols-2 gap-y-2">
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Product
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.name }}
-                    </p>
-
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Amount
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.amount }}
-                    </p>
-
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Description
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.description }}
-                    </p>
-
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Cash
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.cash }} Bs.
-                    </p>
-
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Price
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.price }} Bs.
-                    </p>
-
-                    <p class=" text-start border-b-2 border-b-gray-200">
-                        Change
-                    </p>
-
-                    <p class=" text-end border-b-2 border-b-gray-200">
-                        {{ findOrder.change }} Bs.
-                    </p>
-                </div>
-                <div class="flex justify-center pt-2 pb-5">
-                    <Button 
-                        @click="viewOrderDetails = false"
-                        xSize="md"
-                        name="Return"
-                        type="danger"/>
-                </div>
+                <View
+                    @buttonClosed="(viewOrderDetails = false)"
+                    :content="findOrder"
+                    type="product"/>
             </div>
         </div>
+        
         <div 
             v-if="viewEditProduct"
             class="absolute z-20 inset-0 flex justify-center items-center m-2">
