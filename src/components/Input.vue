@@ -35,6 +35,11 @@ const props=defineProps({
     disabled :{
         type:Boolean,
         default: false
+    },
+
+    complementaryData :{
+        type:String,
+        default :''
     }
 })
 
@@ -75,12 +80,6 @@ const modelInput = computed({
             v-model="modelInput"
             @focus="isFocused = true"
             @blur="isFocused = false">
-
-        <label 
-            v-if="modelInput" 
-            class="absolute left-2 -top-2 text-xs bg-white rounded">
-            {{ placeholder }}
-        </label>
         <p 
             v-if="error" 
             class="text-red-500 px-2">

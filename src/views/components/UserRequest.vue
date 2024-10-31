@@ -9,6 +9,8 @@ import Modal from '../../components/Modal.vue'
 import EditProduct from './EditProduct.vue'
 import Title from '../../components/Title.vue'
 import View from './View.vue'
+import ProductForm from './productForm.vue'
+import TextArea from '../../components/TextArea.vue'
 
 
 const idUserSelect = ref('0')
@@ -173,7 +175,7 @@ const onProductCancel = (state)=>{
                 :class="{
                     'h-52 overflow-y-auto' : products.length > 3
                 }"
-                class="my-2 border-2 border-blue-600 rounded"
+                class="my-2 border-2 border-blue-600 rounded overflow-x-auto"
                 v-if="viewTable">
                 <table class="w-full text-sm text-left rtl:text-right">
                     <thead class="text-xs uppercase bg-gray-200 sticky top-0 z-10">
@@ -211,7 +213,7 @@ const onProductCancel = (state)=>{
                                 {{ product.price }} Bs.
                             </td>
 
-                            <td class="px-6 py-4 flex justify-center gap-3">
+                            <td class="px-6 py-4 flex justify-center gap-2">
                                 <button
                                     @click="viewOrder(product.id)">
                                     <EyeIcon
@@ -242,6 +244,9 @@ const onProductCancel = (state)=>{
                 <PlusCircleIcon 
                     class="size-8"/>New Product
             </button>
+
+            <ProductForm
+                />
 
             <div 
                 v-if="viewProductSection"

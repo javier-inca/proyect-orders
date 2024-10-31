@@ -9,22 +9,35 @@ vuetify
 solicitudes axios 
 */
 const viewOptions = ref(false)
-const viewPrice = ref(false)
-
-const name = ref('')
-const price = ref()
-
-const emit = defineEmits('sentProduct')
+const name = ref()
+const filteredOptions = ref([])
 
 const props = defineProps({
     options: {
         type: Array,
         default: []
     },
+})
 
-    reset :{
-        type:Boolean,
-        default : false
+const inputClick = () =>{
+    viewOptions.value = true
+    name.value = ''
+}
+
+const selectOption = (productName) => {
+    name.value = productName
+    viewOptions.value = false
+}
+
+watch(name, () => {
+    if (!name.value) {
+        viewOptions.value = true
+        filteredOptions.value = [...props.options]
+    } 
+    else {
+        filteredOptions.value = props.options.filter(option => option.name.toLowerCase().includes(name.value.toLowerCase()))
+        const exactMatch = props.options.some(product => product.name.toLowerCase() === name.value.toLowerCase())
+        viewOptions.value = !exactMatch && filteredOptions.value.length > 0
     }
 })
 
@@ -34,38 +47,6 @@ const handleClickOutside = (event) => {
         viewOptions.value = false
     }
 }
-
-const selectOption = (productName , productPrice)=>{
-    name.value = productName
-    price.value = productPrice
-    viewOptions.value = false
-}
-
-const inputClick = () => {
-    viewOptions.value = true
-    viewPrice.value = false
-    name.value = ''
-    price.value = null
-}
-
-watch(name,()=>{
-    if (name.value !== null) {
-        viewPrice.value = props.options.find(product => product.name === name.value) ? false : true 
-        viewOptions.value = false
-    }
-    if(name.value === ''){
-        viewOptions.value = true
-        viewPrice.value = false
-        price.value = null
-    }
-})
-
-watch ([name, price],()=>{
-    emit ('sentProduct',{
-        name:(name.value.length > 0)? name.value : '' ,
-        price:(price.value > 0)? price.value : ''
-    })   
-})
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside)
@@ -86,21 +67,13 @@ onBeforeUnmount(() => {
         <div
             v-if="viewOptions"
             class="absolute bg-white p-2 w-full rounded-b border-2">
-            <div 
-                v-for="option in options"
+            <button 
+                class="flex my-1 w-full"
+                v-for="option in filteredOptions"
                 :key="option.id"
-                @click="selectOption(option.name , option.price)">
+                @click="selectOption(option.name)">
                 {{ option.name }}
-            </div>
+            </button>
         </div>
-    </div>
-
-    <div 
-        v-if="viewPrice"
-        class="">
-        <Input
-            placeholder="Insert price"
-            type="number"
-            v-model="price"/>
     </div>
 </template>
