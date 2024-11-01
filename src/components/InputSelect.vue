@@ -8,72 +8,78 @@ vuetify
 
 solicitudes axios 
 */
-const viewOptions = ref(false)
-const name = ref()
-const filteredOptions = ref([])
+const isViewOptions = ref(false)
 
 const props = defineProps({
     options: {
         type: Array,
-        default: []
+        default:{}
     },
-})
 
-const inputClick = () =>{
-    viewOptions.value = true
-    name.value = ''
-}
+    textAlignment:{
+        tyte:String,
+        default:'start'
+    },
 
-const selectOption = (productName) => {
-    name.value = productName
-    viewOptions.value = false
-}
+    modelValue:{
+        type:String,
+        default:''
+    },
 
-watch(name, () => {
-    if (!name.value) {
-        viewOptions.value = true
-        filteredOptions.value = [...props.options]
-    } 
-    else {
-        filteredOptions.value = props.options.filter(option => option.name.toLowerCase().includes(name.value.toLowerCase()))
-        const exactMatch = props.options.some(product => product.name.toLowerCase() === name.value.toLowerCase())
-        viewOptions.value = !exactMatch && filteredOptions.value.length > 0
+    placeholder:{
+        type:String,
+        default:''
     }
 })
 
-const handleClickOutside = (event) => {
-    const dropdown = document.querySelector('.dropdown')
-    if (dropdown && !dropdown.contains(event.target)) {
-        viewOptions.value = false
+const emit = defineEmits('update:modelValue')
+
+const modelInput = computed({
+    get: () => props.modelValue,
+    set: (newValue) =>{
+        emit('update:modelValue', newValue)
     }
+})
+
+const viewOptions = ()=>{
+    isViewOptions.value = true
+
+    console.log('hola')
+
+    emit('update:modelValue', '')
 }
 
-onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
-})
+const selectOption = (name) => {
+    emit('update:modelValue', name)
 
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside)
-})
+    isViewOptions.value = false 
+}
 </script>
 
 <template>
-    <div class="relative dropdown">
+    <div class="relative dropdown z-10">
         <Input 
-            @click="inputClick"
-            v-model="name"
-            placeholder="Insert product"/>
+            :textAlignment="textAlignment"
+            @click="viewOptions"
+            v-model="modelInput"
+            :placeholder="placeholder"/>
 
         <div
-            v-if="viewOptions"
-            class="absolute bg-white p-2 w-full rounded-b border-2">
+            v-if="isViewOptions && options.length > 0"
+            class="absolute bg-white p-2 w-full rounded-b border-2 overflow-y-auto">
             <button 
                 class="flex my-1 w-full"
-                v-for="option in filteredOptions"
+                v-for="option in options"
                 :key="option.id"
                 @click="selectOption(option.name)">
                 {{ option.name }}
             </button>
         </div>
     </div>
+
+    <!-- Backdrop -->
+    <div 
+        v-if="isViewOptions"
+        @click="isViewOptions = false" 
+        class="fixed top-0 left-0 w-full h-full" />
 </template>

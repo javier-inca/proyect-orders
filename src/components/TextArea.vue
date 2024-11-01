@@ -21,18 +21,17 @@ const props = defineProps({
         type:Boolean,
         default:false
     },
-
-    value:{
+    modelValue:{
         type:String,
         default:''
     }
 })
 
-const emit = defineEmits('update:value')
+const emit = defineEmits('update:modelValue')
 
 const textValue = computed({
-    get : () => props.value,
-    set: (newValue) => { emit ('update:value' , newValue) }
+    get: () => props.modelValue,
+    set: (newValue) => { emit ('update:modelValue' , newValue) }
 })
 
 const ySizes ={
@@ -61,5 +60,5 @@ const classDisabled = computed(()=>{
         :rows="rowSize"
         :placeholder="placeholder" 
         class="p-2 h-full resize-none rounded" 
-        v-model="textValue"/>
+        v-model="textValue" />
 </template>

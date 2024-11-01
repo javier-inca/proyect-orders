@@ -15,7 +15,7 @@ const props = defineProps({
     modelValue:{
         type:String,
         default:''
-    }
+    },
 })
 
 const sizes = {

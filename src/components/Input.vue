@@ -40,8 +40,19 @@ const props=defineProps({
     complementaryData :{
         type:String,
         default :''
+    },
+
+    textAlignment:{
+        type:String,
+        default:'start'
     }
 })
+
+const textAlignments = {
+    'start' : 'text-start',
+    'center' : 'text-center',
+    'end' : 'text-end',
+}
 
 const xSizes ={
     'sm' : 'w-1/4',
@@ -49,6 +60,10 @@ const xSizes ={
     'lg' : 'w-2/3',
     'xl' : 'w-full',
 }
+
+const textAlignment = computed(()=>{
+    return textAlignments[props.textAlignment] ? textAlignments[props.textAlignment] : 'text-start'
+})
 
 const xSize = computed(()=>{
     return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-full'
@@ -58,16 +73,18 @@ const emit = defineEmits('update:modelValue')
 
 const modelInput = computed({
     get: () => props.modelValue,
-    set: (newValue) => { emit ('update:modelValue', newValue) }
+    set: (newValue) => { 
+        emit ('update:modelValue', newValue) }
 })
 </script>
 
 <template>
-    <div class="relative mt-2">
+    <div class="mt-2 rounded-md">
         <input 
             :class="[
+                textAlignment,
                 xSize,
-                'p-2 rounded border-2 h-10',
+                'p-2 rounded border-2 h-10 ',
                 {
                     'border-blue-500 bg-white focus:border-blue-700': !error && !disabled,
                     'border-red-600 bg-red-100 focus:border-red-600': error && !disabled,
