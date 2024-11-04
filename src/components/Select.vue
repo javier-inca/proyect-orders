@@ -12,10 +12,15 @@ const props = defineProps({
         default:false
     },
 
-    modelValue:{
-        type:String,
-        default:''
+    options:{
+        type:Array,
+        default:[]
     },
+
+    optionPlaceholder:{
+        type:String,
+        default:'Select'
+    }
 })
 
 const sizes = {
@@ -44,6 +49,18 @@ const modelSelect = computed({
         ]"
         class="border-2 border-blue-500 rounded w-1/2 p-2"
         :disabled="disabled">
-        <slot></slot>
+        <option 
+            value="0" 
+            selected 
+            disabled>
+            {{ optionPlaceholder }}
+        </option>
+
+        <option 
+            :value="option.name"
+            v-for="option in options"
+            :key="option.id">
+            {{ option.name }}
+        </option>
     </select>
 </template>

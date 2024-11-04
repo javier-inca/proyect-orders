@@ -6,50 +6,26 @@ import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import View from './View.vue';
 
 const props = defineProps({
-    order: Object,
-    default: {
-    }
+    products: Object,
+    default: {}
 })
-
-const sentObject = ref()
-const viewDetails = ref(false)
-const getProducts = ref(props.order && props.order.products ? (props.order.products.length > 0 ? props.order.products : {}) : {})
 const emit = defineEmits()
 
-const buttonClick = (type) =>{
-    emit('buttonClick' , type)
+const buttonClick = (action,product ) =>{
+    emit('buttonClick' ,{
+        type:action,
+        product:product
+    })
 }
 
-const showDetails = (getObject) =>{
-    sentObject.value = getObject
-    viewDetails.value = true
-}
-
-const closeView = ()=>{
-    viewDetails.value = false
-    sentObject.value = null
-}
 </script>
 
 <template>
     <div 
         class="my-2 border-2 border-blue-600 rounded bg-white">
-        <div 
-            v-if="!viewDetails"
-            class="flex justify-between m-2 items-center">
-            <Title
-                :title="`${order.userName}'s products`"
-                size="sm"/>
-            <Button
-                @click="buttonClick('back')"
-                name="Back"
-                type="danger"/>
-        </div>
-
         <div
-            v-if="!viewDetails"
             :class="{
-                'h-52 overflow-y-auto' : getProducts.length > 3
+                'h-52 overflow-y-auto' : products.length > 3
             }">
             <table 
                 class="w-full text-sm text-left rtl:text-right">
@@ -70,7 +46,7 @@ const closeView = ()=>{
     
                         <th 
                             scope="col" 
-                            class="px-6 py-3 text-center">
+                            class="px-6 py-3 text-center w-full">
                             Price
                         </th>
     
@@ -81,11 +57,11 @@ const closeView = ()=>{
                         </th>
                     </tr>
                 </thead>
-    
+
                 <tbody>
                     <tr 
                         class="bg-white border-b" 
-                        v-for="order in getProducts" 
+                        v-for="order in products" 
                         :key="order.id">
                         <td 
                             scope="row" 
@@ -95,27 +71,27 @@ const closeView = ()=>{
     
                         <td 
                             scope="row" 
-                            class="px-6 py-4 font-medium text-gray-900 text-center">
-                            {{ order.amount }}
+                            class="px-6 py-4 font-medium text-gray-900 text-end">
+                            {{ order.quantity }} u.
                         </td>
     
                         <td 
                             scope="row" 
-                            class="px-6 py-4 font-medium text-gray-900 text-center">
-                            {{ order.price }}
+                            class="px-6 py-4 font-medium text-gray-900 text-end">
+                            {{ order.totalPrice }} Bs.
                         </td>
     
                         <td
                             scope="row" 
                             class="px-6 py-4 flex justify-center gap-2">
                             <button
-                                @click="showDetails(order)">
+                                @click="buttonClick('view',order)">
                                 <EyeIcon
                                     class="size-6 text-blue-600"/>
                             </button>
 
                             <button
-                                >
+                                @click="buttonClick('edit',order)">
                                 <PencilIcon
                                     class="size-6 text-blue-600"/>
                             </button>
@@ -130,11 +106,5 @@ const closeView = ()=>{
                 </tbody>
             </table>
         </div>
-
-        <View
-            type="product"
-            @buttonClosed="closeView"
-            :content="sentObject"
-            v-if="viewDetails"/>
     </div>
 </template>

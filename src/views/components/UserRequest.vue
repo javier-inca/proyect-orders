@@ -1,88 +1,186 @@
 <script setup>
-import { computed, ref } from 'vue';
-import InputSelect from '../../components/InputSelect.vue';
-import ProductForm from './productForm.vue';
-import Button from '../../components/Button.vue';
+import { computed, ref, watch } from 'vue'
+import InputSelect from '../../components/InputSelect.vue'
+import ProductForm from './ProductForm.vue'
+import Button from '../../components/Button.vue'
+import OrdersTableByUser from './OrdersTableByUser.vue';
+import { PlusIcon } from '@heroicons/vue/24/outline';
+import Input from '../../components/Input.vue';
+import Select from '../../components/Select.vue';
+import Title from '../../components/Title.vue';
+import View from './View.vue';
 
-const getUsers = ref(JSON.parse(localStorage.getItem('userArray')) || []);
+const getUsers = ref(JSON.parse(localStorage.getItem('userArray')) || [])
 const getProducts = ref(JSON.parse(localStorage.getItem('productArray')))
-const searchUser = ref('');
-const searchProduct = ref('')
+const selectedUser = ref(0)
+const saveProducts = ref([])
+const payment = ref()
+const totalPrice = ref()
+const change = ref(null)
+const productDetails = ref({})
 
-const selectProduct = ref()
+const isButtonRegisterProduct = ref(false)
+const isViewProductForm = ref(false)
+const isViewOrderDetails = ref(false)
+const isViewProductTable = ref(false)
+const isViewProduct = ref(false)
+const isEditProduct = ref(false)
+
+const productSelect = ref({
+    name:'',
+    quantity:'',
+    unitPrice:'',
+    totalPrice:'',
+    description:''
+})
 
 const filterProduct = computed(()=>{
-    if(!searchProduct.value){
+    if(!productSelect.value.name){
         return getProducts.value
     }
     return getProducts.value.filter(product=>
-        product.name.toLowerCase().includes(searchProduct.value.toLocaleLowerCase())
+    product.name.toLowerCase().includes(productSelect.value.name.toLocaleLowerCase())
     )
 })
 
-const filterUser = computed(() => {
-    if (!searchUser.value) {
-        return getUsers.value;
+const registerProduct=(type)=>{
+    if(type !== 'cancel'){
+        saveProducts.value.push({...productSelect.value})
+        totalPrice.value = saveProducts.value.reduce((sum, product) => {
+            return sum + (product.totalPrice || 0);
+        }, 0);
+        isViewProductTable.value = true
     }
+    isViewOrderDetails.value = true
+    isViewProductForm.value=false
+    productSelect.value.name = ''
+    productSelect.value.description=''
+}
 
-    return getUsers.value.filter(user =>
-        user.name.toLowerCase().includes(searchUser.value.toLowerCase())
-    );
-});
+watch(()=>productSelect.value.name , ()=>{
+    productSelect.value.unitPrice = getProducts.value.find(product => product.name === productSelect.value.name ) ? (getProducts.value.find(product => product.name === productSelect.value.name ).price ):''
+    productSelect.value.quantity = (productSelect.value.name.length > 0)? 1:''
+})
 
+watch(productSelect, ()=>{
+    productSelect.value.totalPrice = (productSelect.value.quantity > 0 && productSelect.value.unitPrice > 0) ? productSelect.value.quantity*productSelect.value.unitPrice : ''
+    isButtonRegisterProduct.value = productSelect.value.totalPrice > 0 && productSelect.value.name.length > 0
+},{deep:true})
 
-const filterUsers = computed(() => {
-    return getUsers.value;
-  
-});
+watch([payment, saveProducts] , ()=>{
+    change.value = (totalPrice.value>0 && payment.value>0) ? ((totalPrice.value <= payment.value)? payment.value-totalPrice.value: null ):null
+},{deep:true})
 
-const test =ref()
+watch(selectedUser,()=>{
+    isViewProductForm.value = selectedUser.value!==0
+})
+
+const tableOptions = (details)=>{
+    productDetails.value = details.product
+    if(details.type === 'view'){
+        isViewProduct.value = true
+    }
+    if(details.type === 'edit'){
+        isEditProduct.value = true
+    }    
+    isViewProductForm.value = false
+    isViewOrderDetails.value = false
+    isViewProductTable.value = false
+}
+
+const optionsClosed = ()=>{
+    isViewProduct.value = false
+    isViewProductForm.value = false
+    isViewOrderDetails.value = true
+    isViewProductTable.value = true
+}
 </script>
 
 <template>
     <div class="relative">
         <div class="my-5 border-2 border-blue-800 rounded p-2">
-            <InputSelect
-                v-model="searchUser"
-                placeholder="Insert User"
-                :options="filterUser" />
+            <Select
+                size="md"
+                v-if="selectedUser === 0"
+                v-model="selectedUser"
+                :options="getUsers"
+                optionPlaceholder="Select User"/>
 
+            <Title
+                class=" pb-3"
+                v-if="selectedUser !== 0"
+                :title="selectedUser"
+                size="sm"/>
 
-            <InputSelect
-                v-model="test"
-                placeholder="Insert User"
-                :options="filterUsers" />
+            <OrdersTableByUser
+                @buttonClick="(details => tableOptions(details))"
+                v-if="isViewProductTable"
+                :products="saveProducts"/>
 
             <ProductForm
-                v-model="selectProduct"
+                v-if="isViewProductForm"
+                @clickButton="(type => registerProduct(type))"
+                v-model:productName="productSelect.name"
+                v-model:quantity="productSelect.quantity"
+                v-model:unitPrice="productSelect.unitPrice"
+                v-model:totalPrice="productSelect.totalPrice"
+                v-model:description="productSelect.description"
+                :isViewButton="isButtonRegisterProduct"
                 :products="filterProduct"/>
-        </div>
 
-        <div 
-            class=" absolute z-20 inset-0 flex justify-center items-center m-2"
-            v-if="viewOrderDetails">
-            <div class="bg-white rounded w-full h-full border-2 border-blue-800 overflow-y-auto">
-                <View
-                    @buttonClosed="(viewOrderDetails = false)"
-                    :content="findOrder"
-                    type="product"/>
+            <button
+                class=" rounded-full bg-blue-800"
+                v-if="isViewOrderDetails"
+                @click="[isViewProductForm = true, isViewOrderDetails = false]">
+                <PlusIcon
+                    class="size-7 text-white"/>
+            </button>
+
+            <div
+                v-if="isViewOrderDetails" 
+                class="flex gap-2 w-full">
+                <Input
+                    v-model="payment"
+                    type="number"
+                    label="Payment"/>
+
+                <Input
+                    v-model="totalPrice"
+                    :disabled="true"
+                    label="Total Price"/>
+
+                <Input
+                    v-model="change"
+                    :disabled="true"
+                    label="Change"/>
             </div>
+
+            <div
+                v-if="isViewOrderDetails" 
+                class="flex gap-4 mt-5">
+                <Button
+                    name="Cancel"
+                    type="danger"
+                    xSize="lg"/>
+
+                <Button
+                    :disabled="(change == null)"
+                    name="Order"
+                    xSize="lg"/>
+            </div>
+
+            <View
+                @buttonClosed="optionsClosed"
+                v-if="isViewProduct"
+                :content="productDetails"/>
+
+            <ProductForm
+                v-model:productName="productDetails.name"
+                v-model:quantity="productDetails.quantity"
+                v-model:unitPrice="productDetails.unitPrice"
+                v-model:totalPrice="productDetails.totalPrice"
+                v-model:description="productDetails.description"
+                v-if="isEditProduct"/>
         </div>
-        
-        <div 
-            v-if="viewEditProduct"
-            class="absolute z-20 inset-0 flex justify-center items-center m-2">
-            <EditProduct 
-                @buttonClick="(action => editAction (action))"
-                :product="product"/>
-        </div>
-    </div>
-    
-    <div 
-        v-if="viewNotification"
-        class="absolute z-20 inset-0 w-full h-full">
-        <Modal
-            :message="'Delete '+ productName "
-            @buttonClick="(type => deleteProduct(type))"/>
     </div>
 </template>

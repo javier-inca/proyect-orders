@@ -43,9 +43,6 @@ const modelInput = computed({
 
 const viewOptions = ()=>{
     isViewOptions.value = true
-
-    console.log('hola')
-
     emit('update:modelValue', '')
 }
 
@@ -57,7 +54,7 @@ const selectOption = (name) => {
 </script>
 
 <template>
-    <div class="relative dropdown z-10">
+    <div class="relative dropdown z-10 pb-2">
         <Input 
             :textAlignment="textAlignment"
             @click="viewOptions"

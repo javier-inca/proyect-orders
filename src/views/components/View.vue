@@ -43,19 +43,19 @@ const emitButton = () =>{
 
             <p 
                 class="text-end">
-                {{ content.amount }} unit.
+                {{ content.quantity }} unit.
             </p>
         </div>
 
         <div class="w-full flex justify-between px-2 mb-3">
             <strong 
                 class="uppercase text-sm flex items-end">
-                Price
+                Unit Price
             </strong>
 
             <p 
                 class="text-end">
-                {{ content.price }} Bs.
+                {{ content.unitPrice }} Bs.
             </p>
         </div>
 
@@ -66,24 +66,12 @@ const emitButton = () =>{
         <div class="w-full flex justify-between border-b border-dashed border-blue-600 px-2 mb-3">
             <strong 
                 class="uppercase text-sm flex items-end">
-                Cash
+                Total Price
             </strong>
 
             <p 
                 class="text-end">
-                {{ content.cash }} Bs.
-            </p>
-        </div>
-
-        <div class="w-full flex justify-between border-b border-dashed border-blue-600 px-2 mb-3">
-            <strong 
-                class="uppercase text-sm flex items-end">
-                Change
-            </strong>
-
-            <p 
-                class="text-end">
-                {{ content.change }} Bs.
+                {{ content.totalPrice }} Bs.
             </p>
         </div>
 

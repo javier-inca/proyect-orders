@@ -7,15 +7,29 @@ import Title from '../../components/Title.vue'
 import Button from '../../components/Button.vue';
 
 const props = defineProps({
-    modelProduct:{
-        type:Array,
-        default:{
-            name:'',
-            quantity:'',
-            unitPrice:'',
-            totalPrice:'',
-            description:'',
-        }
+    productName:{
+        type:String,
+        default:''
+    },
+
+    quantity:{
+        type:Number,
+        default:''
+    },
+
+    unitPrice:{
+        type:Number,
+        default:''
+    },
+
+    totalPrice:{
+        type:Number,
+        default:''
+    },
+
+    description:{
+        type:String,
+        default:''
     },
 
     nameButton:{
@@ -26,17 +40,54 @@ const props = defineProps({
     products:{
         type:Array,
         default:{}
+    },
+
+    isViewButton:{
+        type:Boolean,
+        default:true
     }
 })
 
-const emit = defineEmits('update:modelProduct')
+const emit = defineEmits(['update:productName', 'update:quantity', 'update:unitPrice', 'update:totalPrice', 'update:description'])
 
-const modelInput = computed({
-    get: () => props.modelProduct,
-    set: (newValue) => { 
-        emit ('update:modelProduct', newValue) 
-    }   
+const modelProductName = computed({
+    get: () => props.productName,
+    set: (newValue) => {
+        emit ('update:productName', newValue)
+    }
 })
+
+const modelQuantity = computed({
+    get: () => props.quantity,
+    set: (newValue) => {
+        emit ('update:quantity', newValue)
+    }
+})
+
+const modelUnitPrice = computed({
+    get: () => props.unitPrice,
+    set: (newValue) => {
+        emit ('update:unitPrice', newValue)
+    }
+})
+
+const modelTotalPrice = computed({
+    get: () => props.totalPrice,
+    set: (newValue) => {
+        emit ('update:totalPrice', newValue)
+    }
+})
+
+const modelDescription = computed({
+    get: () => props.description,
+    set: (newValue) => {
+        emit ('update:description', newValue)
+    }
+})
+
+const emitButton = (type)=>{
+    emit('clickButton', type)
+}  
 </script>
 
 <template>
@@ -48,13 +99,13 @@ const modelInput = computed({
             </strong>
 
             <InputSelect
-                v-model="modelInput.name"
+                v-model="modelProductName"
                 textAlignment="end"
                 :options="products"/>
         </div>
 
         <Title
-            :title="'dw'"
+            :title="''"
             size="sm"/>
 
         <div class="flex justify-between items-center py-1">
@@ -64,7 +115,7 @@ const modelInput = computed({
             </strong>
 
             <Input
-                v-model="modelInput.quantity"
+                v-model="modelQuantity"
                 textAlignment="end"
                 class="bg-green-800"
                 type="number"/>
@@ -77,7 +128,7 @@ const modelInput = computed({
             </strong>
 
             <Input
-                v-model="modelInput.unitPrice"
+                v-model="modelUnitPrice"
                 textAlignment="end"
                 class="bg-green-800"
                 type="number"/>
@@ -90,7 +141,7 @@ const modelInput = computed({
             </strong>
 
             <Input
-                v-model="modelInput.totalPrice"
+                v-model="modelTotalPrice"
                 textAlignment="end"
                 :disabled="true"
                 class="bg-green-800"
@@ -104,16 +155,20 @@ const modelInput = computed({
             </strong>
 
             <TextArea
-                v-model="modelInput.description"/>
+                v-model="modelDescription"/>
         </div>
 
-        <div class="flex gap-12 py-1">
+        <div
+            class="flex gap-12 py-1">
             <Button
+                @click="emitButton('cancel')"
                 name="Cancel"
                 type="danger"
                 xSize="lg"/>
             
             <Button
+                :disabled="!isViewButton"
+                @click="emitButton('add')"
                 type="accept"
                 :name="nameButton"
                 xSize="lg"/>

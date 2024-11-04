@@ -45,6 +45,11 @@ const props=defineProps({
     textAlignment:{
         type:String,
         default:'start'
+    },
+
+    label:{
+        type:String,
+        default:''
     }
 })
 
@@ -80,6 +85,11 @@ const modelInput = computed({
 
 <template>
     <div class="mt-2 rounded-md">
+        <label
+            v-if="label.length>0"
+            class="text-xs">
+            {{ label }}
+        </label>
         <input 
             :class="[
                 textAlignment,

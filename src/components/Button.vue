@@ -90,7 +90,7 @@ const xSize = computed(() => {
             
             'rounded': rounded,
         }]" 
-        class="py-2 px-4 bg-white "
+        class="py-2 px-4 "
         :disabled="disabled">
         {{ name }}
     </button>
