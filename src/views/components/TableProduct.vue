@@ -12,11 +12,20 @@ const props = defineProps({
         default:true
     }
 })
+
+const emit =defineEmits()
+
+const clickOptions =(type, id)=>{
+    emit('clickOptions',{
+        type:type,
+        id:id
+    })
+}
 </script>
 
 <template>
     <div class="flex justify-center">
-        <table class="w-full text-sm text-left md:w-2/3 lg:w-1/2 2xl:w-2/5">
+        <table class="w-full text-sm text-left md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12">
             <thead class="text-xs text-black uppercase bg-gray-200">
                 <tr>
                     <th  class="px-6 py-3">
@@ -46,12 +55,14 @@ const props = defineProps({
                     </td>
 
                     <td class="px-6 py-4 flex justify-center gap-3">
-                        <button>
+                        <button
+                            @click="clickOptions('edit', product.id)">
                             <PencilIcon
-                                class="size-5 hover:text-secondary hover:scale-125 transition-transform duration-75"/>
+                                class="size-5 hover:text-primary hover:scale-125 transition-transform duration-75"/>
                         </button>
 
-                        <button>
+                        <button
+                            @click="clickOptions('viewDelete',product.id)">
                             <TrashIcon
                                 class="size-5 hover:text-secondary hover:scale-125 transition-transform duration-75"/>
                                 

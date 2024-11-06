@@ -6,7 +6,7 @@ const route = useRoute()
 
 <template>
     <div class="flex justify-center bg-black-custom">
-        <nav class="p-5 flex justify-end gap-10 text-white w-full md:w-2/3 lg:w-1/2 2xl:w-2/5">
+        <nav class="p-5 flex justify-end gap-10 text-white w-full md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12">
             <router-link 
                 to="/"
                 :class="{

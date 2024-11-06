@@ -14,9 +14,9 @@ const props = defineProps({
 })
 
 const types = {
-    'danger':'bg-red-600 text-white',
-    'success':'bg-green-600 text-white',
-    'warning':'bg-yellow-400 text-black',
+    'danger':'bg-secondary text-white',
+    's':'bg-green-600 text-white',
+    'success':'bg-primary text-black',
 }
 
 const type = computed(()=>{
@@ -26,9 +26,9 @@ const type = computed(()=>{
 
 <template>
     <div 
-        class="flex justify-center">
+        class="w-3/5 md:w-2/5 lg:w-2/6 2xl:w-1/6">
         <div 
-            class="absolute w-1/2 my-4 p-4 rounded-xl text-center text-lg"
+            class="my-4 p-4 rounded-xl text-center text-lg"
             :class="[
                 type,
             ]">

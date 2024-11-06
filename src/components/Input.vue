@@ -96,8 +96,8 @@ const modelInput = computed({
                 xSize,
                 'p-2 rounded border-2 h-10 ',
                 {
-                    'border-black-custom bg-white focus:border-primary focus:outline-none': !error && !disabled,
-                    'border-red-600 bg-red-100 focus:border-red-600': error && !disabled,
+                    'border-black-custom bg-white focus:border-primary focus:outline-none': !messageError && !disabled,
+                    'border-red-600 bg-red-100 focus:border-red-600 focus:outline-none': messageError && !disabled,
                     'border-primary bg-gray-200': disabled,
                 }
             ]"
@@ -108,8 +108,8 @@ const modelInput = computed({
             @focus="isFocused = true"
             @blur="isFocused = false">
         <p 
-            v-if="error" 
-            class="text-red-500 px-2">
+            v-if="messageError" 
+            class="text-red-500 px-2 text-sm">
             {{ messageError }}
         </p>
     </div>

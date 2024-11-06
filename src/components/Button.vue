@@ -76,21 +76,21 @@ const xSize = computed(() => {
         sizeRounded,
         ringSize,
         {
-            'hover:bg-red-600 ring-red-600 hover:ring-red-800': type === 'danger',
+            'hover:bg-secondary ring-secondary hover:ring-secondary text-black hover:text-white': type === 'danger',
 
             'hover:bg-green-600 ring-green-600 hover:ring-green-800': type === 'accept',
 
             'hover:bg-yellow-400 ring-yellow-400 hover:ring-yellow-600': type === 'warning',
 
-            'hover:bg-secondary ring-secondary': type === 'default',
+            'bg-secondary hover:bg-transparent ring-secondary text-white': type === 'default',
 
             'hover:bg-slate-300 hover:ring-slate-700 ring-slate-700 bg-slate-300':disabled,
 
-            'hover:text-white':!disabled,
+            'hover:text-black':!disabled,
             
             'rounded': rounded,
         }]" 
-        class="py-2 px-4 "
+        class="py-2 px-4"
         :disabled="disabled">
         {{ name }}
     </button>

@@ -10,6 +10,9 @@ export default {
         'primary':'#F8C601',
         'secondary':'#FF2940',
         'black-custom':'#1E1E21'
+      },
+      screens:{
+        '3xl': '1800px',
       }
     },
   },
