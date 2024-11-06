@@ -45,6 +45,11 @@ const props = defineProps({
     isViewButton:{
         type:Boolean,
         default:true
+    },
+
+    type:{
+        type:String,
+        default:'create'
     }
 })
 
@@ -92,7 +97,9 @@ const emitButton = (type)=>{
 
 <template>
     <div class="border-2 border-blue-800 p-2 rounded">
-        <div class="flex justify-between items-center py-1">
+        <div 
+            v-if="type==='create'"
+            class="flex justify-between items-center py-1">
             <strong
                 class="text-sm">
                 Select Product
@@ -105,7 +112,8 @@ const emitButton = (type)=>{
         </div>
 
         <Title
-            :title="''"
+            v-if="type === 'edit'"
+            :title="''+productName"
             size="sm"/>
 
         <div class="flex justify-between items-center py-1">

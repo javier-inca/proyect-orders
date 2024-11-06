@@ -84,7 +84,7 @@ const modelInput = computed({
 </script>
 
 <template>
-    <div class="mt-2 rounded-md">
+    <div class="rounded-md">
         <label
             v-if="label.length>0"
             class="text-xs">
@@ -96,9 +96,9 @@ const modelInput = computed({
                 xSize,
                 'p-2 rounded border-2 h-10 ',
                 {
-                    'border-blue-500 bg-white focus:border-blue-700': !error && !disabled,
+                    'border-black-custom bg-white focus:border-primary focus:outline-none': !error && !disabled,
                     'border-red-600 bg-red-100 focus:border-red-600': error && !disabled,
-                    'border-blue-500 bg-gray-200': disabled,
+                    'border-primary bg-gray-200': disabled,
                 }
             ]"
             :disabled="disabled"

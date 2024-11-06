@@ -17,14 +17,15 @@ const saveProducts = ref([])
 const payment = ref()
 const totalPrice = ref()
 const change = ref(null)
-const productDetails = ref({})
+const editProduct = ref({})
+const indexProduct = ref()
 
 const isButtonRegisterProduct = ref(false)
 const isViewProductForm = ref(false)
 const isViewOrderDetails = ref(false)
 const isViewProductTable = ref(false)
 const isViewProduct = ref(false)
-const isEditProduct = ref(false)
+const isViewEditProduct = ref(false)
 
 const productSelect = ref({
     name:'',
@@ -46,21 +47,40 @@ const filterProduct = computed(()=>{
 const registerProduct=(type)=>{
     if(type !== 'cancel'){
         saveProducts.value.push({...productSelect.value})
+        productSelect.value={}
         totalPrice.value = saveProducts.value.reduce((sum, product) => {
             return sum + (product.totalPrice || 0);
         }, 0);
-        isViewProductTable.value = true
     }
+    isViewProductTable.value = true
     isViewOrderDetails.value = true
     isViewProductForm.value=false
     productSelect.value.name = ''
     productSelect.value.description=''
 }
 
+const updateProduct = (type)=>{
+    if(type !== 'cancel'){
+        saveProducts.value.splice(indexProduct.value,1,editProduct.value)
+        totalPrice.value = saveProducts.value.reduce((sum, product) => {
+            return sum + (product.totalPrice || 0);
+        }, 0);
+    }
+    isViewOrderDetails.value=true
+    isViewProductTable.value=true
+    isViewEditProduct.value=false
+
+}
+
 watch(()=>productSelect.value.name , ()=>{
     productSelect.value.unitPrice = getProducts.value.find(product => product.name === productSelect.value.name ) ? (getProducts.value.find(product => product.name === productSelect.value.name ).price ):''
     productSelect.value.quantity = (productSelect.value.name.length > 0)? 1:''
 })
+
+watch(editProduct, ()=>{
+    editProduct.value.totalPrice = (editProduct.value.quantity > 0 && editProduct.value.unitPrice > 0) ? editProduct.value.quantity*editProduct.value.unitPrice : ''
+    isButtonRegisterProduct.value = editProduct.value.totalPrice > 0
+},{deep:true})
 
 watch(productSelect, ()=>{
     productSelect.value.totalPrice = (productSelect.value.quantity > 0 && productSelect.value.unitPrice > 0) ? productSelect.value.quantity*productSelect.value.unitPrice : ''
@@ -76,12 +96,13 @@ watch(selectedUser,()=>{
 })
 
 const tableOptions = (details)=>{
-    productDetails.value = details.product
+    editProduct.value = details.product
     if(details.type === 'view'){
         isViewProduct.value = true
     }
     if(details.type === 'edit'){
-        isEditProduct.value = true
+        indexProduct.value = details.index
+        isViewEditProduct.value = true
     }    
     isViewProductForm.value = false
     isViewOrderDetails.value = false
@@ -131,7 +152,7 @@ const optionsClosed = ()=>{
             <button
                 class=" rounded-full bg-blue-800"
                 v-if="isViewOrderDetails"
-                @click="[isViewProductForm = true, isViewOrderDetails = false]">
+                @click="[isViewProductForm = true, isViewOrderDetails = false, isViewProductTable = false]">
                 <PlusIcon
                     class="size-7 text-white"/>
             </button>
@@ -172,15 +193,19 @@ const optionsClosed = ()=>{
             <View
                 @buttonClosed="optionsClosed"
                 v-if="isViewProduct"
-                :content="productDetails"/>
+                :content="editProduct"/>
 
             <ProductForm
-                v-model:productName="productDetails.name"
-                v-model:quantity="productDetails.quantity"
-                v-model:unitPrice="productDetails.unitPrice"
-                v-model:totalPrice="productDetails.totalPrice"
-                v-model:description="productDetails.description"
-                v-if="isEditProduct"/>
+                @clickButton="(type => updateProduct(type))"
+                :isViewButton="isButtonRegisterProduct"
+                nameButton="Update"
+                type="edit"
+                v-model:productName="editProduct.name"
+                v-model:quantity="editProduct.quantity"
+                v-model:unitPrice="editProduct.unitPrice"
+                v-model:totalPrice="editProduct.totalPrice"
+                v-model:description="editProduct.description"
+                v-if="isViewEditProduct"/>
         </div>
     </div>
 </template>

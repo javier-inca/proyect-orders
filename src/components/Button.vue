@@ -82,7 +82,7 @@ const xSize = computed(() => {
 
             'hover:bg-yellow-400 ring-yellow-400 hover:ring-yellow-600': type === 'warning',
 
-            'hover:bg-blue-600 ring-blue-600 hover:ring-blue-800': type === 'default',
+            'hover:bg-secondary ring-secondary': type === 'default',
 
             'hover:bg-slate-300 hover:ring-slate-700 ring-slate-700 bg-slate-300':disabled,
 

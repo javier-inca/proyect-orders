@@ -11,10 +11,11 @@ const props = defineProps({
 })
 const emit = defineEmits()
 
-const buttonClick = (action,product ) =>{
+const buttonClick = (action,product,index ) =>{
     emit('buttonClick' ,{
         type:action,
-        product:product
+        product:product,
+        index:index
     })
 }
 
@@ -61,7 +62,7 @@ const buttonClick = (action,product ) =>{
                 <tbody>
                     <tr 
                         class="bg-white border-b" 
-                        v-for="order in products" 
+                        v-for="order,index in products" 
                         :key="order.id">
                         <td 
                             scope="row" 
@@ -85,13 +86,13 @@ const buttonClick = (action,product ) =>{
                             scope="row" 
                             class="px-6 py-4 flex justify-center gap-2">
                             <button
-                                @click="buttonClick('view',order)">
+                                @click="buttonClick('view',order,index)">
                                 <EyeIcon
                                     class="size-6 text-blue-600"/>
                             </button>
 
                             <button
-                                @click="buttonClick('edit',order)">
+                                @click="buttonClick('edit',order,index)">
                                 <PencilIcon
                                     class="size-6 text-blue-600"/>
                             </button>
