@@ -4,21 +4,19 @@ import Button from './Button.vue';
 const props = defineProps({
     message:{
         type:String,
-        default:'message'
+        default: ''
     },
 
     product:{
         type:String,
-        default:'product'
+        default: ''
     }
 })
 
 const emit = defineEmits()
 
 const clickButton = (type)=> {
-    emit('clickOptions',{
-        type:type
-    })
+    emit('clickOptions',type)
 }
 </script>
 
@@ -33,10 +31,14 @@ const clickButton = (type)=> {
             </button>
         </div>
 
+        <!-- Parte central -->
         <div class="m-5">
+            <slot />
+
             <p
+                v-if="message || product"
                 class="text-center text-lg">
-                {{ message }} {{ product }}
+                {{ message }} {{ product }} 
             </p>
         </div>
 

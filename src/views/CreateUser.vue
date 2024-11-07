@@ -99,7 +99,6 @@ const deleteUser = () =>{
 const clickRegister = ()=>{
     viewRegister.value=true
 }
-
 </script>
 
 <template>

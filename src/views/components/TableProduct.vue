@@ -18,7 +18,8 @@ const emit =defineEmits()
 const clickOptions =(type, id)=>{
     emit('clickOptions',{
         type:type,
-        id:id
+        id:id,
+        product: id
     })
 }
 </script>
@@ -31,14 +32,17 @@ const clickOptions =(type, id)=>{
                     <th  class="px-6 py-3">
                         Product name
                     </th>
+
                     <th  class="px-6 py-3 text-end">
                         Price
                     </th>
+
                     <th  class="px-6 py-3 text-center">
                         Options
                     </th>
                 </tr>
             </thead>
+
             <tbody
                 class=" border-b-2 border-b-black border-opacity-25"
                 v-if="!stateLoading">
@@ -62,7 +66,7 @@ const clickOptions =(type, id)=>{
                         </button>
 
                         <button
-                            @click="clickOptions('viewDelete',product.id)">
+                            @click="clickOptions('delete', product)">
                             <TrashIcon
                                 class="size-5 hover:text-secondary hover:scale-125 transition-transform duration-75"/>
                                 
@@ -70,6 +74,7 @@ const clickOptions =(type, id)=>{
                     </td>
                 </tr>
             </tbody>
+            
             <div
                 v-if="stateLoading" 
                 class="">

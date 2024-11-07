@@ -8,7 +8,7 @@ import axios from '../connection/axiosConfig'
 import TableProduct from './components/TableProduct.vue'
 import ProductRegister from './components/ProductRegister.vue'
 
-
+/* layout */
 const dataProducts = ref([])
 const dataError = ref(null)
 const actionType = ref('Register')
@@ -64,6 +64,8 @@ const saveProduct = (type)=>{
     }
 }
 
+const eventualProduct = ref()
+
 const tableOptions = (data)=>{    
     if(data.type === 'edit'){
         getProductById(data.id)
@@ -71,16 +73,19 @@ const tableOptions = (data)=>{
         isProductRegister.value = true
     }
 
-    if(data.type === 'viewDelete'){
-        getProductById(data.id)
+    if(data.type === 'delete'){
+        eventualProduct.value = data.product
+
         isProductDelete.value = true
     }
+}
 
-    if(data.type === 'delete'){
+const modelOptions = (type)=>{
+    if(type === 'delete'){
         deleteProduct()
     }
 
-    if(data.type === 'cancel'){
+    if(type === 'cancel'){
         cancelProductRegister()
     }
 }
@@ -170,7 +175,7 @@ const getProductById = async (id) =>{
 
 const deleteProduct = async () =>{
     try {
-        const response = await axios.delete(`/api/products/${product.value.id}`)
+        const response = await axios.delete(`/api/products/${eventualProduct.value.id}`)
 
         if(response.status === 204){
             cancelProductRegister()
@@ -242,16 +247,16 @@ const viewNotification =()=>{
                 v-model:nameError="product.nameError"
                 v-model:price="product.price"
                 v-model:priceError="product.priceError"
-                @clickButton="(type => saveProduct(type))"/>
+                @clickButton="(type => saveProduct(type))" />
         </div>
 
         <div
             v-if="isProductDelete"
             class=" fixed z-20 w-full h-full backdrop-blur-sm flex justify-center items-center">
             <Modal
-                @clickOptions="(data =>tableOptions(data))"
-                message="Delete"
-                :product="product.name"/>
+                @clickOptions="(data =>modelOptions(data))">
+                Do you want to delete this product {{ eventualProduct.name }}?
+            </Modal>
         </div>
 
         <div 

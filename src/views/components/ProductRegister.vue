@@ -70,6 +70,7 @@ const clickButton = (type) => {
                     {{ actionType }} product
                 </p>
             </div>
+            
             <ShoppingCartIcon
                 class=" size-2/6 text-black-custom"/>
 
