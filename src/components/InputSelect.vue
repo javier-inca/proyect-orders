@@ -7,6 +7,8 @@ prime vue
 vuetify
 
 solicitudes axios 
+
+pictogrames // material desing icons 
 */
 const isViewOptions = ref(false)
 

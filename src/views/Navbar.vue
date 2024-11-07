@@ -37,7 +37,7 @@ const route = useRoute()
             <router-link 
                 to="/orders"
                 :class="{
-                    'text-primary':(route.name === 'Order')
+                    'text-primary':(route.name === 'Order' || route.name === 'NewOrder')
                 }"
                 class="hover:text-primary hover:scale-125 transition-transform duration-100">
                 Orders

@@ -3,6 +3,7 @@ import CreateUser from "../views/CreateUser.vue";
 import Product from "../views/Product.vue";
 import HomeStart from "../views/HomeStart.vue";
 import Order from "../views/Order.vue";
+import NewOrder from "../views/NewOrder.vue";
 
 const routes =[
     {
@@ -24,7 +25,12 @@ const routes =[
         path: '/orders',
         name: 'Order',
         component: Order
-    }
+    },
+    {
+        path: '/orders/create',
+        name: 'NewOrder',
+        component: NewOrder
+    },
 ]
 
 const router = createRouter({

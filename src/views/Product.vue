@@ -77,7 +77,7 @@ const tableOptions = (data)=>{
         eventualProduct.value = data.product
 
         isProductDelete.value = true
-    }
+    } 
 }
 
 const modelOptions = (type)=>{
@@ -232,7 +232,7 @@ const viewNotification =()=>{
                         @click="[isProductRegister = true , actionType = 'Register']"
                         class="p-2 rounded-full bg-primary hover:scale-110 transition-transform duration-100">
                         <PlusIcon
-                            class="size-5 text-black-custom transition-transform duration-100"/>
+                            class="size-5 text-black-custom"/>
                     </button>
                 </div>
             </div>
