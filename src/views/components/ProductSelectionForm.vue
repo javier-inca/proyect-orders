@@ -19,6 +19,8 @@ const productData = ref()
 const productSelect = ref('')
 const productTotalPrice = ref(0.00)
 
+const emit = defineEmits()
+
 const productRegister = ref({
     product_id:0,
     quantity:1,
@@ -33,6 +35,7 @@ const getProductData = async ()=>{
             productData.value = response.data.data
         }
     } catch (error) {
+        console.error('Error Get Product Data',error);
         
     }
 }
@@ -50,16 +53,43 @@ const filteredProducts = computed(() => {
     )
 })
 
-const saveProduct = ()=>{
+const saveProduct = async ()=>{
     const foundProduct = productData.value.find(product => product.name.toLowerCase() === productSelect.value.toLowerCase())
 
     if(foundProduct){
-        console.log('Buscar Id Producto ', productRegister.value);
+        productRegister.value.product_id = foundProduct.id        
+
+        emit('productRegister',productRegister.value)
+        productSelect.value = ''
+        productRegister.value.description = ''
         return
     }
-    console.log('Registrar Producto', productRegister.value);
-    
-    
+
+    if(!foundProduct){
+        await createProduct()
+
+        emit('productRegister', productRegister.value)
+
+        productSelect.value = ''
+        productRegister.value.description = ''
+
+        return
+    }
+}
+
+const createProduct = async ()=>{
+    try {
+        const response = await axios.post('/api/products',{
+            name : productSelect.value,
+            reference_price : productRegister.value.final_price,
+        })
+        
+        if(response.status === 201){
+            productRegister.value.product_id = response.data.product.id
+        }
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 watch(productSelect, ()=>{
@@ -74,6 +104,7 @@ watch(productSelect, ()=>{
     }
 
     productRegister.value.final_price = 0
+    productRegister.value.description = ''
     productTotalPrice.value = 0
 })
 
