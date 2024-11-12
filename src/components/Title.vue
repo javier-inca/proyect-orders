@@ -39,6 +39,11 @@ const size = computed(()=>{
 
                 'text-right' : aling === 'right',
             }]">
-        {{title}}
+        <p
+            v-if="title">
+            {{ title }}
+        </p>
+        
+        <slot/>
     </div>
 </template>

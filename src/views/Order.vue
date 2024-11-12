@@ -21,12 +21,12 @@ import TableOrder from './components/TableOrder.vue';
                     <router-link
                         to="/orders/create"
                         class="p-2 rounded-full bg-primary flex hover:scale-105 transition-transform">
-                        <p class=" text-sm px-2">
+                        <p class=" text-sm px-2 text-white">
                             New Order
                         </p>
 
                         <PlusIcon
-                            class="size-5 text-black-custom"/>
+                            class="size-5 text-white"/>
                     </router-link>
                 </div>
             </div>

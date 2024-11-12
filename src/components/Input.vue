@@ -50,6 +50,11 @@ const props=defineProps({
     label:{
         type:String,
         default:''
+    },
+
+    complementText:{
+        type:String,
+        default:''
     }
 })
 
@@ -71,7 +76,7 @@ const textAlignment = computed(()=>{
 })
 
 const xSize = computed(()=>{
-    return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-full'
+    return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-auto'
 })
 
 const emit = defineEmits('update:modelValue')
@@ -84,33 +89,53 @@ const modelInput = computed({
 </script>
 
 <template>
-    <div class="rounded-md">
+    <div class="flex justify-between">
         <label
-            v-if="label.length>0"
-            class="text-xs">
+            v-if="label"
+            :class="{
+                '!text-red-500' : messageError
+            }"
+            class="font-bold">
             {{ label }}
         </label>
-        <input 
-            :class="[
-                textAlignment,
-                xSize,
-                'p-2 rounded border-2 h-10 ',
-                {
-                    'border-black-custom bg-white focus:border-primary focus:outline-none': !messageError && !disabled,
-                    'border-red-600 bg-red-100 focus:border-red-600 focus:outline-none': messageError && !disabled,
-                    'border-primary bg-gray-200': disabled,
-                }
-            ]"
-            :disabled="disabled"
-            :placeholder="placeholder"
-            :type="type"
-            v-model="modelInput"
-            @focus="isFocused = true"
-            @blur="isFocused = false">
-        <p 
-            v-if="messageError" 
-            class="text-red-500 px-2 text-sm">
-            {{ messageError }}
-        </p>
+
+        <div class="flex justify-end">
+            <div 
+                :class="xSize">
+                <input 
+                    :class="[
+                        textAlignment,
+                        'border-b pl-2',
+                        {
+                            'border-black-custom bg-white focus:border-primary focus:outline-none': !messageError && !disabled,
+                            'border-red-600 bg-red-100 focus:border-red-600 focus:outline-none': messageError && !disabled,
+                            'border-black-custom bg-gray-100': disabled,
+                        }
+                    ]"
+                    class="w-full"
+                    :disabled="disabled"
+                    :placeholder="placeholder"
+                    :type="type"
+                    v-model="modelInput"
+                    @focus="isFocused = true"
+                    @blur="isFocused = false">
+
+                <div class="flex justify-end">
+                    <p 
+                        v-if="messageError" 
+                        class="text-red-500 text-sm break-words">
+                        {{ messageError }}
+                    </p>
+                </div>
+            </div>
+
+            <p  
+                v-if="complementText"
+                :class="{
+                    'text-red-500' : messageError
+                }">
+                {{ complementText }}
+            </p>
+        </div>
     </div>
 </template>

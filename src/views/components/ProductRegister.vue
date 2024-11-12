@@ -53,7 +53,8 @@ const clickButton = (type) => {
 </script>
 
 <template>
-    <div class="w-3/5 md:w-2/5 lg:w-2/6 2xl:w-1/6 h-2/5 bg-white rounded-xl border border-black-custom shadow-2xl ">
+    <div 
+        class="w-3/5 md:w-2/5 lg:w-2/6 2xl:w-1/6 h-2/5 bg-white rounded-xl border border-black-custom shadow-2xl ">
         <div class="w-full h-10 bg-black-custom rounded-t-xl flex justify-end">
             <button
                 @click="clickButton('cancel')"

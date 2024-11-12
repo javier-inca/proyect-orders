@@ -1,11 +1,13 @@
 <script setup>
-import { ChevronDownIcon, UserPlusIcon } from '@heroicons/vue/24/outline';
-import Title from '../components/Title.vue';
-import Navbar from './Navbar.vue';
-import Select from '../components/Select.vue';
-import { onMounted, ref } from 'vue';
+import { ChevronDownIcon, UserPlusIcon } from '@heroicons/vue/24/outline'
+import Button from '../components/Button.vue'
+import Title from '../components/Title.vue'
+import Navbar from './Navbar.vue'
+import Select from '../components/Select.vue'
+import { onMounted, ref } from 'vue'
 import axios from '../connection/axiosConfig'
-import TableNewOrder from './components/TableNewOrder.vue';
+import TableNewOrder from './components/TableNewOrder.vue'
+import ModalRegisterProduct from './components/ModalRegisterProduct.vue'
 
 const props = defineProps({
     titleName:{
@@ -14,9 +16,29 @@ const props = defineProps({
     }
 })
 
+const order = ref({
+    order: {
+        description: '',
+        delivery_user_id: null,
+        order_date: null,
+        order_users: [{
+            user_id: null,
+            amount_money: null,
+            products: [{
+                product_id: null,
+                quantity: null,
+                description: '',
+                final_price: null
+            }]
+        }]
+    }
+})
+
 const dataUsers = ref([])
+const selectedPerson = ref(null)
 
 const isLoadingUserData = ref(false)
+const isViewSelect = ref(false)
 
 onMounted( async () =>{
     getUserData()
@@ -32,13 +54,19 @@ const getUserData = async () =>{
         }
         isLoadingUserData.value = false
     } catch (error) {
-        console.error(error);
+        console.error(error)
         isLoadingUserData.value = false
     }
 }
 
-const isViewSelect = ref(false)
+const selectedOptionPerson = (option) =>{
+    isViewSelect.value = false
+    selectedPerson.value = option
+}
 
+const modalAccion= (type)=>{
+    selectedPerson.value = null    
+}
 </script>
 
 <template>
@@ -66,19 +94,21 @@ const isViewSelect = ref(false)
                         <button
                             @click="isViewSelect = true"
                             :class="{
-                                'rounded-b-none':isViewSelect
+                                'rounded-b-none border-b-white':isViewSelect
                             }"
-                            class="p-2 rounded-md bg-white border-2 border-black border-b-0 flex">
+                            class="p-2 rounded-md bg-white border-2 border-black flex">
                             <p class=" text-sm px-2 font-bold">
                                 Select person
                             </p>
 
                             <ChevronDownIcon
-                                class="size-5 text-black-custom "/>
+                                
+                                class="size-5 text-black-custom transition-transform"/>
                         </button>
 
                         <!-- Dropdown -->
                         <Select
+                            @selectOption="(option => selectedOptionPerson(option))"
                             class="z-20"
                             :options="dataUsers"
                             v-if="isViewSelect" />
@@ -98,6 +128,24 @@ const isViewSelect = ref(false)
                     <TableNewOrder/>
                 </div>
             </div>
+
+            <div class="flex justify-center">
+                <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3 flex justify-between">
+                    <Button
+                        name="Cancel Order"/>
+
+                    <Button
+                        name="Register Order"/>
+                </div>
+            </div>
+        </div>
+
+        <div
+            v-if="selectedPerson" 
+            class="fixed z-10 backdrop-blur-sm w-full h-full flex justify-center items-center">
+            <ModalRegisterProduct
+                @clickButton="(type => modalAccion(type))"
+                :person="selectedPerson"/>
         </div>
     </div>
 </template>

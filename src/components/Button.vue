@@ -84,7 +84,7 @@ const xSize = computed(() => {
 
             'bg-secondary hover:bg-transparent ring-secondary text-white': type === 'default',
 
-            'hover:bg-slate-300 hover:ring-slate-700 ring-slate-700 bg-slate-300':disabled,
+            'hover:bg-slate-300 hover:ring-slate-700 ring-slate-700 bg-slate-300 !text-black':disabled,
 
             'hover:text-black':!disabled,
             

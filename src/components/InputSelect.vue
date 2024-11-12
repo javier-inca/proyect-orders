@@ -56,7 +56,7 @@ const selectOption = (name) => {
 </script>
 
 <template>
-    <div class="relative dropdown z-10 pb-2">
+    <div class="relative z-10 ">
         <Input 
             :textAlignment="textAlignment"
             @click="viewOptions"
@@ -66,13 +66,13 @@ const selectOption = (name) => {
         <div
             v-if="isViewOptions && options.length > 0"
             class="absolute bg-white p-2 w-full rounded-b border-2 overflow-y-auto">
-            <button 
-                class="flex my-1 w-full"
+            <p 
+                class="flex my-1 w-full cursor-pointer"
                 v-for="option in options"
                 :key="option.id"
                 @click="selectOption(option.name)">
                 {{ option.name }}
-            </button>
+            </p>
         </div>
     </div>
 

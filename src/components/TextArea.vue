@@ -46,7 +46,7 @@ const ySize = computed(()=>{
 })
 
 const classDisabled = computed(()=>{
-    return props.disabled ? 'bg-slate-200 border-2 border-slate-500':' bg-white border-2 border-blue-500'
+    return props.disabled ? 'bg-slate-200 border-2 border-slate-500':' bg-white border-2 border-black-custom focus:outline-none'
 })
 </script>
 
