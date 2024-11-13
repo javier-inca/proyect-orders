@@ -7,14 +7,14 @@ const route = useRoute()
 <template>
     <div class="flex justify-center bg-black-custom">
         <nav class="p-5 flex justify-end gap-10 text-white w-full md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12">
-            <router-link 
+            <!-- <router-link 
                 to="/"
                 :class="{
                     'text-primary':(route.name === 'Home')
                 }"
                 class="hover:text-primary hover:scale-125 transition-transform duration-100">
                 Home
-            </router-link>
+            </router-link> -->
 
             <router-link 
                 to="/users"

@@ -24,7 +24,7 @@ const emit = defineEmits()
 const productRegister = ref({
     product_id:0,
     quantity:1,
-    description:'',
+    description:'S/N',
     final_price:0
 })
 
@@ -104,7 +104,7 @@ watch(productSelect, ()=>{
     }
 
     productRegister.value.final_price = 0
-    productRegister.value.description = ''
+    productRegister.value.description = 'S/N'
     productTotalPrice.value = 0
 })
 

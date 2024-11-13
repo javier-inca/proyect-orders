@@ -12,6 +12,11 @@ const props = defineProps({
         default:[]
     }
 })
+
+const getNameUser = (userId) => {
+    const user = props.userBackend.find(findUser => findUser.id === userId)
+    return user.name
+}
 </script>
 
 <template>
@@ -52,7 +57,7 @@ const props = defineProps({
                     :key="index"
                     class="hover:bg-slate-50">
                     <td class="px-6 py-4 font-medium text-gray-900">
-                        {{ user.user_id }}
+                        {{ getNameUser(user.user_id) }}
                     </td>
 
                     <td class="px-6 py-4 text-end">

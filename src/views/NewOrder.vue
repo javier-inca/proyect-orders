@@ -10,6 +10,7 @@ import TableNewOrder from './components/TableNewOrder.vue'
 import ModalRegisterProduct from './components/ModalRegisterProduct.vue'
 import Input from '../components/Input.vue'
 import TextArea from '../components/TextArea.vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
     titleName:{
@@ -21,7 +22,7 @@ const props = defineProps({
 const order = ref({
     order: {
         description: '',
-        delivery_user_id: null,
+        delivery_user_id: 0,
         order_date: null,
         order_users: []
     }
@@ -31,10 +32,12 @@ const dataUsers = ref([])
 const dataUsersFilter = ref([])
 const selectedPerson = ref(null)
 const orderArray = ref([])
-const totalPayment = ref([])
-const totalPrice = ref([])
-const totalChange = ref([])
+const totalPayment = ref(0)
+const totalPrice = ref(0)
+const totalChange = ref(0)
+const router = useRouter()
 
+const isViewButtonRegister = ref(true)
 const isLoadingUserData = ref(false)
 const isViewSelect = ref(false)
 
@@ -70,7 +73,46 @@ const modalAccion= (type)=>{
 const registerProduct = (type) => {
     orderArray.value.push(type)
     selectedPerson.value = null  
+
+    totalPayment.value = orderArray.value.reduce((accumulator , order) => {
+        return accumulator + order.amount_money;
+    }, 0)
+
+    totalPrice.value = orderArray.value.reduce((accumulator , order) => {
+        return accumulator + order.totalPrice
+    }, 0) 
+
+    totalChange.value = orderArray.value.reduce((accumulator , order) => {
+        return accumulator + order.change
+    }, 0) 
 }
+
+const registerOrders = () => {
+    order.value.order.order_users = orderArray.value
+    saveOrders()
+}
+
+const saveOrders = async () => {
+    try {
+        const response = await axios.post('/api/orders', order.value)
+        if(response.status === 201){
+            router.push('/orders')
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+watch([order , orderArray] , () => {
+    if(
+        order.value.order.description.length > 0 &&
+        order.value.order.delivery_user_id > 0 &&
+        orderArray.value.length > 0
+    ){
+        isViewButtonRegister.value = false
+    }
+    
+} , { deep : true})
 
 watch(orderArray, () =>{
     const userIdsInOrder = orderArray.value.map(order => order.user_id)
@@ -81,7 +123,9 @@ watch(orderArray, () =>{
 
 <template>
     <div class="relative">
-        <div class=" fixed z-0 w-full">
+        <div 
+            :class="{ '!fixed' : selectedPerson }"
+            class=" absolute z-0 w-full">
             <Navbar/>
             
             <Title
@@ -98,13 +142,13 @@ watch(orderArray, () =>{
                         </p>
 
                         <select 
-                            name=""
+                            v-model="order.order.delivery_user_id"
                             class=" w-36 border-b border-b-black-custom focus:outline-none">
                             <option value="0" selected disabled>
                                 Select Person
                             </option>
                             <option 
-                                value="" 
+                                :value="user.id" 
                                 v-for="user in dataUsers" 
                                 :key="user.id">
                                 {{ user.name }}
@@ -113,6 +157,7 @@ watch(orderArray, () =>{
                     </div>
 
                     <Input
+                        v-model="order.order.order_date"
                         class="mb-6"
                         label="Date"
                         type="date"
@@ -126,6 +171,7 @@ watch(orderArray, () =>{
     
                     <div>
                         <TextArea
+                            v-model="order.order.description"
                             rowSize="2"
                             placeholder="Example (breakfast, bet, ...)"/>
                     </div>
@@ -178,7 +224,38 @@ watch(orderArray, () =>{
             <div class="flex justify-center">
                 <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3">
                     <TableNewOrder
-                        :users="orderArray"/>
+                        :users="orderArray"
+                        :userBackend="dataUsers"/>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3">
+                    <Input
+                        type="number"
+                        class="mb-3"
+                        label="Total Payment"
+                        complementText="Bs."
+                        v-model="totalPayment"
+                        :disabled="true"
+                        textAlignment="end"/>
+
+                    <Input
+                        type="number"
+                        class="mb-3"
+                        label="Total Price"
+                        complementText="Bs."
+                        v-model="totalPrice"
+                        :disabled="true"
+                        textAlignment="end"/>
+
+                    <Input
+                        type="number"
+                        label="Total Change"
+                        complementText="Bs."
+                        v-model="totalChange"
+                        :disabled="true"
+                        textAlignment="end"/>
                 </div>
             </div>
 
@@ -189,7 +266,8 @@ watch(orderArray, () =>{
                         name="Cancel Order"/>
                     
                     <Button
-                        :disabled="orderArray.length === 0"
+                        @click="registerOrders"
+                        :disabled="isViewButtonRegister"
                         name="Register Order"/>
                 </div>
             </div>

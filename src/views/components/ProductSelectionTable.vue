@@ -78,17 +78,17 @@ onMounted(
                 v-if="listProduct.length > 0">
                 <thead class="sticky top-0 text-xs text-black uppercase bg-gray-200">
                     <tr>
-                        <th  class="px-6 w-1/3 py-3 text-center">
+                        <th  class="px-6 w-2/3 py-3 text-start">
                             Product name
                         </th>
 
-                        <th  class="px-6 w-1/3 py-3 text-center">
+                        <th  class="px-6 w-1/3 py-3 text-start">
                             Price
                         </th>
 
-                        <th  class="px-6 w-1/3 py-3 text-center">
+                        <!-- <th  class="px-6 w-1/3 py-3 text-center">
                             Option
-                        </th>
+                        </th> -->
                     </tr>
                 </thead>
 
@@ -106,7 +106,7 @@ onMounted(
                             {{ product.final_price * product.quantity }} Bs.
                         </td>
 
-                        <td class="px-6 py-4 flex justify-center gap-1">
+                        <!-- <td class="px-6 py-4 flex justify-center gap-1">
                             <button
                                 @click="clickOptions('view', index)">
                                 <EyeIcon
@@ -125,7 +125,7 @@ onMounted(
                                     class="size-5 hover:text-secondary hover:scale-125 transition-transform duration-75"/>
                                     
                             </button>
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
