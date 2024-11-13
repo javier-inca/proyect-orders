@@ -24,7 +24,7 @@ const clickButton =(type)=>{
     emit('clickButton', type)
 }
 
-const registerProduct = (product) => {    
+const registerProduct = (product) => {       
     productArray.value.push(JSON.parse(JSON.stringify(product)));
 
     getProductData()
@@ -49,14 +49,15 @@ onMounted(
     getProductData
 )
 
-const tableOptions = (type) => {
+const tableOptions = (type) => {    
     if(type.type === 'return'){
         isViewTableProducts.value = false
 
         return
-    }
+        }
 
     if(type.type === 'registerProduct'){
+        
         emit('registerProduct',{
             user_id:props.person.id,
             amount_money:type.amount_money,
@@ -64,7 +65,7 @@ const tableOptions = (type) => {
             change:type.change,
             products:productArray.value,
         })
-    }
+    } 
 }
 
 const vibrarBoton = () => {

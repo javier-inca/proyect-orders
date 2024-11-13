@@ -95,7 +95,7 @@ const modelInput = computed({
             :class="{
                 '!text-red-500' : messageError
             }"
-            class="font-bold">
+            class="font-bold flex-shrink-0 min-w-36">
             {{ label }}
         </label>
 

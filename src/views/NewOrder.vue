@@ -72,6 +72,7 @@ const modalAccion= (type)=>{
 
 const registerProduct = (type) => {
     orderArray.value.push(type)
+    
     selectedPerson.value = null  
 
     totalPayment.value = orderArray.value.reduce((accumulator , order) => {
@@ -87,13 +88,15 @@ const registerProduct = (type) => {
     }, 0) 
 }
 
-const registerOrders = () => {
+const registerOrders = async () => {
     order.value.order.order_users = orderArray.value
-    saveOrders()
+    await saveOrders()
 }
 
 const saveOrders = async () => {
     try {
+        console.log(order.value);
+        
         const response = await axios.post('/api/orders', order.value)
         if(response.status === 201){
             router.push('/orders')
@@ -173,7 +176,7 @@ watch(orderArray, () =>{
                         <TextArea
                             v-model="order.order.description"
                             rowSize="2"
-                            placeholder="Example (breakfast, bet, ...)"/>
+                            placeholder="Example (breakfast, lunch, ...)"/>
                     </div>
                 </div>
             </div>
@@ -229,38 +232,36 @@ watch(orderArray, () =>{
                 </div>
             </div>
 
-            <div class="flex justify-center">
-                <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3">
-                    <Input
-                        type="number"
-                        class="mb-3"
-                        label="Total Payment"
-                        complementText="Bs."
-                        v-model="totalPayment"
-                        :disabled="true"
-                        textAlignment="end"/>
+            <div class="w-full px-3 sm:px-0 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3 mx-auto">
+                <Input
+                    type="number"
+                    class="mb-3"
+                    label="Total Payment"
+                    complementText="Bs."
+                    v-model="totalPayment"
+                    :disabled="true"
+                    textAlignment="end"/>
 
-                    <Input
-                        type="number"
-                        class="mb-3"
-                        label="Total Price"
-                        complementText="Bs."
-                        v-model="totalPrice"
-                        :disabled="true"
-                        textAlignment="end"/>
+                <Input
+                    type="number"
+                    class="mb-3"
+                    label="Total Price"
+                    complementText="Bs."
+                    v-model="totalPrice"
+                    :disabled="true"
+                    textAlignment="end"/>
 
-                    <Input
-                        type="number"
-                        label="Total Change"
-                        complementText="Bs."
-                        v-model="totalChange"
-                        :disabled="true"
-                        textAlignment="end"/>
-                </div>
+                <Input
+                    type="number"
+                    label="Total Change"
+                    complementText="Bs."
+                    v-model="totalChange"
+                    :disabled="true"
+                    textAlignment="end"/>
             </div>
 
             <div class="flex justify-center">
-                <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3 flex justify-between">
+                <div class="w-full mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 my-3 flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between">
                     <Button
                         type="danger"
                         name="Cancel Order"/>

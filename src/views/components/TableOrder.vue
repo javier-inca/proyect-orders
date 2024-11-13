@@ -21,15 +21,15 @@ const clickButton = (type , orderId) => {
     <table class="w-full">
         <thead class="text-xs text-black uppercase bg-gray-200">
             <tr>
-                <th  class="px-6 py-3 w-1/3 text-center">
+                <th  class="px-6 py-3 w-[42%] text-start">
                     Order Description
                 </th>
 
-                <th  class="px-6 py-3 w-1/3 text-center">
+                <th  class="px-6 py-3 w-[42%] text-start">
                     Date
                 </th>
 
-                <th  class="px-6 py-3 w-1/3 text-center">
+                <th  class="px-6 py-3  w-[16%] text-start">
                     Options
                 </th>
             </tr>
@@ -46,7 +46,7 @@ const clickButton = (type , orderId) => {
                     {{ order.description }}
                 </td>
 
-                <td class=" px-6 py-4 text-center">
+                <td class=" px-6 py-4 text-start">
                     {{ moment(order.order_date).format('DD - MMM - YYYY') }}
                 </td>
 
@@ -58,14 +58,14 @@ const clickButton = (type , orderId) => {
                     </button>
 
                     <button
-                        class=" cursor-not-allowed"
+                        class=" cursor-not-allowed disabled:opacity-50"
                         disabled>
                         <PencilIcon
                             class="size-5 text-slate-700"/>
                     </button>
 
                     <button
-                        class="cursor-not-allowed"
+                        class="cursor-not-allowed disabled:opacity-50"
                         disabled>
                         <TrashIcon
                             class="size-5 text-slate-700"/>

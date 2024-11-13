@@ -16,14 +16,14 @@ const route = useRoute()
                 Home
             </router-link> -->
 
-            <router-link 
+            <!-- <router-link 
                 to="/users"
                 :class="{
                     'text-primary':(route.name === 'User')
                 }"
                 class="hover:text-primary hover:scale-125 transition-transform duration-100">
                 Users
-            </router-link>
+            </router-link> -->
 
             <router-link 
                 to="/products"
@@ -37,7 +37,7 @@ const route = useRoute()
             <router-link 
                 to="/orders"
                 :class="{
-                    'text-primary':(route.name === 'Order' || route.name === 'NewOrder')
+                    'text-primary':(route.name === 'Order' || route.name === 'NewOrder' || route.name === 'ShowOrder')
                 }"
                 class="hover:text-primary hover:scale-125 transition-transform duration-100">
                 Orders

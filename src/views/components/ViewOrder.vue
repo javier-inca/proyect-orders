@@ -34,6 +34,11 @@ const getProductName = (productId) => {
 </script>
 
 <template>
+
+    <pre>
+
+        {{ order }}
+    </pre>
     <div 
         class=" m-3">
         <Title 

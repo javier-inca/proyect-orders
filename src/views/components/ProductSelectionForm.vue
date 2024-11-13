@@ -21,12 +21,9 @@ const productTotalPrice = ref(0.00)
 
 const emit = defineEmits()
 
-const productRegister = ref({
-    product_id:0,
-    quantity:1,
-    description:'S/N',
-    final_price:0
-})
+const quantity = ref(1)
+const description = ref('')
+const final_price = ref(0)
 
 const getProductData = async ()=>{
     try {
@@ -55,69 +52,83 @@ const filteredProducts = computed(() => {
 
 const saveProduct = async ()=>{
     const foundProduct = productData.value.find(product => product.name.toLowerCase() === productSelect.value.toLowerCase())
-
+    
     if(foundProduct){
-        productRegister.value.product_id = foundProduct.id        
 
-        emit('productRegister',productRegister.value)
-        productSelect.value = ''
-        productRegister.value.description = ''
+        const productSave = {
+            product_id : foundProduct.id,
+            quantity : quantity.value,
+            description : description.value,
+            final_price : final_price.value
+        }
+
+        emit('productRegister',productSave)
+
+        cleanForm()
         return
     }
 
     if(!foundProduct){
-        await createProduct()
+        const id = await createProduct()
 
-        emit('productRegister', productRegister.value)
+        const productSave = {
+            product_id : id,
+            quantity : quantity.value,
+            description : description.value,
+            final_price : final_price.value
+        }
+        
+        emit('productRegister', productSave)
 
-        productSelect.value = ''
-        productRegister.value.description = ''
-
+        cleanForm()
         return
-    }
+    } 
 }
 
 const createProduct = async ()=>{
     try {
         const response = await axios.post('/api/products',{
             name : productSelect.value,
-            reference_price : productRegister.value.final_price,
+            reference_price : final_price.value
         })
         
         if(response.status === 201){
-            productRegister.value.product_id = response.data.product.id
+            return response.data.product.id
         }
     } catch (error) {
         console.error(error)
     }
 }
 
+const cleanForm = () => {
+    quantity.value = 1
+    description.value = ''
+    final_price.value = 0
+    productTotalPrice.value = 0
+    productSelect.value = ''
+}
+
 watch(productSelect, ()=>{
     const foundProduct = productData.value.find(product => product.name.toLowerCase() === productSelect.value.toLowerCase())
-    
-    productRegister.value.quantity = 1
 
     if(foundProduct){
-        productRegister.value.final_price = foundProduct.reference_price
-        productTotalPrice.value = productRegister.value.quantity * productRegister.value.final_price
+        final_price.value = foundProduct.reference_price 
+        productTotalPrice.value = quantity.value * final_price.value
         return
     }
 
-    productRegister.value.final_price = 0
-    productRegister.value.description = 'S/N'
+    final_price.value = 0
     productTotalPrice.value = 0
 })
 
-watch(productRegister, () => {
-    if(productSelect.value.length > 0 && productRegister.value.final_price > 0){
-        productTotalPrice.value = productRegister.value.quantity * productRegister.value.final_price
+watch([ final_price,quantity ] , ()=>{
+    if(final_price.value > 0 ){
+        productTotalPrice.value = (quantity.value * final_price.value)
         return
     }
-
-    productTotalPrice.value = 0
-    productRegister.value.quantity = 1
-}, { deep: true });
-
+    
+    final_price.value = 0
+})
 </script>
 
 <template>
@@ -144,7 +155,7 @@ watch(productRegister, () => {
             </p>
 
             <ButtonAmount
-                v-model:valueNumber="productRegister.quantity"/>
+                v-model:valueNumber="quantity"/>
         </div>
 
         <div class="my-7">
@@ -152,8 +163,8 @@ watch(productRegister, () => {
                 :disabled="productSelect.length <= 0"
                 label="Unit Price"
                 complementText="Bs."
-                :messageError ="(productRegister.final_price < 0 ? 'The value must be greater than 0': '')"
-                v-model="productRegister.final_price"
+                :messageError ="(final_price < 0 ? 'The value must be greater than 0': '')"
+                v-model="final_price"
                 class="flex justify-end"
                 textAlignment="end"
                 xSize="md"
@@ -179,7 +190,7 @@ watch(productRegister, () => {
             </p>
 
             <TextArea
-                v-model="productRegister.description"
+                v-model="description"
                 rowSize="3"/>
         </div>
 

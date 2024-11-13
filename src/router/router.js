@@ -4,6 +4,7 @@ import Product from "../views/Product.vue";
 import HomeStart from "../views/HomeStart.vue";
 import Order from "../views/Order.vue";
 import NewOrder from "../views/NewOrder.vue";
+import OrderShow from "../views/OrderShow.vue";
 
 const routes =[
     {
@@ -31,6 +32,11 @@ const routes =[
         name: 'NewOrder',
         component: NewOrder
     },
+    {
+        path: '/orders/:id/show',
+        name: 'ShowOrder',
+        component: OrderShow,
+    }
 ]
 
 const router = createRouter({
