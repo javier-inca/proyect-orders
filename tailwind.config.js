@@ -7,9 +7,11 @@ export default {
   theme: {
     extend: {
       colors:{
-        'primary':'#E77523',
-        'secondary':'#18243C',
-        'black-custom':'#182339'
+        'primary' : '#414B6F',
+        'secondary' : '#64C5CC',
+        'danger' : '#E41925',
+        'warning' : '#FFBC18',
+        'black-custom':'#8A8D8F'
       },
       screens:{
         '3xl': '1800px',

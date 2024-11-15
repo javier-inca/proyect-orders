@@ -1,18 +1,37 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateUser from "../views/CreateUser.vue";
 import Product from "../views/Product.vue";
-import HomeStart from "../views/HomeStart.vue";
+import HomeStart from "../views/home/HomeStart.vue";
 import Order from "../views/Order.vue";
 import NewOrder from "../views/NewOrder.vue";
 import OrderShow from "../views/OrderShow.vue";
+import MainLayout from "../layouts/MainLayout.vue";
 
-const routes =[
+const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: HomeStart
+      path: '/',
+      component: MainLayout,
+      children: [
+        {
+            path: '', 
+            component: HomeStart, 
+        },
+        {
+            path : 'products',
+            component : Product,
+        }
+      ],
     },
-    {
+  ];
+  
+  const router = createRouter({
+    history: createWebHistory(),
+    routes,
+  });
+  
+  export default router;
+
+/*     {
         path: '/users',
         name: 'User',
         component : CreateUser
@@ -44,4 +63,4 @@ const router = createRouter({
     routes,
 });
   
-export default router;
+export default router; */

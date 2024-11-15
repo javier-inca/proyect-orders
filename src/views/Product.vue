@@ -215,9 +215,7 @@ const viewNotification =()=>{
 
 <template>
     <div class="relative">
-        <div class="fixed z-0 w-full h-full">
-            <Navbar/>
-    
+        <div class="fixed z-0 w-full h-full">    
             <TableProduct
                 @clickOptions="(data=> tableOptions(data))"
                 class=" my-1"

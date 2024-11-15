@@ -1,4 +1,129 @@
 <script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+    placeholder: {
+        type: String,
+        default: ''
+    },
+
+    type: {
+        type: String,
+        default: 'text'
+    },
+
+    desing:{
+        type: String,
+        default: '' 
+    },
+
+    inputType:{
+        type: String,
+        default: 'danger'
+    },
+
+    isRounded: {
+        type: Boolean,
+        default: true
+    },
+
+    textAlignment: {
+        type: String,
+        default: ''
+    },
+
+    errorMessage: {
+        type: String,
+        default: 'sdwd a dwadwjdvj dw djwa d wdu adh adryatuwfydghj awdawd dft yghjk'
+    },
+
+    isPadding: {
+        type: Boolean,
+        default : true
+    },
+
+    inputSize: {
+        type: String,
+        default: 'sm'
+    }
+})
+
+const desingOptions = {
+    'complete' : 'border-2',
+    'lineBelow' : 'border-b-2',
+}
+
+const inputTypes = {
+    'primary' : 'border-primary',
+    'secondary' : 'border-secondary',
+    'warning' : 'border-warning',
+}
+
+const textAlignments = {
+    'start' : 'text-start',
+    'center' : 'text-center',
+    'end' : 'text-end',
+}
+
+const inputSizes = {
+    'sm' : 'w-1/4',    
+    'md' : 'w-2/4',
+    'lg' : 'w-3/4',
+    'xl' : 'w-full',
+}
+
+const desing = computed(() => {    
+    return desingOptions[props.desing] ? desingOptions[props.desing] : 'border-2'
+})
+
+const inputType = computed(() => {
+    return inputTypes[props.inputType] ? inputTypes[props.inputType] : 'border-primary'
+})
+
+const textAlignment = computed(() => {
+    return textAlignments[props.textAlignment] ? textAlignments[props.textAlignment] : 'text-start'
+})
+
+const inputSize = computed(() => {
+    return inputSizes[props.inputSize] ? inputSizes[props.inputSize] : 'w-full'
+})
+</script>
+
+<template>
+    <div class="flex justify-between">
+        <label>
+            dawdaw wd awdwdawdwdbaw duhavdyvwdg awuyvdbwidbaiw dwad wdfygawhjkdlmawd wagfjd hkgjhlkjk
+        </label>
+
+        <div
+            class="flex flex-col">
+            <div :class="inputSize">
+                <input
+                    :class="[
+                        textAlignment,
+                        inputType,
+                        desing,
+                        {
+                            'rounded-md' : isRounded,
+                            '!border-danger bg-danger bg-opacity-10' : errorMessage,
+                            'p-2' : isPadding,
+                        }
+                    ]"
+                    :placeholder="placeholder" 
+                    :type="type" 
+                    class="focus:outline-none w-full">
+                    
+                    <p
+                    class="text-danger text-sm text-justify">
+                    {{ errorMessage }}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+</template>
+
+<!-- <script setup>
 import { computed } from 'vue';
 
 const props=defineProps({
@@ -23,7 +148,7 @@ const props=defineProps({
     },
 
     messageError:{
-        tipe:String,
+        type:String,
         default:''
     },
 
@@ -138,4 +263,4 @@ const modelInput = computed({
             </p>
         </div>
     </div>
-</template>
+</template> -->
