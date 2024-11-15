@@ -19,7 +19,7 @@ const props = defineProps({
 
     inputType:{
         type: String,
-        default: 'danger'
+        default: ''
     },
 
     isRounded: {
@@ -34,7 +34,7 @@ const props = defineProps({
 
     errorMessage: {
         type: String,
-        default: 'sdwd a dwadwjdvj dw djwa d wdu adh adryatuwfydghj awdawd dft yghjk'
+        default: ''
     },
 
     isPadding: {
@@ -44,7 +44,17 @@ const props = defineProps({
 
     inputSize: {
         type: String,
-        default: 'sm'
+        default: ''
+    },
+
+    inputAlignment: {
+        type:String,
+        default: ''
+    },
+
+    label: {
+        type: String,
+        default: ''
     }
 })
 
@@ -72,6 +82,12 @@ const inputSizes = {
     'xl' : 'w-full',
 }
 
+const inputAlignments = {
+    'start' : 'justify-start',
+    'center' : 'justify-center',
+    'end' : 'justify-end',
+}
+
 const desing = computed(() => {    
     return desingOptions[props.desing] ? desingOptions[props.desing] : 'border-2'
 })
@@ -87,16 +103,25 @@ const textAlignment = computed(() => {
 const inputSize = computed(() => {
     return inputSizes[props.inputSize] ? inputSizes[props.inputSize] : 'w-full'
 })
+
+const inputAlignment = computed(() => {
+    return inputAlignments[props.inputAlignment] ? inputAlignments[props.inputAlignment] : 'justify-start'
+})
 </script>
 
 <template>
-    <div class="flex justify-between">
-        <label>
-            dawdaw wd awdwdawdwdbaw duhavdyvwdg awuyvdbwidbaiw dwad wdfygawhjkdlmawd wagfjd hkgjhlkjk
+    <div class="flex justify-between max-w-96">
+        <label
+            v-if="label"
+            :class="{
+                'text-danger' : errorMessage
+            }">
+            {{ label }}
         </label>
 
         <div
-            class="flex flex-col">
+            :class="inputAlignment"
+            class="flex w-full">
             <div :class="inputSize">
                 <input
                     :class="[
@@ -113,7 +138,8 @@ const inputSize = computed(() => {
                     :type="type" 
                     class="focus:outline-none w-full">
                     
-                    <p
+                <p
+                    v-if="errorMessage"
                     class="text-danger text-sm text-justify">
                     {{ errorMessage }}
                 </p>
