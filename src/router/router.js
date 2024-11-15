@@ -6,6 +6,7 @@ import Order from "../views/Order.vue";
 import NewOrder from "../views/NewOrder.vue";
 import OrderShow from "../views/OrderShow.vue";
 import MainLayout from "../layouts/MainLayout.vue";
+import UserHome from "../views/user/Home.vue"
 
 const routes = [
     {
@@ -17,8 +18,16 @@ const routes = [
             component: HomeStart, 
         },
         {
+            path: 'users',
+            component: UserHome
+        },
+        {
             path : 'products',
             component : Product,
+        },
+        {
+            path : 'orders',
+            component : Order,
         }
       ],
     },

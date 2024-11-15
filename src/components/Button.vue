@@ -1,97 +1,68 @@
 <script setup>
 import { computed } from 'vue';
 
+
 const props = defineProps({
-    name: {
-        type: String,
-        default: 'name'
-    },
-
-    type: {
-        type: String,
-        default: "default",
-    },
-
-    disabled:{
-        type:Boolean,
-        default:false
-    },
-
-    rounded: {
-        type: Boolean,
-        default: true
-    },
-
-    roundedSize: {
-        type: String,
-        default: ''
-    },
-
-    ringSize: {
-        type: String,
-        default: ''
-    },
-
-    xSize:{
+    buttonName: {
         type:String,
+        default: 'buttonName'
+    },
+
+    buttonSize: {
+        type: String,
+        default: ''
+    }, 
+
+    buttonAlignment: {
+        type: String,
         default: ''
     },
-});
 
-const ringSizes = {
-    'sm' : 'ring-1',
-    'md' : 'ring-4',
-    'lg' : 'ring-8',
-}
+    leftIcon: Object,
 
-const roundedSizes = {
-    'sm' : 'rounded-md',
-    'md' : 'rounded-lg',
-    'lg' : 'rounded-3xl',
-}
-const xSizes = {
+    rightIcon: Object,
+})
+
+const buttonSizes = {
     'sm' : 'w-1/4',
-    'md' : 'w-2/3',
-    'lg' : 'w-full',
+    'md' : 'w-2/4',
+    'lg' : 'w-3/4',
+    'xl' : 'w-full',
 }
 
-const ringSize = computed(() => {
-    return ringSizes[props.ringSize] ? ringSizes[props.ringSize] : 'ring-2'
+const buttonAlignments = {
+    'start' : 'justify-start',
+    'center' : 'justify-center',
+    'end' : 'justify-end',
+}
+
+const buttonSize = computed(() => {
+    return buttonSizes[props.buttonSize] ? buttonSizes[props.buttonSize] : 'w-full'
 })
 
-const sizeRounded = computed(() => {
-    return roundedSizes[props.roundedSize] ? roundedSizes[props.roundedSize] : 'rounded'
-})
-
-const xSize = computed(() => {
-    return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-auto'
+const buttonAlignment = computed(() => {
+    return buttonAlignments[props.buttonAlignment] ? buttonAlignments[props.buttonAlignment] : 'justify-center'
 })
 </script>
 
 <template>
-    <button :class="[,
-        transition,
-        time,
-        xSize,
-        sizeRounded,
-        ringSize,
-        {
-            'hover:bg-secondary ring-secondary hover:ring-secondary text-black hover:text-white': type === 'danger',
+    <div 
+        :class="[
+            buttonSize,
+            buttonAlignment,
 
-            'hover:bg-green-600 ring-green-600 hover:ring-green-800': type === 'accept',
+        ]"
+        class="flex gap-2 cursor-pointer min-w-[200px] items-center">
+        <component
+            :is="leftIcon"
+            class="size-5"/>
 
-            'hover:bg-yellow-400 ring-yellow-400 hover:ring-yellow-600': type === 'warning',
+        <button>
+            {{ buttonName }}
+        </button>
 
-            'bg-secondary hover:bg-transparent ring-secondary text-white': type === 'default',
-
-            'ring-slate-500 bg-slate-100 !text-slate-500 hover:!bg-slate-100 cursor-not-allowed':disabled,
-
-            'hover:text-black':!disabled,
-            
-            'rounded': rounded,
-        }]" 
-        class="py-2 px-4"
-        :disabled="disabled">
-        {{ name }}
-    </button>
+        <component
+            :is="rightIcon"
+            class="size-5"/>
+    </div>
 </template>

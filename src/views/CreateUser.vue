@@ -6,7 +6,7 @@ import { PencilSquareIcon } from '@heroicons/vue/16/solid'
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
 import Modal from '../components/Modal.vue'
-import Notification from '../components/Notification.vue'
+import Notification from '../components/Toast.vue'
 import Navbar from './Navbar.vue'
 
 const name=ref('')

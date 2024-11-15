@@ -6,16 +6,20 @@ export default {
   ],
   theme: {
     extend: {
-      colors:{
+      colors: {
         'primary' : '#414B6F',
         'secondary' : '#64C5CC',
-        'danger' : '#E41925',
-        'warning' : '#FFBC18',
+        'danger' : '#EA4F2C',
+        'warning' : '#ED9201',
+        'information' : '#0272E6',
+        'success' : '#42BB6B',
+        'light-success' : '#DFF2E3',
         'black-custom':'#8A8D8F'
       },
-      screens:{
+
+      screens: {
         '3xl': '1800px',
-      }
+      },
     },
   },
   plugins: [],

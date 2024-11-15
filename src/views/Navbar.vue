@@ -5,41 +5,41 @@ const route = useRoute()
 </script>
 
 <template>
-    <div class="flex justify-center bg-black-custom">
-        <nav class="p-5 flex justify-end gap-10 text-white w-full md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12">
-            <!-- <router-link 
+    <div class="flex justify-center bg-primary">
+        <nav class="p-3 flex justify-end gap-10 text-white w-full max-w-3xl">
+            <router-link 
                 to="/"
                 :class="{
-                    'text-primary':(route.name === 'Home')
+                    'text-secondary':(route.path === '/')
                 }"
-                class="hover:text-primary hover:scale-125 transition-transform duration-100">
+                class="hover:text-secondary hover:scale-125 transition-transform">
                 Home
-            </router-link> -->
+            </router-link>
 
-            <!-- <router-link 
+            <router-link 
                 to="/users"
                 :class="{
-                    'text-primary':(route.name === 'User')
+                    'text-secondary':(route.path === '/users')
                 }"
-                class="hover:text-primary hover:scale-125 transition-transform duration-100">
+                class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Users
-            </router-link> -->
+            </router-link>
 
             <router-link 
                 to="/products"
                 :class="{
-                    'text-primary':(route.name === 'Product')
+                    'text-secondary':(route.path === '/products')
                 }"
-                class="hover:text-primary hover:scale-125 transition-transform duration-100">
+                class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Products
             </router-link>
 
             <router-link 
                 to="/orders"
                 :class="{
-                    'text-primary':(route.name === 'Order' || route.name === 'NewOrder' || route.name === 'ShowOrder')
+                    'text-secondary':(route.path === '/orders' || route.path === 'NewOrder' || route.path === 'ShowOrder')
                 }"
-                class="hover:text-primary hover:scale-125 transition-transform duration-100">
+                class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Orders
             </router-link>
         </nav>

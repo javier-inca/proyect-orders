@@ -9,11 +9,22 @@ const props = defineProps({
 
     aling:{
         type: String,
-        default: 'center'
+        default: ''
     },
+
     size:{
         type:String,
         default:''
+    },
+
+    isBold: {
+        type: Boolean,
+        default: true
+    },
+
+    isUppercase: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -23,8 +34,18 @@ const sizes ={
     'lg' : 'text-3xl',
 }
 
+const alings = {
+    'start' : 'text-start',
+    'center' : 'text-center',
+    'end' : 'text-end'
+}
+
 const size = computed(()=>{
     return sizes[props.size] ? sizes[props.size] : 'text-base'
+})
+
+const aling = computed(() => {
+    return alings[props.aling] ? alings[props.aling] : 'text-center'
 })
 </script>
 
@@ -32,13 +53,12 @@ const size = computed(()=>{
     <div 
         :class="[
             size,
+            aling,
             {
-                'text-center' : aling === 'center',
-
-                'text-left' : aling === 'left',
-
-                'text-right' : aling === 'right',
-            }]">
+                'font-bold' : isBold,
+                'uppercase' : isUppercase
+            }
+        ]">
         <p
             v-if="title">
             {{ title }}

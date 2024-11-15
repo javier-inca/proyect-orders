@@ -2,7 +2,7 @@
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { ref, onMounted } from 'vue'
 import Modal from '../components/Modal.vue'
-import Notification from '../components/Notification.vue'
+import Notification from '../components/Toast.vue'
 import Navbar from './Navbar.vue'
 import axios from '../connection/axiosConfig'
 import TableProduct from './components/TableProduct.vue'

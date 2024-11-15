@@ -29,7 +29,7 @@ const props = defineProps({
 
     textAlignment: {
         type: String,
-        default: ''
+        default: 'start'
     },
 
     errorMessage: {
@@ -44,15 +44,25 @@ const props = defineProps({
 
     inputSize: {
         type: String,
-        default: ''
+        default: 'sm'
     },
 
     inputAlignment: {
-        type:String,
+        type: String,
         default: ''
     },
 
     label: {
+        type: String,
+        default: ''
+    },
+
+    optionText: {
+        type: String,
+        default: ''
+    },
+
+    modelValue:{
         type: String,
         default: ''
     }
@@ -107,14 +117,27 @@ const inputSize = computed(() => {
 const inputAlignment = computed(() => {
     return inputAlignments[props.inputAlignment] ? inputAlignments[props.inputAlignment] : 'justify-start'
 })
+
+const emit = defineEmits()
+
+const modelInput = computed({
+    get: ()=>props.modelValue,
+    set: (newValue) => {
+        emit ('update:modelValue', newValue)
+    }
+})
 </script>
 
 <template>
-    <div class="flex justify-between max-w-96">
+    <div class="flex">
         <label
             v-if="label"
             :class="{
-                'text-danger' : errorMessage
+                'text-danger' : errorMessage,
+                'pt-[10px]' : isPadding,
+                'pt-[3px]' : !isPadding,
+                '!pt-0' : desing === 'border-b-2' && !isPadding,
+                '!pt-2' : desing === 'border-b-2' && isPadding
             }">
             {{ label }}
         </label>
@@ -123,21 +146,40 @@ const inputAlignment = computed(() => {
             :class="inputAlignment"
             class="flex w-full">
             <div :class="inputSize">
-                <input
+                <div 
                     :class="[
-                        textAlignment,
-                        inputType,
                         desing,
+                        inputType,
                         {
-                            'rounded-md' : isRounded,
+                            'rounded-md ': isRounded,
                             '!border-danger bg-danger bg-opacity-10' : errorMessage,
                             'p-2' : isPadding,
+                            'px-2' : !isPadding
                         }
                     ]"
-                    :placeholder="placeholder" 
-                    :type="type" 
-                    class="focus:outline-none w-full">
-                    
+                    class="flex items-center">
+                    <input
+                        :class="[
+                            textAlignment,
+                            inputType,
+                            {
+                                'bg-transparent': errorMessage,
+                            }
+                        ]"
+                        :placeholder="placeholder" 
+                        :type="type" 
+                        v-model="modelInput"
+                        class="focus:outline-none w-full">
+
+                    <p
+                        :class="{
+                            'pl-2' : type !== 'number'
+                        }"
+                        v-if="optionText">
+                        {{ optionText }}
+                    </p>
+                </div>
+
                 <p
                     v-if="errorMessage"
                     class="text-danger text-sm text-justify">
@@ -148,145 +190,3 @@ const inputAlignment = computed(() => {
     </div>
     
 </template>
-
-<!-- <script setup>
-import { computed } from 'vue';
-
-const props=defineProps({
-    placeholder:{
-        type:String,
-        default:''
-    },
-
-    type:{
-        type:String,
-        default:'text'
-    },
-
-    error:{
-        type:Boolean,
-        default:false
-    },
-
-    xSize:{
-        type:String,
-        default:''
-    },
-
-    messageError:{
-        type:String,
-        default:''
-    },
-
-    modelValue:{
-        type:String,
-        default:''
-    },
-
-    disabled :{
-        type:Boolean,
-        default: false
-    },
-
-    complementaryData :{
-        type:String,
-        default :''
-    },
-
-    textAlignment:{
-        type:String,
-        default:'start'
-    },
-
-    label:{
-        type:String,
-        default:''
-    },
-
-    complementText:{
-        type:String,
-        default:''
-    }
-})
-
-const textAlignments = {
-    'start' : 'text-start',
-    'center' : 'text-center',
-    'end' : 'text-end',
-}
-
-const xSizes ={
-    'sm' : 'w-1/4',
-    'md' : 'w-1/2',
-    'lg' : 'w-2/3',
-    'xl' : 'w-full',
-}
-
-const textAlignment = computed(()=>{
-    return textAlignments[props.textAlignment] ? textAlignments[props.textAlignment] : 'text-start'
-})
-
-const xSize = computed(()=>{
-    return xSizes[props.xSize] ? xSizes[props.xSize] : 'w-auto'
-})
-
-const emit = defineEmits('update:modelValue')
-
-const modelInput = computed({
-    get: () => props.modelValue,
-    set: (newValue) => { 
-        emit ('update:modelValue', newValue) }
-})
-</script>
-
-<template>
-    <div class="flex justify-between">
-        <label
-            v-if="label"
-            :class="{
-                '!text-red-500' : messageError
-            }"
-            class="font-bold flex-shrink-0 min-w-36">
-            {{ label }}
-        </label>
-
-        <div class="flex justify-end">
-            <div 
-                :class="xSize">
-                <input 
-                    :class="[
-                        textAlignment,
-                        'border-b pl-2',
-                        {
-                            'border-black-custom bg-white focus:border-primary focus:outline-none': !messageError && !disabled,
-                            'border-red-600 bg-red-100 focus:border-red-600 focus:outline-none': messageError && !disabled,
-                            'border-black-custom bg-gray-100': disabled,
-                        }
-                    ]"
-                    class="w-full"
-                    :disabled="disabled"
-                    :placeholder="placeholder"
-                    :type="type"
-                    v-model="modelInput"
-                    @focus="isFocused = true"
-                    @blur="isFocused = false">
-
-                <div class="flex justify-end">
-                    <p 
-                        v-if="messageError" 
-                        class="text-red-500 text-sm break-words">
-                        {{ messageError }}
-                    </p>
-                </div>
-            </div>
-
-            <p  
-                v-if="complementText"
-                :class="{
-                    'text-red-500' : messageError
-                }">
-                {{ complementText }}
-            </p>
-        </div>
-    </div>
-</template> -->

@@ -35,9 +35,7 @@ onMounted(
 
 <template>
     <div class="relative">
-        <div class="fixed z-0 w-full">
-            <Navbar/>
-            
+        <div class="fixed z-0 w-full">            
             <div class="flex justify-center">
                 <div class="flex justify-between w-full m-3 mx-6 md:w-2/3 lg:w-1/2 2xl:w-2/6 3xl:w-3/12 items-center">
                     <Title 
