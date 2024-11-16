@@ -23,9 +23,9 @@ const props = defineProps({
 // Types of toast
 const types = {
     'success' : ' bg-light-success border border-success shadow-lg shadow-light-success',
-    'information' : 'bg-information bg-opacity-20 border border-information shadow-md shadow-information',
-    'warning' : 'bg-warning bg-opacity-20 border border-warning shadow-md shadow-warning',
-    'danger' : 'bg-danger bg-opacity-20 border border-danger shadow-md shadow-danger',
+    'information' : 'bg-light-information border border-information shadow-lg shadow-light-information',
+    'warning' : 'bg-light-warning border border-warning shadow-lg shadow-light-warning',
+    'danger' : 'bg-light-danger border border-danger shadow-lg shadow-light-danger',
 }
 
 const type = computed(()=>{

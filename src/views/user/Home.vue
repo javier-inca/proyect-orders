@@ -43,10 +43,6 @@ onMounted(async()=>{
             
         </div>
     </div>
-    <button
-        @click="showToast('mensaje de prueba ' , 'success')">
-        ad
-    </button>
 </template>
 
 

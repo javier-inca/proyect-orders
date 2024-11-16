@@ -10,7 +10,7 @@ const route = useRoute()
             <router-link 
                 to="/"
                 :class="{
-                    'text-secondary':(route.path === '/')
+                    'text-secondary scale-125':(route.path === '/')
                 }"
                 class="hover:text-secondary hover:scale-125 transition-transform">
                 Home
@@ -19,7 +19,7 @@ const route = useRoute()
             <router-link 
                 to="/users"
                 :class="{
-                    'text-secondary':(route.path === '/users')
+                    'text-secondary scale-125':(route.path === '/users')
                 }"
                 class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Users
@@ -28,7 +28,7 @@ const route = useRoute()
             <router-link 
                 to="/products"
                 :class="{
-                    'text-secondary':(route.path === '/products')
+                    'text-secondary scale-125':(route.path === '/products')
                 }"
                 class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Products
@@ -37,7 +37,7 @@ const route = useRoute()
             <router-link 
                 to="/orders"
                 :class="{
-                    'text-secondary':(route.path === '/orders' || route.path === 'NewOrder' || route.path === 'ShowOrder')
+                    'text-secondary scale-125':(route.path === '/orders' || route.path === 'NewOrder' || route.path === 'ShowOrder')
                 }"
                 class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Orders
