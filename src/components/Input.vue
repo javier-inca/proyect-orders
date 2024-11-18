@@ -44,7 +44,7 @@ const props = defineProps({
 
     inputSize: {
         type: String,
-        default: 'sm'
+        default: 'xl'
     },
 
     inputAlignment: {

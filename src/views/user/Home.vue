@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue' 
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
 import { useUserStore } from '../../stores/useUserStore'
 import { useToastStore } from '../../stores/useToastStore'
 import Title from '../../components/Title.vue'

@@ -32,7 +32,7 @@ const getProductData = async ()=>{
             productData.value = response.data.data
         }
     } catch (error) {
-        console.error('Error Get Product Data',error);
+        console.error('Error Get Product Data',error)
         
     }
 }

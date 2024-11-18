@@ -76,7 +76,7 @@ const registerProduct = (type) => {
     selectedPerson.value = null  
 
     totalPayment.value = orderArray.value.reduce((accumulator , order) => {
-        return accumulator + order.amount_money;
+        return accumulator + order.amount_money
     }, 0)
 
     totalPrice.value = orderArray.value.reduce((accumulator , order) => {
@@ -95,14 +95,14 @@ const registerOrders = async () => {
 
 const saveOrders = async () => {
     try {
-        console.log(order.value);
+        console.log(order.value)
         
         const response = await axios.post('/api/orders', order.value)
         if(response.status === 201){
             router.push('/orders')
         }
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 }
 
@@ -119,7 +119,7 @@ watch([order , orderArray] , () => {
 
 watch(orderArray, () =>{
     const userIdsInOrder = orderArray.value.map(order => order.user_id)
-    dataUsersFilter.value = dataUsers.value.filter(user => !userIdsInOrder.includes(user.id));
+    dataUsersFilter.value = dataUsers.value.filter(user => !userIdsInOrder.includes(user.id))
     
 }, { deep: true })
 </script>

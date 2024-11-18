@@ -3,12 +3,12 @@ import { computed, ref, watch } from 'vue'
 import InputSelect from '../../components/InputSelect.vue'
 import ProductForm from './ProductForm.vue'
 import Button from '../../components/Button.vue'
-import OrdersTableByUser from './OrdersTableByUser.vue';
-import { PlusIcon } from '@heroicons/vue/24/outline';
-import Input from '../../components/Input.vue';
-import Select from '../../components/Select.vue';
-import Title from '../../components/Title.vue';
-import View from './View.vue';
+import OrdersTableByUser from './OrdersTableByUser.vue'
+import { PlusIcon } from '@heroicons/vue/24/outline'
+import Input from '../../components/Input.vue'
+import Select from '../../components/Select.vue'
+import Title from '../../components/Title.vue'
+import View from './View.vue'
 
 const getUsers = ref(JSON.parse(localStorage.getItem('userArray')) || [])
 const getProducts = ref(JSON.parse(localStorage.getItem('productArray')))
@@ -49,8 +49,8 @@ const registerProduct=(type)=>{
         saveProducts.value.push({...productSelect.value})
         productSelect.value={}
         totalPrice.value = saveProducts.value.reduce((sum, product) => {
-            return sum + (product.totalPrice || 0);
-        }, 0);
+            return sum + (product.totalPrice || 0)
+        }, 0)
     }
     isViewProductTable.value = true
     isViewOrderDetails.value = true
@@ -63,8 +63,8 @@ const updateProduct = (type)=>{
     if(type !== 'cancel'){
         saveProducts.value.splice(indexProduct.value,1,editProduct.value)
         totalPrice.value = saveProducts.value.reduce((sum, product) => {
-            return sum + (product.totalPrice || 0);
-        }, 0);
+            return sum + (product.totalPrice || 0)
+        }, 0)
     }
     isViewOrderDetails.value=true
     isViewProductTable.value=true

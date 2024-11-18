@@ -188,7 +188,7 @@ const deleteProduct = async () =>{
             viewNotification()
         }
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
@@ -209,7 +209,7 @@ const viewNotification =()=>{
 
     setTimeout(() => {
         isNotification.value = false
-    }, 2000);
+    }, 2000)
 }
 </script>
 

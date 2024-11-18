@@ -1,5 +1,5 @@
 <script setup>
-import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
     products:{

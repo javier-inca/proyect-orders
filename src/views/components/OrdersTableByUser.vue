@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import Title from '../../components/Title.vue'
 import Button from '../../components/Button.vue'
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
-import View from './View.vue';
+import View from './View.vue'
 
 const props = defineProps({
     products: Object,

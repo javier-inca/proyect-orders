@@ -1,84 +1,162 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch, computed, toRef } from 'vue'
-import Input from './Input.vue'
-/* 
-vue autocomplete 
-prime vue 
-vuetify
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
+import { computed, ref, watch } from 'vue'
 
-solicitudes axios 
 
-pictogrames // material desing icons 
-*/
-const isViewOptions = ref(false)
-
-const props = defineProps({
-    options: {
-        type: Array,
-        default:{}
+const props= defineProps({
+    selectData: {
+        type:Array,
+        default: []
     },
 
-    textAlignment:{
-        tyte:String,
-        default:'start'
+    selectColor: {
+        type: String,
+        default: 'primary'
     },
 
-    modelValue:{
-        type:String,
-        default:''
+    isFiltered: {
+        type: Boolean,
+        default: true
     },
 
-    placeholder:{
-        type:String,
-        default:''
-    }
+    dataName: {
+        type: String,
+        default: 'name'
+    },
+
+    inputValue: {
+        type: String,
+        default: ''
+    },
+
+    isReset: {
+        type: Boolean,
+        default: true
+    },
+
+    message: {
+        type: String,
+        default: ''
+    },
 })
 
-const emit = defineEmits('update:modelValue')
+const emit = defineEmits()
 
-const modelInput = computed({
-    get: () => props.modelValue,
-    set: (newValue) =>{
-        emit('update:modelValue', newValue)
-    }
-})
+const filterData = ref()
 
-const viewOptions = ()=>{
-    isViewOptions.value = true
-    emit('update:modelValue', '')
+const isEnabled = ref(false)
+
+const selectColors= {
+    'primary' : 'border-primary text-primary',
+    'secondary' : 'border-secondary text-secondary',
+    'danger' : 'border-danger text-danger',
+    'warning' : 'border-warning text-warning',
+    'information' : 'border-information text-information',
+    'success' : 'border-success text-success',
 }
 
-const selectOption = (name) => {
-    emit('update:modelValue', name)
+const selectColor = computed(() =>{
+    return selectColors[props.selectColor] ? selectColors[props.selectColor] : 'border-primary'
+})
 
-    isViewOptions.value = false 
+const valueInput = computed({
+    get: () => props.inputValue,
+    set: (newValue) => {
+        emit('update:inputValue', newValue)
+    }
+})
+
+const selectedOption = (option) =>{
+    isEnabled.value = false
+
+    emit('update:inputValue', option)
+}
+
+watch( valueInput, () => {
+    if (props.isFiltered) {
+        const filtered = props.selectData.filter(
+            option => option[props.dataName]?.toLowerCase().includes(props.inputValue.toLowerCase())
+        )
+
+        filterData.value = filtered
+
+        if(filtered.length > 0){
+            if(valueInput.value === filterData.value[0].name){
+                isEnabled.value = false
+                return
+            }
+        }
+
+        isEnabled.value = filtered.length > 0
+    }
+})
+
+
+const resetInput = () => {
+    filterData.value = props.selectData
+    if (props.isReset) {
+        emit('update:inputValue', '')
+    }
+    isEnabled.value = true 
 }
 </script>
 
 <template>
-    <div class="relative z-10 ">
-        <Input 
-            :textAlignment="textAlignment"
-            @click="viewOptions"
-            v-model="modelInput"
-            :placeholder="placeholder"/>
-
-        <div
-            v-if="isViewOptions && options.length > 0"
-            class="absolute bg-white p-2 w-full rounded-b border-2 overflow-y-auto">
-            <p 
-                class="flex my-1 w-full cursor-pointer"
-                v-for="option in options"
-                :key="option.id"
-                @click="selectOption(option.name)">
-                {{ option.name }}
-            </p>
-        </div>
-    </div>
-
-    <!-- Backdrop -->
     <div 
-        v-if="isViewOptions"
-        @click="isViewOptions = false" 
-        class="fixed top-0 left-0 w-full h-full" />
+        class="w-full min-w-[200px] flex flex-col">
+        <div 
+            :class="[selectColor]"
+            class="relative z-10 border-2 rounded-md">
+            <div 
+                class="flex items-center px-2">
+                <input
+                    v-model="valueInput" 
+                    @click="resetInput()"
+                    class="focus:outline-none w-full !text-black"
+                    type="text">
+
+                <ChevronDownIcon
+                    @click="resetInput"
+                    v-if="!isEnabled"
+                    :class="[
+                        selectColor
+                    ]"
+                    class="size-5"/>
+
+                <ChevronUpIcon
+                    @click="isEnabled = false"
+                    v-if="isEnabled"
+                    :class="[
+                        selectColor
+                    ]"
+                    class="size-5"/>
+            </div>
+
+            <div 
+                v-if="isEnabled"
+                class="!text-black p-2">
+                <p
+                    v-for="data in filterData"
+                    @click="selectedOption(data[props.dataName])"
+                    :key="data.id"
+                    class=" cursor-pointer">
+                        {{ data[props.dataName] }}
+                </p>
+            </div>
+            
+        </div>
+
+        <p
+            class=" leading-4 text-justify"
+            :class="[ selectColor, ]"
+            v-if="!isEnabled && message">
+            {{ message }}
+        </p>
+    </div>
+    
+    <div 
+        @click="isEnabled = false"
+        v-if="isEnabled"
+        class="fixed top-0 left-0 w-full h-full z-0">
+    </div>
 </template>

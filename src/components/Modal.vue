@@ -1,56 +1,71 @@
 <script setup>
-import { XMarkIcon } from '@heroicons/vue/24/outline';
-import Button from './Button.vue';
+import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { computed } from 'vue'
+import Title from './Title.vue'
+
+
 const props = defineProps({
-    message:{
-        type:String,
-        default: ''
+    modalColor: {
+        type: String,
+        default: 'danger'
     },
 
-    product:{
-        type:String,
-        default: ''
-    }
+    title: {
+        type: String,
+        default: 'insert product'
+    },
+
+    message: {
+        type: String,
+        default: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit enim per sodales metus, conubia senectus fermentum justo iaculis. Malesuada molestie vehicula turpis cubilia pharetra feugiat eleifend, non nam felis velit aenean suspendisse auctor, purus ante arcu aptent ligula pellentesque, sollicitudin facilisi dapibus quisque inceptos rhoncus. Tristique habitasse mus in, congue commodo.'
+    },
+
+    
 })
 
-const emit = defineEmits()
-
-const clickButton = (type)=> {
-    emit('clickOptions',type)
+const modalColors = {
+    'primary' : 'bg-primary border-primary text-primary',
+    'secondary' : 'bg-secondary border-secondary text-secondary',
+    'danger' : 'bg-danger border-danger text-danger',
+    'warning' : 'bg-warning border-warning text-warning',
+    'information' : 'bg-information border-information text-information',
+    'success' : 'bg-success border-success text-success',
 }
+
+const modalColor = computed(() => {
+    return modalColors[props.modalColor]? modalColors[props.modalColor] : 'bg-primary'
+})
 </script>
 
 <template>
-    <div class="w-3/5 md:w-2/5 lg:w-2/6 2xl:w-1/6 3xl:w-3/12 bg-white rounded-xl border border-black-custom shadow-2xl">
-        <div class="w-full h-10 bg-black-custom rounded-t-xl flex justify-end">
-            <button
-                @click="clickButton('cancel')"
-                class="mx-3">
-                <XMarkIcon
-                    class="size-6 text-white hover:text-secondary"/>
-            </button>
-        </div>
+    <div 
+        :class="[
+            modalColor,
+        ]"
+        class="relative z-10 min-w-[300px] max-w-[350px] rounded-md border-2">
+        <div class=" mt-4 bg-white w-full rounded-b flex items-center flex-col p-2">
+            <div class="mt-1 mb-1">
+                <InformationCircleIcon
+                    :class="modalColor"
+                    class="size-10 !bg-white rounded-full"/>
+            </div>
 
-        <!-- Parte central -->
-        <div class="m-5">
-            <slot />
+            <Title
+                class="!text-black"
+                :title="title"/>
 
             <p
-                v-if="message || product"
-                class="text-center text-lg">
-                {{ message }} {{ product }} 
+                class=" my-2 text-center !text-black"
+                v-if="message">
+                {{ message }}
+            </p>
+
+            <p
+                v-if="!message"
+                class=" my-2 text-center !text-black">
+                <slot/>
             </p>
         </div>
 
-        <div class=" flex justify-center items-center my-10 gap-20">
-            <Button
-                @click="clickButton('cancel')"
-                type="danger"
-                name="Cancel"/>
-
-            <Button
-                @click="clickButton('delete')"
-                name="Delete"/>
-        </div>
     </div>
 </template>

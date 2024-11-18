@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
 const props = defineProps({
     orderUsers: {
@@ -11,7 +11,7 @@ const props = defineProps({
             type:Array,
             default:[]
     },
-});
+})
 
 const getProductName = (productId) => {
     const product = props.dataProducts.find(findProduct => findProduct.id === productId)
@@ -19,28 +19,28 @@ const getProductName = (productId) => {
 }  
 
 const getProductPrice = (productId) => {
-  const product = props.dataProducts.find(findProduct => findProduct.id === productId);
-  return product ? product.reference_price : 0;
-};
+  const product = props.dataProducts.find(findProduct => findProduct.id === productId)
+  return product ? product.reference_price : 0
+}
 
 const productSummary = computed(() => {
-  const summary = {};
+  const summary = {}
 
   props.orderUsers.forEach(order => {
     order.products.forEach(product => {
       if (summary[product.product_id]) {
-        summary[product.product_id] += product.quantity;
+        summary[product.product_id] += product.quantity
       } else {
-        summary[product.product_id] = product.quantity;
+        summary[product.product_id] = product.quantity
       }
-    });
-  });
+    })
+  })
 
   return Object.keys(summary).map(productId => ({
     product_id: Number(productId),
     quantity: summary[productId]
-  }));
-});
+  }))
+})
 </script>
 
 <template>

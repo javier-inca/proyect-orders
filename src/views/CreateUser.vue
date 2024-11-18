@@ -17,7 +17,7 @@ const viewRegister = ref(false)
 const viewMessage= ref(false)
 const message = ref('')
 const typeMessage =ref('danger')
-let globalId=null;
+let globalId=null
  
 
 if (!localStorage.getItem('userArray')) {
@@ -27,21 +27,21 @@ if (!localStorage.getItem('userArray')) {
 const getUsers = ref(JSON.parse(localStorage.getItem('userArray')))
 
 const create = () => {
-    const userId = globalId !== null ? globalId : (getUsers.value.length ? getUsers.value[getUsers.value.length - 1].id + 1 : 1);
+    const userId = globalId !== null ? globalId : (getUsers.value.length ? getUsers.value[getUsers.value.length - 1].id + 1 : 1)
     
     if (globalId !== null) {
-        const userIndex = getUsers.value.findIndex(user => user.id === globalId);
-        getUsers.value[userIndex].name = name.value;
-        clickUpdate.value = false;
+        const userIndex = getUsers.value.findIndex(user => user.id === globalId)
+        getUsers.value[userIndex].name = name.value
+        clickUpdate.value = false
         message.value='Updated user'
     } else {
-        getUsers.value.push({ id: userId, name: name.value });
+        getUsers.value.push({ id: userId, name: name.value })
         message.value='Registered user'
     }
 
-    localStorage.setItem('userArray', JSON.stringify(getUsers.value));
-    name.value = '';
-    globalId = null;
+    localStorage.setItem('userArray', JSON.stringify(getUsers.value))
+    name.value = ''
+    globalId = null
     viewRegister.value=false
     typeMessage.value='success'
     viewMessage.value=true
@@ -49,7 +49,7 @@ const create = () => {
     setTimeout(()=>{
         viewMessage.value = false
     }, 1500)
-};
+}
 
 const findUser =(id)=>{
     globalId = id

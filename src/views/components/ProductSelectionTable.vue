@@ -1,9 +1,9 @@
 <script setup>
-import { ExclamationTriangleIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
-import Button from '../../components/Button.vue';
-import Title from '../../components/Title.vue';
-import Input from '../../components/Input.vue';
-import { onMounted, ref, watch } from 'vue';
+import { ExclamationTriangleIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import Button from '../../components/Button.vue'
+import Title from '../../components/Title.vue'
+import Input from '../../components/Input.vue'
+import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
     listProduct :{

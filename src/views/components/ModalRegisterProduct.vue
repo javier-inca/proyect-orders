@@ -1,12 +1,12 @@
 <script setup>
-import { ArrowLeftIcon, ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { ArrowLeftIcon, ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import axios from '../../connection/axiosConfig'
-import Title from '../../components/Title.vue';
-import ProductSelectionForm from './ProductSelectionForm.vue';
-import { onMounted, ref } from 'vue';
-import ProductSelectionTable from './ProductSelectionTable.vue';
+import Title from '../../components/Title.vue'
+import ProductSelectionForm from './ProductSelectionForm.vue'
+import { onMounted, ref } from 'vue'
+import ProductSelectionTable from './ProductSelectionTable.vue'
 
-const productArray = ref([]);
+const productArray = ref([])
 const productData = ref()
 const isViewTableProducts = ref(false)
 const buttonClass = ref('')
@@ -25,7 +25,7 @@ const clickButton =(type)=>{
 }
 
 const registerProduct = (product) => {       
-    productArray.value.push(JSON.parse(JSON.stringify(product)));
+    productArray.value.push(JSON.parse(JSON.stringify(product)))
 
     getProductData()
 
@@ -40,7 +40,7 @@ const getProductData = async ()=>{
             productData.value = response.data.data
         }
     } catch (error) {
-        console.error('Error Get Product Data',error);
+        console.error('Error Get Product Data',error)
         
     }
 }

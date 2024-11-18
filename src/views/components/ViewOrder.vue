@@ -1,7 +1,7 @@
 <script setup>
-import TextArea from '../../components/TextArea.vue';
-import Title from '../../components/Title.vue';
-import moment from 'moment';
+import TextArea from '../../components/TextArea.vue'
+import Title from '../../components/Title.vue'
+import moment from 'moment'
 
 
 const props = defineProps({

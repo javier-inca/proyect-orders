@@ -1,11 +1,11 @@
 <script setup>
-import { MinusIcon, PlusIcon } from '@heroicons/vue/24/outline';
-import { computed, ref } from 'vue';
+import { MinusIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
     valueNumber:{
-        type:Number,
-        default:1
+        type: Number,
+        default: 1
     }
 })
 
@@ -20,10 +20,11 @@ const modelNumber = computed({
 </script>
 
 <template>
-    <div class="flex items-center border rounded-xl border-black-custom">
+    <div class="flex items-center border rounded-xl border-primary">
         <button
             :class="{
-                'bg-slate-200':modelNumber <= 1
+                '!bg-light-primary':modelNumber <= 1,
+                'text-white': modelNumber > 1
             }"
             :disabled="modelNumber <= 1"
             @click="modelNumber = modelNumber - 1"
@@ -38,6 +39,11 @@ const modelNumber = computed({
         </p>
 
         <button
+            :class="{
+                '!bg-light-primary':modelNumber >= 99,
+                'text-white': modelNumber < 99
+            }"
+            :disabled="modelNumber >= 99"
             @click="modelNumber = modelNumber + 1"
             class="bg-primary p-1 rounded-r-xl">
             <PlusIcon

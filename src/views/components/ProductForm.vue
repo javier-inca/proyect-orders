@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue'
 import InputSelect from '../../components/InputSelect.vue'
-import Input from '../../components/Input.vue';
+import Input from '../../components/Input.vue'
 import TextArea from '../../components/TextArea.vue'
 import Title from '../../components/Title.vue'
-import Button from '../../components/Button.vue';
+import Button from '../../components/Button.vue'
 
 const props = defineProps({
     productName:{

@@ -1,9 +1,9 @@
 <script setup>
-import { ShoppingCartIcon } from '@heroicons/vue/24/solid';
-import { XMarkIcon } from '@heroicons/vue/24/solid';
-import Input from '../../components/Input.vue';
+import { ShoppingCartIcon } from '@heroicons/vue/24/solid'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
+import Input from '../../components/Input.vue'
 import Button from '../../components/Button.vue'
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props =defineProps({
     name:{

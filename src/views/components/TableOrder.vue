@@ -1,6 +1,6 @@
 <script setup>
-import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
-import moment from 'moment';
+import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import moment from 'moment'
 
 const props = defineProps({
     orders:{

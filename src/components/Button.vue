@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 
 const props = defineProps({
@@ -30,7 +30,7 @@ const props = defineProps({
 
     isDisabled : {
         type: Boolean,
-        default: true
+        default: false
     },
 
     leftIcon: Object,

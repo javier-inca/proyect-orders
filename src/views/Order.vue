@@ -1,11 +1,11 @@
 <script setup>
 import Navbar from './Navbar.vue'
 import Title from '../components/Title.vue'
-import { PlusIcon } from '@heroicons/vue/24/solid';
-import { onMounted, ref } from 'vue';
-import TableOrder from './components/TableOrder.vue';
+import { PlusIcon } from '@heroicons/vue/24/solid'
+import { onMounted, ref } from 'vue'
+import TableOrder from './components/TableOrder.vue'
 import axios from '../connection/axiosConfig'
-import router from '../router/router';
+import router from '../router/router'
 
 const dataOrders = ref([])
 
@@ -17,7 +17,7 @@ const getDataOrders = async () => {
             dataOrders.value = orders.data.data
         }
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 }
 

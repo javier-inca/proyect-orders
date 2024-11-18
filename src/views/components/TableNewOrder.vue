@@ -1,5 +1,5 @@
 <script setup>
-import { ExclamationTriangleIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ExclamationTriangleIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
     users:{

@@ -1,16 +1,16 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import Navbar from './Navbar.vue'
-import { onMounted, ref } from 'vue';
-import axios from '../connection/axiosConfig';
-import Title from '../components/Title.vue';
-import TextArea from '../components/TextArea.vue';
-import moment from 'moment';
-import OrderShowDetails from './components/OrderShowDetails.vue';
-import ListProduct from './components/ListProduct.vue';
+import { onMounted, ref } from 'vue'
+import axios from '../connection/axiosConfig'
+import Title from '../components/Title.vue'
+import TextArea from '../components/TextArea.vue'
+import moment from 'moment'
+import OrderShowDetails from './components/OrderShowDetails.vue'
+import ListProduct from './components/ListProduct.vue'
 
-const route = useRoute();
-const orderId = route.params.id; 
+const route = useRoute()
+const orderId = route.params.id 
 const orderDetails = ref()
 const dataUser = ref()
 const dataProducts = ref()
@@ -32,7 +32,7 @@ const getOrderDetails = async () => {
             isLoading.value = false
         }
     } catch (error) {
-        console.error(error);
+        console.error(error)
 
         isLoading.value = false
     }

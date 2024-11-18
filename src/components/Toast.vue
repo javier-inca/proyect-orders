@@ -1,7 +1,7 @@
 <script setup>
 import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiCheckBold, mdiExclamationThick, mdiInformationVariant } from '@mdi/js';
-import { computed, ref, watch } from 'vue';
+import { mdiCheckBold, mdiExclamationThick, mdiInformationVariant } from '@mdi/js'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
     type:{

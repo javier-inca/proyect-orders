@@ -1,6 +1,6 @@
 <script setup>
-import { ChevronDownIcon } from '@heroicons/vue/24/outline';
-import { ref } from 'vue';
+import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import { ref } from 'vue'
 
 
 const props = defineProps({
@@ -41,22 +41,22 @@ const openDetails = (id) => {
 }
 
 const calculateTotalPrice = (products) => {
-    let totalPrice = 0; 
+    let totalPrice = 0 
 
     products.forEach(product => {
-        const price = parseFloat(product.final_price);  
-        const quantity = product.quantity; 
+        const price = parseFloat(product.final_price)  
+        const quantity = product.quantity 
 
-        totalPrice += price * quantity;
-    });
+        totalPrice += price * quantity
+    })
 
-    return (totalPrice).toFixed(2); 
-};
+    return (totalPrice).toFixed(2) 
+}
 
 const calculateChange = (payment, totalPrice) => {
-    const change = parseFloat(payment) - parseFloat(totalPrice);
+    const change = parseFloat(payment) - parseFloat(totalPrice)
     return change.toFixed(2)
-};
+}
 </script>
 
 <template>
