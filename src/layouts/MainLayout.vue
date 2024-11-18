@@ -17,9 +17,9 @@ const toastStore = useToastStore()
 
         <div class="absolute z-50 top-16 right-0 pr-4 w-80">
             <Toast
-                :isVisible= "toastStore.isVisible"
+                :toggleToast= "toastStore.toggleToast"
                 :message= "toastStore.message"
-                :type= "toastStore.type"/>
+                :type= "toastStore.type" />
         </div>
     </div>
 </template>

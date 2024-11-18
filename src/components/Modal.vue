@@ -19,8 +19,6 @@ const props = defineProps({
         type: String,
         default: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit enim per sodales metus, conubia senectus fermentum justo iaculis. Malesuada molestie vehicula turpis cubilia pharetra feugiat eleifend, non nam felis velit aenean suspendisse auctor, purus ante arcu aptent ligula pellentesque, sollicitudin facilisi dapibus quisque inceptos rhoncus. Tristique habitasse mus in, congue commodo.'
     },
-
-    
 })
 
 const modalColors = {

@@ -4,17 +4,18 @@ import { ref } from "vue"
 export const useToastStore = defineStore('toast', () => {
     const message = ref('')
     const type = ref('success')
-    const isVisible = ref(false)
+    const toggleToast = ref(false)
 
     const showToast = (smg, t = ' success ') => {
+
         message.value = smg
         type.value = t
-        isVisible.value = true
+        toggleToast.value = !toggleToast.value
 
-        setTimeout(() => {
-            isVisible.value = false
-        }, 2000)
+       /*  setTimeout(() => {
+            toggleToast.value = !toggleToast.value
+        }, 4000) */
     }
 
-    return { message, type, isVisible, showToast}
+    return { message, type, toggleToast, showToast}
 })

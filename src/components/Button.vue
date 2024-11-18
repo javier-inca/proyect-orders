@@ -122,6 +122,6 @@ const buttonColor = computed(() => {
 
         <component
             :is="rightIcon"
-            class="size-5"/>
+            class="size-5" />
     </div>
 </template>
