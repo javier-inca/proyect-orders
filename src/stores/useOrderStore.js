@@ -17,7 +17,7 @@ export const useOrderStore = defineStore('orderStore' , () => {
     }
 
     //Create new order
-    const createOrder = async (orderData) => {
+    const createOrder = async (orderData) => {        
         try {
             const response = await axios.post('/api/orders' , orderData)
 
@@ -25,12 +25,26 @@ export const useOrderStore = defineStore('orderStore' , () => {
                 return response
             }
         } catch (error) {  
-            return error.message || 'Error creating order'
+            return error || 'Error creating order'
+        }
+    }
+
+    //Update order
+    const updateOrder = async (orderId , orderData) => {
+        try {
+            const response = await axios.put(`/api/orders/${orderId}`, orderData)
+
+            if(response.status === 200) {
+                return response
+            }
+        } catch (error) {  
+            return error || 'Error updating order'
         }
     }
 
     return {
         fetchOrders,
         createOrder,
+        updateOrder,
     }
 })

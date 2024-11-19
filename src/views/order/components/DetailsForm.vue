@@ -18,10 +18,24 @@ const props = defineProps({
             return today
         }
     },
+
+    delivery: {
+        type: String,
+        default : 'dw'
+    },
+
+    description: {
+        type: String,
+        default: ''
+    },
+
+    errorDelivery: String,
+    
+    errorDescription: String,
+
+    errorDate: String,
 })
 const emit = defineEmits()
-
-const user = ref('Select')
 
 const inputDate = computed({
     get: () => {
@@ -32,6 +46,22 @@ const inputDate = computed({
     set: (newValue) => {
         const newDate = new Date(newValue) 
         emit('update:date', newDate)
+    }
+})
+
+const inputDelivery = computed({
+    get: () => props.delivery,
+
+    set: (newValue) => {
+        emit('update:delivery' , newValue)
+    }
+})
+
+const inputDescription = computed({
+    get: () => props.description,
+
+    set: (newValue) => {
+        emit('update:description', newValue)
     }
 })
 </script>
@@ -46,8 +76,8 @@ const inputDate = computed({
         <div class="flex flex-col gap-2 sm:flex-row mt-3">
             <div class="w-full sm:w-1/2">
                 <Select
-                    message=""
-                    v-model:inputValue="user"
+                    :errorMessage="errorDelivery"
+                    v-model:inputValue="inputDelivery"
                     :selectData="userData"
                     label="Delivery Person"/>
             </div>
@@ -55,16 +85,17 @@ const inputDate = computed({
             <div class="w-full sm:w-1/2">
                 <Input
                     v-model="inputDate"
-                    errorMessage=""
+                    :errorMessage="errorDate"
                     label="Date"
                     type="date"/>
             </div>
         </div>
 
-        <div class="w-full mt-3">
+        <div class="w-full mt-3 mb-2">
             <TextArea
+                v-model="inputDescription"
                 label="Description"
-                errorMessage=""/>
+                :errorMessage="errorDescription"/>
         </div>
     </div>    
 </template>

@@ -128,22 +128,24 @@ const modelInput = computed({
 })
 
 const today = computed(() => {
-    console.log('imprimir');
-    
-    const date = new Date()
-    const yyyy = date.getFullYear()
-    const mm = (date.getMonth() + 1).toString().padStart(2, '0')
-    const dd = date.getDate().toString().padStart(2, '0')
-    return `${yyyy}-${mm}-${dd}`
+    if (props.type === 'date') {
+        const date = new Date()
+        const yyyy = date.getFullYear()
+        const mm = (date.getMonth() + 1).toString().padStart(2, '0')
+        const dd = date.getDate().toString().padStart(2, '0')
+        return `${yyyy}-${mm}-${dd}`
+    }    
 })
 
 const maxDate = computed(() => {
-    const date = new Date()
-    date.setMonth(date.getMonth() + 3)
-    const yyyy = date.getFullYear()
-    const mm = (date.getMonth() + 1).toString().padStart(2, '0')
-    const dd = date.getDate().toString().padStart(2, '0')
-    return `${yyyy}-${mm}-${dd}`
+    if(props.type === 'date'){
+        const date = new Date()
+        date.setMonth(date.getMonth() + 3)
+        const yyyy = date.getFullYear()
+        const mm = (date.getMonth() + 1).toString().padStart(2, '0')
+        const dd = date.getDate().toString().padStart(2, '0')
+        return `${yyyy}-${mm}-${dd}`
+    }
 })
 </script>
 
@@ -167,26 +169,20 @@ const maxDate = computed(() => {
                         inputType,
                         {
                             'rounded-md ': isRounded,
-                            '!border-danger bg-danger bg-opacity-10' : errorMessage,
+                            '!border-danger bg-light-danger' : errorMessage,
                             'p-2' : isPadding,
                             'px-2' : !isPadding
                         }
                     ]"
                     class="flex items-center">
                     <input
-                        :class="[
-                            textAlignment,
-                            inputType,
-                            {
-                                'bg-transparent': errorMessage,
-                            }
-                        ]"
+                        :class="[ textAlignment, ]"
                         :min="today"
                         :max="maxDate"
                         :placeholder="placeholder" 
                         :type="type" 
                         v-model="modelInput"
-                        class="focus:outline-none w-full">
+                        class="focus:outline-none w-full bg-transparent">
 
                     <p
                         :class="{

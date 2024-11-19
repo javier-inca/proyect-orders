@@ -47,6 +47,16 @@ const props= defineProps({
     label: {
         type: String,
         default: ''
+    },
+
+    errorMessage: {
+        type: String,
+        default: ''
+    },
+
+    isDisabled : {
+        type: Boolean,
+        default : false
     }
 })
 
@@ -76,6 +86,7 @@ const size = computed(() => {
 
 const valueSelect = computed({
     get: () => props.inputValue,
+    
     set: (newValue) => {
         emit('update:inputValue', newValue)
     }
@@ -85,6 +96,12 @@ const selectedOption = (option) => {
     emit('update:inputValue' , option)
     isEnabled.value = false
 }
+
+const showData = () => {
+    if(!props.isDisabled){
+        isEnabled.value = !isEnabled.value
+    }
+}
 </script>
 
 <template>
@@ -92,19 +109,30 @@ const selectedOption = (option) => {
         :class="[size]"
         class=" min-w-[100px] flex flex-col">
         <label
+            :class="{
+                'text-danger' : errorMessage
+            }"
             v-if="label">
             {{ label }}
         </label>
 
         <div 
-            :class="[selectColor]"
+            :class="[
+                selectColor,
+                {
+                    '!border-danger' : errorMessage,
+                    ' !border-gray-600 ' : isDisabled
+                }
+            ]"
             class="relative z-10 border-2 rounded-md cursor-pointer w-full">
             <div 
-                @click="isEnabled = !isEnabled"
+                @click="showData()"
                 :class="{
+                    'bg-light-danger' : errorMessage,
+                    '!bg-gray-200 !text-gray-600' : isDisabled,
                     'p-2' : isPadding
                 }"
-                class="flex items-center px-2 text-black justify-between">
+                class="flex items-center px-2 text-black justify-between rounded">
                 <p>
                     {{ valueSelect }}
                 </p>
@@ -135,9 +163,14 @@ const selectedOption = (option) => {
 
         <p
             class=" leading-4"
-            :class="[ selectColor, ]"
-            v-if="!isEnabled && message">
-            {{ message }}
+            :class="[ 
+                selectColor,
+                {
+                    '!text-danger' : errorMessage
+                }
+            ]"
+            v-if="!isEnabled && errorMessage">
+            {{ errorMessage }}
         </p>
     </div>
     
