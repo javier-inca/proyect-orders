@@ -24,6 +24,16 @@ const props = defineProps({
     modelValue:{
         type:String,
         default:''
+    },
+
+    label: {
+        type: String,
+        default: ''
+    },
+
+    errorMessage: {
+        type: String,
+        default: ''
     }
 })
 
@@ -46,19 +56,36 @@ const ySize = computed(()=>{
 })
 
 const classDisabled = computed(()=>{
-    return props.disabled ? 'bg-slate-200 border-2 border-slate-500':' bg-white border-2 border-black-custom focus:outline-none'
+    return props.disabled ? 'bg-slate-200 border-2 border-slate-500':' bg-white border-2 border-primary focus:outline-none'
 })
 </script>
 
 <template>
-    <textarea 
+    <div class="flex flex-col">
+        <label
+            :class="{
+                'text-danger' : errorMessage
+            }">
+            {{ label }}
+        </label>
+
+        <textarea 
         :class="[
             ySize,
             classDisabled,
+            {
+                '!border-danger !bg-light-danger' : errorMessage
+            }
         ]"
         :disabled="disabled"
         :rows="rowSize"
         :placeholder="placeholder" 
         class="p-2 h-full resize-none rounded" 
         v-model="textValue" />
+
+        <p
+            class="text-danger text-sm text-justify">
+            {{ errorMessage }}
+        </p>
+    </div>
 </template>

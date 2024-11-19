@@ -126,18 +126,33 @@ const modelInput = computed({
         emit ('update:modelValue', newValue)
     }
 })
+
+const today = computed(() => {
+    console.log('imprimir');
+    
+    const date = new Date()
+    const yyyy = date.getFullYear()
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+})
+
+const maxDate = computed(() => {
+    const date = new Date()
+    date.setMonth(date.getMonth() + 3)
+    const yyyy = date.getFullYear()
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0')
+    const dd = date.getDate().toString().padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+})
 </script>
 
 <template>
-    <div class="flex">
+    <div class="flex flex-col">
         <label
             v-if="label"
             :class="{
-                'text-danger' : errorMessage,
-                'pt-[10px]' : isPadding,
-                'pt-[3px]' : !isPadding,
-                '!pt-0' : desing === 'border-b-2' && !isPadding,
-                '!pt-2' : desing === 'border-b-2' && isPadding
+                'text-danger' : errorMessage
             }">
             {{ label }}
         </label>
@@ -166,6 +181,8 @@ const modelInput = computed({
                                 'bg-transparent': errorMessage,
                             }
                         ]"
+                        :min="today"
+                        :max="maxDate"
                         :placeholder="placeholder" 
                         :type="type" 
                         v-model="modelInput"
@@ -182,7 +199,7 @@ const modelInput = computed({
 
                 <p
                     v-if="errorMessage"
-                    class="text-danger text-sm text-justify">
+                    class="text-danger text-sm text-justify leading-4">
                     {{ errorMessage }}
                 </p>
             </div>

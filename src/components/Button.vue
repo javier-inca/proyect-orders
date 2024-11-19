@@ -111,7 +111,7 @@ const buttonColor = computed(() => {
                 '!bg-gray-100 !text-gray-500 !border-gray-500 !border !cursor-not-allowed' : isDisabled
             }
         ]"
-        class="flex gap-2 cursor-pointer min-w-[150px] items-center p-2 rounded-md border-2 font-bold">
+        class="flex gap-2 cursor-pointer min-w-[100px] max-w-[200px] items-center p-1 rounded-md border-2 font-bold">
         <component
             :is="leftIcon"
             class="size-5"/>

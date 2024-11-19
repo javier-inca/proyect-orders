@@ -1,5 +1,5 @@
 <script setup>
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { computed, ref, watch } from 'vue'
 
 
@@ -97,7 +97,7 @@ const resetInput = () => {
     if (props.isReset) {
         emit('update:inputValue', '')
     }
-    isEnabled.value = true 
+    isEnabled.value = !isEnabled.value 
 }
 </script>
 
@@ -117,20 +117,14 @@ const resetInput = () => {
 
                 <ChevronDownIcon
                     @click="resetInput"
-                    v-if="!isEnabled"
                     :class="[
-                        selectColor
+                        selectColor,
+                        {
+                            'rotate-180' : isEnabled
+                        }
                     ]"
-                    class="size-5"/>
-
-                <ChevronUpIcon
-                    @click="isEnabled = false"
-                    v-if="isEnabled"
-                    :class="[
-                        selectColor
-                    ]"
-                    class="size-5"/>
-            </div>
+                    class="size-5 transition-all duration-300" />
+            </div> 
 
             <div 
                 v-if="isEnabled"
@@ -139,11 +133,10 @@ const resetInput = () => {
                     v-for="data in filterData"
                     @click="selectedOption(data[props.dataName])"
                     :key="data.id"
-                    class=" cursor-pointer">
-                        {{ data[props.dataName] }}
+                    class="cursor-pointer">
+                    {{ data[props.dataName] }}
                 </p>
             </div>
-            
         </div>
 
         <p

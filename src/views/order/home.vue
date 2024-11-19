@@ -1,33 +1,53 @@
 <script setup>
-import { useToastStore } from '../../stores/useToastStore';
+import { ShoppingCartIcon } from '@heroicons/vue/24/solid'
+import Button from '../../components/Button.vue'
+import Title from '../../components/Title.vue'
+import { useUserStore } from '../../stores/useUserStore';
+import { onMounted, ref } from 'vue';
+import OrderTable from './components/OrderTable.vue';
+import { useOrderStore } from '../../stores/useOrderStore';
 
-const toastStore = useToastStore()
+const userStore = useUserStore()
+const orderStore = useOrderStore()
 
-const showToast = (message , type) => {
-    toastStore.showToast(message , type )
-}
+const orderData = ref([])
+const isLoadingOrderData = ref(true)
+
+const userData = ref([])
+const isLoadingUserData = ref(true)
+
+onMounted( async () => {
+    orderData.value = await orderStore.fetchOrders()
+    isLoadingOrderData.value = false
+
+    userData.value = await userStore.fetchUsers()
+    isLoadingUserData.value = false
+})
 </script>
 
 <template>
-    <div class="flex justify-center bg-secondary gap-4 p-2">
-        <button
-            @click="showToast('Mostrar' , 'success')">
-            click
-        </button>
+    <div class="flex justify-center mx-2">
+        <div class="relative max-w-3xl w-full">
+            <div class="absolute z-0 w-full">
+                <div class="flex justify-between items-center mb-2">
+                    <Title
+                        title="Order list"/>
 
-        <button
-            @click="showToast('Mostrar' , 'information')">
-            click
-        </button>
+                    <router-link
+                        to="/orders/create">
+                        <Button
+                            buttonName="New Order"
+                            :rightIcon="ShoppingCartIcon"
+                            class=" w-[150px]"/>
+                    </router-link>
+                </div>  
 
-        <button
-            @click="showToast('Mostrar' , 'warning')">
-            click
-        </button>
-
-        <button
-            @click="showToast('Mostrar' , 'danger')">
-            click
-        </button>
+                <div class="my-2">
+                    <OrderTable
+                        :orderData="orderData"
+                        :userData="userData"/>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

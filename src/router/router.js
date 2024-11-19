@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
 import Product from "../views/Product.vue"
 import HomeStart from "../views/home/HomeStart.vue"
-import OrderHome from '../views/order/home.vue'
-import NewOrder from "../views/NewOrder.vue"
+import HomeOrder from '../views/order/Home.vue'
+import CreateOrder from "../views/order/Create.vue"
 import MainLayout from "../layouts/MainLayout.vue"
 import UserHome from "../views/user/Home.vue"
 
@@ -25,11 +25,11 @@ const routes = [
         },
         {
             path : 'orders',
-            component : OrderHome,
+            component : HomeOrder,
         },
         {
             path : 'orders/create',
-            component : NewOrder,
+            component : CreateOrder,
         }
       ],
     },

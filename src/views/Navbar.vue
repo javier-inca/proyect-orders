@@ -37,7 +37,7 @@ const route = useRoute()
             <router-link 
                 to="/orders"
                 :class="{
-                    'text-secondary scale-125':(route.path === '/orders' || route.path === 'NewOrder' || route.path === 'ShowOrder')
+                    'text-secondary scale-125':(route.path === '/orders' || route.path === '/orders/create' || route.path === 'ShowOrder')
                 }"
                 class="hover:text-secondary hover:scale-125 transition-transform duration-100">
                 Orders

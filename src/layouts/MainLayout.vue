@@ -1,17 +1,19 @@
 <script setup>
-import Toast from '../components/Toast.vue'
+/* import Toast from '../components/Toast.vue' */
 import { useToastStore } from '../stores/useToastStore'
 import Navbar from '../views/Navbar.vue'
-
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+import { Button } from 'primevue'
 const toastStore = useToastStore()
-
 </script>
 
 <template>
     <div>
         <Navbar />
 
-        <main>
+        <main
+            class="my-5">
             <router-view />
         </main>
 

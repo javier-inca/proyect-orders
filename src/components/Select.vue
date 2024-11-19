@@ -32,6 +32,21 @@ const props= defineProps({
     message: {
         type: String,
         default: ''
+    },
+
+    size: {
+        type: String,
+        default: 'xl'
+    },
+
+    isPadding: {
+        type: Boolean,
+        default: true
+    },
+    
+    label: {
+        type: String,
+        default: ''
     }
 })
 
@@ -44,8 +59,19 @@ const selectColors = {
     'danger' : 'border-danger text-danger',
 }
 
+const sizes = {
+    'sm' : 'w-1/4',
+    'md' : 'w-2/4',
+    'lg' : 'w-3/4',
+    'xl' : 'w-full',
+}
+
 const selectColor = computed (() => {
     return selectColors[props.selectColor]? selectColors[props.selectColor] : 'border-primary text-primary'
+})
+
+const size = computed(() => {
+    return sizes[props.size] ? sizes[props.size] : 'w-full'
 })
 
 const valueSelect = computed({
@@ -63,35 +89,39 @@ const selectedOption = (option) => {
 
 <template>
     <div 
-        class=" min-w-[200px] w-full flex flex-col">
+        :class="[size]"
+        class=" min-w-[100px] flex flex-col">
+        <label
+            v-if="label">
+            {{ label }}
+        </label>
+
         <div 
             :class="[selectColor]"
             class="relative z-10 border-2 rounded-md cursor-pointer w-full">
             <div 
                 @click="isEnabled = !isEnabled"
+                :class="{
+                    'p-2' : isPadding
+                }"
                 class="flex items-center px-2 text-black justify-between">
                 <p>
                     {{ valueSelect }}
                 </p>
 
                 <ChevronDownIcon
-                    v-if="!isEnabled"
                     :class="[
-                        selectColor
+                        selectColor,
+                        {
+                            'rotate-180' : isEnabled
+                        }
                     ]"
-                    class="size-5"/>
-
-                <ChevronUpIcon
-                    v-if="isEnabled"
-                    :class="[
-                        selectColor
-                    ]"
-                    class="size-5"/>
+                    class="size-5 transition-all duration-300"/>
             </div>
 
             <div 
                 v-if="isEnabled"
-                class="!text-black p-2">
+                class="!text-black px-2 pb-2">
                 <p
                     v-for="data in selectData"
                     @click="selectedOption(data[props.dataName])"
