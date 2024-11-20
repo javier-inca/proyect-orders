@@ -63,8 +63,13 @@ const props = defineProps({
     },
 
     modelValue:{
-        type: String,
+        type: [String , Number],
         default: ''
+    },
+
+    isDisabled: {
+        type: Boolean,
+        default : false
     }
 })
 
@@ -147,6 +152,12 @@ const maxDate = computed(() => {
         return `${yyyy}-${mm}-${dd}`
     }
 })
+
+const handleBlur = () => {
+    if(props.type === 'number'){
+        emit('update:modelValue' , (parseFloat(props.modelValue)).toFixed(2) )
+    }
+};
 </script>
 
 <template>
@@ -160,7 +171,12 @@ const maxDate = computed(() => {
         </label>
 
         <div
-            :class="inputAlignment"
+            :class="[
+                inputAlignment,
+                {
+                    'bg-gray-200' : isDisabled
+                }
+            ]"
             class="flex w-full">
             <div :class="inputSize">
                 <div 
@@ -176,11 +192,13 @@ const maxDate = computed(() => {
                     ]"
                     class="flex items-center">
                     <input
+                        @blur="handleBlur"
                         :class="[ textAlignment, ]"
                         :min="today"
                         :max="maxDate"
                         :placeholder="placeholder" 
                         :type="type" 
+                        :disabled="isDisabled"
                         v-model="modelInput"
                         class="focus:outline-none w-full bg-transparent">
 

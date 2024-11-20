@@ -60,12 +60,12 @@ const getUserName = (userId) => {
 
                     <td
                         class="px-2 py-3">
-                        {{ moment(order.order_data).format('DD-MMM-YYYY') }}
+                        {{ moment(order.order_date).format('DD-MMM-YY') }}
                     </td>
 
                     <td
                         class="px-2 py-3">
-                        In Progress
+                        {{ order.state }}
                     </td>
                 </tr>
             </tbody>

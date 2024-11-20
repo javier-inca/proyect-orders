@@ -12,7 +12,7 @@ export const useOrderStore = defineStore('orderStore' , () => {
             }
         } 
         catch (error) {
-            return error.message || 'Error loading orders'    
+            return error || 'Error loading orders'    
         }
     }
 

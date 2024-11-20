@@ -38,6 +38,11 @@ const props= defineProps({
         type: String,
         default: ''
     },
+
+    placeholder: {
+        type: String,
+        default: ''
+    }
 })
 
 const emit = defineEmits()
@@ -110,6 +115,7 @@ const resetInput = () => {
             <div 
                 class="flex items-center px-2">
                 <input
+                    :placeholder="placeholder"
                     v-model="valueInput" 
                     @click="resetInput()"
                     class="focus:outline-none w-full !text-black"

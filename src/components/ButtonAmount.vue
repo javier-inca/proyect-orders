@@ -23,12 +23,12 @@ const modelNumber = computed({
     <div class="flex items-center border rounded-xl border-primary">
         <button
             :class="{
-                '!bg-light-primary':modelNumber <= 1,
+                '!bg-light-primary !rounded-l-xl':modelNumber <= 1,
                 'text-white': modelNumber > 1
             }"
             :disabled="modelNumber <= 1"
             @click="modelNumber = modelNumber - 1"
-            class="bg-primary p-1 rounded-l-xl">
+            class="bg-primary p-1 rounded-l-lg">
             <MinusIcon
                 class="size-5"/>
         </button>
@@ -40,12 +40,12 @@ const modelNumber = computed({
 
         <button
             :class="{
-                '!bg-light-primary':modelNumber >= 99,
+                '!bg-light-primary !rounded-r-xl':modelNumber >= 99,
                 'text-white': modelNumber < 99
             }"
             :disabled="modelNumber >= 99"
             @click="modelNumber = modelNumber + 1"
-            class="bg-primary p-1 rounded-r-xl">
+            class="bg-primary p-1 rounded-r-lg">
             <PlusIcon
                 class="size-5"/>
         </button>
