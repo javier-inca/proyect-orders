@@ -24,7 +24,7 @@ const props = defineProps({
 
     productList: {
         type: Array,
-        default: []
+        default: [{}]
     },
 
     selectedProduct: {
@@ -99,6 +99,14 @@ const inputTotalPrice = computed({
         emit('update:totalPrice' , newValue)
     }
 })
+
+const clickButton = (type) => {
+    emit ('sentButton', type )
+}
+
+const blur = () => {
+    emit ('blurInput')
+}
 const isTableVisible = ref(false)
 </script>
 
@@ -107,6 +115,7 @@ const isTableVisible = ref(false)
         <div class="max-w-md w-full border-2 border-primary rounded">
             <div class="flex w-full bg-primary">
                 <IconButton
+                    @click="clickButton('close')"
                     :isButton="true"
                     :icon="XMarkIcon"/>
             </div>
@@ -130,6 +139,7 @@ const isTableVisible = ref(false)
                     v-if="!isTableVisible" 
                     class="mx-5">
                     <InputSelect
+                        @blurInput="blur"
                         placeholder="Insert Product"
                         v-model:inputValue="inputProduct"
                         :selectData="productData"/>

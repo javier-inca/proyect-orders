@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
     placeholder: {
@@ -63,7 +63,7 @@ const props = defineProps({
     },
 
     modelValue:{
-        type: [String , Number],
+        type: [String , Number , Date],
         default: ''
     },
 
@@ -129,6 +129,7 @@ const modelInput = computed({
     get: ()=>props.modelValue,
     set: (newValue) => {
         emit ('update:modelValue', newValue)
+        emit('blurInput')
     }
 })
 
@@ -154,10 +155,16 @@ const maxDate = computed(() => {
 })
 
 const handleBlur = () => {
-    if(props.type === 'number'){
-        emit('update:modelValue' , (parseFloat(props.modelValue)).toFixed(2) )
+    if (props.type === 'number') {
+        emit('update:modelValue', (parseFloat(props.modelValue)).toFixed(2))
     }
-};
+}
+
+const handleKeydown = (event) => {
+    if (props.type === 'date' && event.key !== 'Tab') {
+        event.preventDefault()
+    }
+}
 </script>
 
 <template>
@@ -200,7 +207,8 @@ const handleBlur = () => {
                         :type="type" 
                         :disabled="isDisabled"
                         v-model="modelInput"
-                        class="focus:outline-none w-full bg-transparent">
+                        class="focus:outline-none w-full bg-transparent"
+                        @keydown="handleKeydown">
 
                     <p
                         :class="{
@@ -221,3 +229,13 @@ const handleBlur = () => {
     </div>
     
 </template>
+
+<style scoped>
+input[type="date"]:not([readonly]) {
+    pointer-events: auto
+}
+
+input[type="date"][readonly] {
+    pointer-events: none
+}
+</style>

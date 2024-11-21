@@ -21,7 +21,7 @@ const getUserName = (userId) => {
 </script>
 
 <template>
-    <div class="w-full overflow-x-auto border-2 border-primary rounded-md">
+    <div class="w-full overflow-x-auto overflow-visible border-2 border-primary rounded-md ">
         <table class="w-full min-w-[600px]">
             <thead class=" bg-light-primary uppercase text-sm">
                 <tr>    
@@ -50,7 +50,7 @@ const getUserName = (userId) => {
                     :key="order.id">
                     <td
                         class="px-2 py-3 text-sm">
-                        {{ order.description }}
+                        {{ order.reason }}
                     </td>
 
                     <td

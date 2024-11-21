@@ -40,9 +40,14 @@ const props = defineProps({
 
 const emit = defineEmits('update:modelValue')
 
+const timeoutId = ref(null)
+
 const textValue = computed({
     get: () => props.modelValue,
-    set: (newValue) => { emit ('update:modelValue' , newValue) }
+    set: (newValue) => { 
+        emit ('update:modelValue' , newValue) 
+        emit('blurInput')
+    }
 })
 
 const ySizes ={
@@ -70,7 +75,7 @@ const classDisabled = computed(()=>{
             {{ label }}
         </label>
 
-        <textarea 
+        <textarea
         :class="[
             ySize,
             classDisabled,

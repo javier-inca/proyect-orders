@@ -1,6 +1,7 @@
 <script setup>
 import { MinusIcon, PlusIcon } from '@heroicons/vue/24/outline'
-import { computed, ref } from 'vue'
+import { computed, normalizeClass, ref } from 'vue'
+import { parse } from 'vue/compiler-sfc';
 
 const props = defineProps({
     valueNumber:{
@@ -17,6 +18,19 @@ const modelNumber = computed({
         emit('update:valueNumber' , newValue)
     }
 })
+
+const validateNumber = () =>{
+    emit('update:valueNumber' , Math.floor(modelNumber.value))
+    
+    if(modelNumber.value > 99 ) {
+        emit('update:valueNumber' , 99)
+    } 
+
+    if(modelNumber.value < 1 ) {
+        emit('update:valueNumber' , 1) 
+    }
+
+}
 </script>
 
 <template>
@@ -33,10 +47,11 @@ const modelNumber = computed({
                 class="size-5"/>
         </button>
 
-        <p
-            class="w-10 text-center">
-            {{ modelNumber }}
-        </p>
+        <input
+            @blur="validateNumber"
+            type="number"
+            class=" w-10 text-center"
+            v-model="modelNumber"/>
 
         <button
             :class="{
@@ -44,10 +59,18 @@ const modelNumber = computed({
                 'text-white': modelNumber < 99
             }"
             :disabled="modelNumber >= 99"
-            @click="modelNumber = modelNumber + 1"
+            @click="modelNumber = parseInt(modelNumber) + 1"
             class="bg-primary p-1 rounded-r-lg">
             <PlusIcon
                 class="size-5"/>
         </button>
     </div>    
 </template>
+
+<style scoped>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+</style>

@@ -104,6 +104,10 @@ const resetInput = () => {
     }
     isEnabled.value = !isEnabled.value 
 }
+
+const blur = () => {
+    emit ('blurInput')
+}
 </script>
 
 <template>
@@ -115,6 +119,7 @@ const resetInput = () => {
             <div 
                 class="flex items-center px-2">
                 <input
+                    @blur="blur"
                     :placeholder="placeholder"
                     v-model="valueInput" 
                     @click="resetInput()"

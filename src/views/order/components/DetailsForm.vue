@@ -37,6 +37,8 @@ const props = defineProps({
 })
 const emit = defineEmits()
 
+const timeoutId = ref(null)
+
 const inputDate = computed({
     get: () => {
         const date = props.date
@@ -64,6 +66,12 @@ const inputDescription = computed({
         emit('update:description', newValue)
     }
 })
+
+const sentBlur = () => {
+    emit('autosave')
+}
+
+const name = ref()
 </script>
 
 <template>
@@ -76,6 +84,8 @@ const inputDescription = computed({
         <div class="flex flex-col gap-2 sm:flex-row mt-3">
             <div class="w-full sm:w-1/2">
                 <Select
+                    @blurInput="sentBlur"
+                    placeholder="Select"
                     :errorMessage="errorDelivery"
                     v-model:inputValue="inputDelivery"
                     :selectData="userData"
@@ -84,17 +94,21 @@ const inputDescription = computed({
 
             <div class="w-full sm:w-1/2">
                 <Input
+                    @blurInput="sentBlur"
                     v-model="inputDate"
                     :errorMessage="errorDate"
                     label="Date"
                     type="date"/>
+
             </div>
         </div>
 
         <div class="w-full mt-3 mb-2">
             <TextArea
+                @blurInput="sentBlur"
                 v-model="inputDescription"
-                label="Description"
+                label="Reason"
+                placeholder="Example: lunch, breakfast..."
                 :errorMessage="errorDescription"/>
         </div>
     </div>    

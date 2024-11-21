@@ -57,10 +57,17 @@ const props= defineProps({
     isDisabled : {
         type: Boolean,
         default : false
+    },
+
+    placeholder: {
+        type : String,
+        default: '',
     }
 })
 
 const emit = defineEmits()
+
+const timeoutId = ref(null)
 
 const isEnabled= ref(false)
 
@@ -89,6 +96,7 @@ const valueSelect = computed({
     
     set: (newValue) => {
         emit('update:inputValue', newValue)
+        emit('blurInput')
     }
 })
 
@@ -107,7 +115,7 @@ const showData = () => {
 <template>
     <div 
         :class="[size]"
-        class=" min-w-[100px] flex flex-col">
+        class=" min-w-[100px] flex flex-col relative">
         <label
             :class="{
                 'text-danger' : errorMessage
@@ -133,9 +141,12 @@ const showData = () => {
                     'p-2' : isPadding
                 }"
                 class="flex items-center px-2 text-black justify-between rounded">
-                <p>
-                    {{ valueSelect }}
-                </p>
+                <input 
+                    :placeholder="placeholder"
+                    class=" bg-transparent w-full cursor-pointer outline-none"
+                    v-model="valueSelect"
+                    type="text"
+                    readonly>
 
                 <ChevronDownIcon
                     :class="[
@@ -149,7 +160,10 @@ const showData = () => {
 
             <div 
                 v-if="isEnabled"
-                class="!text-black px-2 pb-2">
+                :class="[
+                    selectColor
+                ]"
+                class="!text-black px-2 pb-2 absolute w-full z-20 bg-white shadow-lg max-h-32 overflow-y-scroll rounded-md border-2">
                 <p
                     v-for="data in selectData"
                     @click="selectedOption(data[props.dataName])"

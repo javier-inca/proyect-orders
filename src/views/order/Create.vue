@@ -9,6 +9,7 @@ import Title from '../../components/Title.vue'
 import DetailsForm from './components/DetailsForm.vue'
 import Select from '../../components/Select.vue'
 import UserProductsForm from './components/UserProductsForm.vue'
+import StatusLine from '../../components/StatusLine.vue'
 
 const toastStore = useToastStore()
 const orderStore = useOrderStore()
@@ -17,7 +18,7 @@ const productStore = useProductStore()
 const orderUserStore = useOrderUserStore()
 
 const orderData = ref({
-    delivery : 'Select',
+    delivery : '',
     description : '',
     date : new Date(),
 
@@ -28,7 +29,7 @@ const orderData = ref({
 
 const orderUserData = ref({
     order_id : 0,
-    user_name : 'Select the person',
+    user_name : '',
     user_id : 0,
     amount_money : null,
 
@@ -53,6 +54,10 @@ const productData = ref([])
 const stateSelectPerson = ref(false)
 const isVisibleProductForm = ref(false)
 
+const stateOrder = ref(false)
+const timeoutIdOrder = ref(null)
+
+
 const createOrder = async () => {
     let response = null
 
@@ -63,10 +68,10 @@ const createOrder = async () => {
     const formattedDate = orderData.value.date.toISOString().slice(0, 19).replace('T', ' ')
     
     const data = {
-        description: orderData.value.description,
+        reason: orderData.value.description,
         order_date: formattedDate,
         delivery_user_id: findUser? findUser.id : 0
-    }    
+    }        
 
     if(orderUserData.value.order_id > 0){
         response = await orderStore.updateOrder( orderUserData.value.order_id ,data)
@@ -80,16 +85,19 @@ const createOrder = async () => {
         }
     }
 
-    if(response.status === 422){
+    if(response.status === 422){        
         showToast('error' , 'Error' , 'Error saving the order.')
         
+        console.log(response)
         const errors = response.response.data.errors
 
-        orderData.value.errorDescription = errors.description ? errors.description[0] : ''
+        
+        orderData.value.errorDescription = errors.reason ? errors.reason[0] : ''
         orderData.value.errorDelivery = errors.delivery_user_id ? errors.delivery_user_id[0] : ''
         orderData.value.errorDate = errors.order_date ? errors.order_date[0] : ''
 
         stateSelectPerson.value = false
+        stateOrder.value = false
     }
 
     if(response.status === 201 || response.status === 200) {
@@ -98,6 +106,7 @@ const createOrder = async () => {
         orderData.value.errorDate = ''
 
         stateSelectPerson.value = true
+        stateOrder.value = true
     }
 }
 
@@ -131,6 +140,12 @@ const showToast = (severity, summary, detail) => {
 
 const getUserIdByName = (userName) => {
     return userData.value.find( user => user.name === userName) ? userData.value.find( user => user.name === userName).id : 0
+}
+
+const productFormOptions = (type) => {
+    if(type === 'close') {
+        isVisibleProductForm.value = false
+    }
 }
 
 watch(()=> orderUserData.value.user_name , ()=> {
@@ -170,11 +185,25 @@ onMounted(async () => {
 
     productData.value = await productStore.fetchProducts()
 })
+
+const autosave = () => {
+    stateOrder.value = false
+
+    if(timeoutIdOrder.value){
+        clearTimeout(timeoutIdOrder.value)
+    }
+
+    timeoutIdOrder.value = setTimeout(() => {
+        createOrder()
+    }, 2000)
+}
 </script>
 
 <template>
     <div class="flex justify-center mx-2">
         <div class="relative max-w-3xl w-full">
+            <StatusLine
+                />
             <div 
                 :class="{
                     'absolute' : !isVisibleProductForm,
@@ -183,8 +212,9 @@ onMounted(async () => {
                 class="z-0 w-full">
                 <Title
                     title="New Order"/>
-
+                {{ stateOrder }}
                 <DetailsForm
+                    @autosave="autosave"
                     v-model:delivery="orderData.delivery"
                     v-model:description="orderData.description"
                     v-model:date="orderData.date"
@@ -192,12 +222,6 @@ onMounted(async () => {
                     v-model:errorDescription="orderData.errorDescription"
                     v-model:errorDate="orderData.errorDate"
                     :userData="userData"/>
-
-                <button
-                    @click="createOrder"
-                    class="p-2 bg-light-danger rounded">
-                    Agregar order
-                </button>
 
                 <div class="border p-2 border-primary rounded">
                     <Title
@@ -229,6 +253,7 @@ onMounted(async () => {
                     v-model:unitPrice="orderUserProductData.final_price"
                     v-model:totalPrice="orderUserProductData.totalPrice"
                     v-model:isButtonDisabled="orderUserProductData.isButtonDisabled"
+                    @sentButton="(type => productFormOptions(type))"
                     :nameUser="orderUserData.user_name"
                     :productData="productData"/>
             </div>
