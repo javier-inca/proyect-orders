@@ -65,9 +65,7 @@ const props= defineProps({
     }
 })
 
-const emit = defineEmits()
-
-const timeoutId = ref(null)
+const emit = defineEmits(['blurInput'])
 
 const isEnabled= ref(false)
 
@@ -96,12 +94,12 @@ const valueSelect = computed({
     
     set: (newValue) => {
         emit('update:inputValue', newValue)
-        emit('blurInput')
     }
 })
 
 const selectedOption = (option) => {
     emit('update:inputValue' , option)
+    emit('blurInput')
     isEnabled.value = false
 }
 

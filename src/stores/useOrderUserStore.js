@@ -18,7 +18,7 @@ export const useOrderUserStore = defineStore('orderUserStore' , () => {
     //Update Order User
     const updateOrderUser = async (orderUserId  ,orderUserData) => {
         try {
-            const response = await axios.put( `/api/orders/${orderUserId}` , orderUserData)
+            const response = await axios.put( `/api/order-users/${orderUserId}` , orderUserData)
 
             if(response.status === 200){
                 return  response
@@ -28,8 +28,21 @@ export const useOrderUserStore = defineStore('orderUserStore' , () => {
         }
     }
 
+    const deleteOrderUser = async (orderUserId) => {
+        try {
+            const response = await axios.delete( `/api/order-users/${orderUserId}`)
+
+            if(response.status === 204){
+                return response
+            }
+        } catch (error) {
+            return error || 'Error deleted order user'
+        }
+    }
+
     return{
         createOrderUser,
         updateOrderUser,
+        deleteOrderUser,
     }
 } )

@@ -193,7 +193,7 @@ const isTableVisible = ref(false)
                 <div 
                     v-if="isTableVisible"
                     class="mx-2">
-                    <div class="overflow-auto border-2 border-primary rounded max-h-[175px]">
+                    <div class="overflow-auto border-2 border-primary rounded h-[175px]">
                         <table class="w-full min-w-[350px]">
                             <thead>
                                 <tr>

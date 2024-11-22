@@ -123,7 +123,7 @@ const inputAlignment = computed(() => {
     return inputAlignments[props.inputAlignment] ? inputAlignments[props.inputAlignment] : 'justify-start'
 })
 
-const emit = defineEmits()
+const emit = defineEmits(['blurInput'])
 
 const modelInput = computed({
     get: ()=>props.modelValue,

@@ -45,7 +45,7 @@ const props= defineProps({
     }
 })
 
-const emit = defineEmits()
+const emit = defineEmits(['blurInput'])
 
 const filterData = ref()
 

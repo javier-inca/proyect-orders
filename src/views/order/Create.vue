@@ -10,6 +10,7 @@ import DetailsForm from './components/DetailsForm.vue'
 import Select from '../../components/Select.vue'
 import UserProductsForm from './components/UserProductsForm.vue'
 import StatusLine from '../../components/StatusLine.vue'
+import axios from 'axios'
 
 const toastStore = useToastStore()
 const orderStore = useOrderStore()
@@ -21,6 +22,7 @@ const orderData = ref({
     delivery : '',
     description : '',
     date : new Date(),
+    isShowForm : true,
 
     errorDelivery : '',
     errorDescription : '',
@@ -54,9 +56,16 @@ const productData = ref([])
 const stateSelectPerson = ref(false)
 const isVisibleProductForm = ref(false)
 
-const stateOrder = ref(false)
+const statusOrder = ref(false)
 const timeoutIdOrder = ref(null)
 
+const fetchOrderData = ref([])
+const fetchUserData = ref([])
+
+const fetchOrder = async () => {
+    const response = await orderStore.fetchOrderById(orderUserData.value.order_id)
+    fetchOrderData.value = response.data.data
+}
 
 const createOrder = async () => {
     let response = null
@@ -88,16 +97,14 @@ const createOrder = async () => {
     if(response.status === 422){        
         showToast('error' , 'Error' , 'Error saving the order.')
         
-        console.log(response)
         const errors = response.response.data.errors
 
-        
         orderData.value.errorDescription = errors.reason ? errors.reason[0] : ''
         orderData.value.errorDelivery = errors.delivery_user_id ? errors.delivery_user_id[0] : ''
         orderData.value.errorDate = errors.order_date ? errors.order_date[0] : ''
 
         stateSelectPerson.value = false
-        stateOrder.value = false
+        statusOrder.value = false
     }
 
     if(response.status === 201 || response.status === 200) {
@@ -106,7 +113,20 @@ const createOrder = async () => {
         orderData.value.errorDate = ''
 
         stateSelectPerson.value = true
-        stateOrder.value = true
+        statusOrder.value = true
+
+        orderData.value.isShowForm = false
+
+        fetchOrder()
+    }
+}
+
+const fetchOrderUser = async () => {
+    const user = fetchOrderData.value.order_users.find(user => user.id === orderUserProductData.value.order_user_id)
+
+    if(user.products.length <= 0){
+        await deleteOrderUser()
+        fetchOrder()        
     }
 }
 
@@ -120,8 +140,8 @@ const createOrderUser = async () => {
     }
 
     response = await orderUserStore.createOrderUser(data)
-
-    if(response.status !== 201) {        
+        
+    if(response.status === 422) {        
         orderUserData.value.errorUser =  response.response.data.errors.user_id[0]
 
         showToast('error' , 'Error' , response.response.data.errors.order_id[0])
@@ -129,9 +149,18 @@ const createOrderUser = async () => {
 
     if(response.status === 201 || response.status === 200 ){
         orderUserProductData.value.order_user_id = response.data.order_user_id
+        orderUserData.value.errorUser = ''
+
+        response.data
 
         isVisibleProductForm.value = true
+
+        fetchOrder()
     }
+}
+
+const deleteOrderUser = async () => {
+    await orderUserStore.deleteOrderUser(orderUserProductData.value.order_user_id)
 }
 
 const showToast = (severity, summary, detail) => {
@@ -145,14 +174,10 @@ const getUserIdByName = (userName) => {
 const productFormOptions = (type) => {
     if(type === 'close') {
         isVisibleProductForm.value = false
+fetchOrderUser()
+        
     }
 }
-
-watch(()=> orderUserData.value.user_name , ()=> {
-    if(orderUserData.value.order_id > 0){
-        orderUserData.value.user_id = getUserIdByName(orderUserData.value.user_name)
-    }    
-})
 
 watch(() => orderUserProductData.value.product, () => {
     const findProduct = productData.value.find(product => product.name.toLowerCase() === orderUserProductData.value.product.toLocaleLowerCase() )
@@ -180,30 +205,47 @@ watch(orderUserProductData, () => {
     
 }, { deep:true })
 
+const saveOrder = (type) => {    
+    if(timeoutIdOrder.value){
+        clearTimeout(timeoutIdOrder.value)
+    }
+    
+    if(type === 'save' && !statusOrder.value){
+        statusOrder.value = false
+        
+        createOrder()
+        return
+    }
+    
+    if(type === 'autosave'){
+        statusOrder.value = false
+        
+        timeoutIdOrder.value = setTimeout(() => {
+            createOrder()
+        }, 3000)
+        return
+    }
+    
+}
+
+const saveOrderUser = async () =>{    
+    orderUserData.value.user_id =  await( getUserIdByName(orderUserData.value.user_name) )
+    
+    createOrderUser()
+}
+
 onMounted(async () => {
     userData.value = await userStore.fetchUsers()
 
     productData.value = await productStore.fetchProducts()
 })
-
-const autosave = () => {
-    stateOrder.value = false
-
-    if(timeoutIdOrder.value){
-        clearTimeout(timeoutIdOrder.value)
-    }
-
-    timeoutIdOrder.value = setTimeout(() => {
-        createOrder()
-    }, 2000)
-}
 </script>
 
 <template>
     <div class="flex justify-center mx-2">
         <div class="relative max-w-3xl w-full">
-            <StatusLine
-                />
+<!--             <StatusLine
+                /> -->
             <div 
                 :class="{
                     'absolute' : !isVisibleProductForm,
@@ -212,35 +254,41 @@ const autosave = () => {
                 class="z-0 w-full">
                 <Title
                     title="New Order"/>
-                {{ stateOrder }}
+                {{ statusOrder }}
                 <DetailsForm
-                    @autosave="autosave"
+                    @save="type => saveOrder(type)"
                     v-model:delivery="orderData.delivery"
-                    v-model:description="orderData.description"
+                    v-model:reason="orderData.description"
                     v-model:date="orderData.date"
                     v-model:errorDelivery="orderData.errorDelivery"
                     v-model:errorDescription="orderData.errorDescription"
                     v-model:errorDate="orderData.errorDate"
-                    :userData="userData"/>
+                    v-model:isShowForm="orderData.isShowForm"
+                    :userData="userData"
+                    :statusOrder="statusOrder"/>
 
-                <div class="border p-2 border-primary rounded">
+                <div 
+                    :class="{
+                        'bg-gray-200 text-gray-500' : !statusOrder
+                    }"
+                    class="border p-2 border-primary rounded">
                     <Title
-                        title="List of people’s orders."
+                        title="Order Table"
                         :isUppercase="false"
                         aling="start"/>
 
-                    <Select
-                        :errorMessage="orderUserData.errorUser"
-                        :isShowingSelection="true"
-                        :isDisabled="!stateSelectPerson"
-                        v-model:inputValue="orderUserData.user_name"
-                        :selectData="userData"/>
+                    <div class="mt-3">
+                        <Select
+                            label="Select person"
+                            placeholder="Select"
+                            :errorMessage="orderUserData.errorUser"
+                            :isShowingSelection="false"
+                            :isDisabled="!statusOrder"
+                            v-model:inputValue="orderUserData.user_name"
+                            @blurInput="saveOrderUser"
+                            :selectData="userData"/>
+                    </div>
 
-                    <button
-                        class=" bg-light-danger p-2 rounded"
-                        @click="createOrderUser">
-                        Agregar persona
-                    </button>
                 </div>
             </div>
 
@@ -262,6 +310,10 @@ const autosave = () => {
                 v-if="isVisibleProductForm"
                 class="fixed top-0 left-0 w-full h-full z-10 backdrop-blur-md">
             </div> 
+
         </div>
     </div>
+    <pre class=" mt-80"> 
+        {{ fetchOrderData }}
+    </pre>
 </template>

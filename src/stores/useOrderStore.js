@@ -16,6 +16,19 @@ export const useOrderStore = defineStore('orderStore' , () => {
         }
     }
 
+    //Get an order by Idw
+    const fetchOrderById = async (orderId) => {
+        try {
+            const response = await axios.get(`/api/orders/${orderId}`)
+
+            if(response.status === 200){
+                return response
+            }
+        } catch (error) {
+            return error
+        }
+    }
+
     //Create new order
     const createOrder = async (orderData) => {        
         try {
@@ -44,6 +57,7 @@ export const useOrderStore = defineStore('orderStore' , () => {
 
     return {
         fetchOrders,
+        fetchOrderById,
         createOrder,
         updateOrder,
     }
