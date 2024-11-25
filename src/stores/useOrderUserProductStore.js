@@ -7,7 +7,7 @@ export const useOrderUserProduct = defineStore('orderUserProduct' , () => {
         try {
             const response = await axios.post('/api/order-user-products' , orderUserProductData )
 
-            if(response.status === 201) {
+            if(response.status === 200) {
                 return response
             }
         } catch (error) {

@@ -111,6 +111,7 @@ const name = ref()
         </div>
 
         <div
+            class=" transition-all"
             v-if="showForm">    
             <div class="w-full my-3">
                 <TextArea
@@ -151,6 +152,7 @@ const name = ref()
         </div>
 
         <div 
+            class="transition-all"
             v-if="!showForm">
             <div class=" flex flex-col sm:flex-row justify-between w-full gap-2 ">
                 <p>

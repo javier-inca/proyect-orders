@@ -5,18 +5,20 @@ import { useUserStore } from '../../stores/useUserStore'
 import { useProductStore } from '../../stores/useProductStore'
 import { useToastStore } from '../../stores/useToastStore'
 import { useOrderUserStore } from '../../stores/useOrderUserStore'
+import { useOrderUserProduct } from '../../stores/useOrderUserProductStore'
 import Title from '../../components/Title.vue'
 import DetailsForm from './components/DetailsForm.vue'
 import Select from '../../components/Select.vue'
 import UserProductsForm from './components/UserProductsForm.vue'
 import StatusLine from '../../components/StatusLine.vue'
-import axios from 'axios'
+import UserOrdersTable from './components/UserOrdersTable.vue'
 
 const toastStore = useToastStore()
-const orderStore = useOrderStore()
 const userStore = useUserStore()
 const productStore = useProductStore()
+const orderStore = useOrderStore()
 const orderUserStore = useOrderUserStore()
+const orderUserProductStore = useOrderUserProduct()
 
 const orderData = ref({
     delivery : '',
@@ -35,11 +37,11 @@ const orderUserData = ref({
     user_id : 0,
     amount_money : null,
 
-    errorUser : ''
+    errorUser : '',
+    errorAmountMoney:'',
 })
 
 const orderUserProductData = ref({
-    status : 'create',
     order_user_id : 0,
     product : '',
     product_id: 0,
@@ -47,7 +49,11 @@ const orderUserProductData = ref({
     final_price : 0,
     totalPrice: 0,
     description: '',
-    isButtonDisabled: true
+    isButtonDisabled: true,
+
+    errorProduct:'',
+    errorPrice:'',
+    errorDescription:'',
 })
 
 const userData = ref([])
@@ -60,7 +66,7 @@ const statusOrder = ref(false)
 const timeoutIdOrder = ref(null)
 
 const fetchOrderData = ref([])
-const fetchUserData = ref([])
+const fetchUserData = ref([]) 
 
 const fetchOrder = async () => {
     const response = await orderStore.fetchOrderById(orderUserData.value.order_id)
@@ -122,11 +128,15 @@ const createOrder = async () => {
 }
 
 const fetchOrderUser = async () => {
-    const user = fetchOrderData.value.order_users.find(user => user.id === orderUserProductData.value.order_user_id)
-
+    const user =  await fetchOrderData.value.order_users.find(user => user.id === orderUserProductData.value.order_user_id)
+    
     if(user.products.length <= 0){
         await deleteOrderUser()
         fetchOrder()        
+    }
+
+    if(user.products.length > 0){
+        fetchUserData.value = user.products        
     }
 }
 
@@ -159,8 +169,83 @@ const createOrderUser = async () => {
     }
 }
 
+const updateOrderUser = async () => {
+    const data = {
+        user_id: orderUserData.value.user_id,
+        amount_money: orderUserData.value.amount_money,
+    }
+    const response = await orderUserStore.updateOrderUser(orderUserProductData.value.order_user_id , data)
+    
+    if(response.status === 422){
+        orderUserData.value.errorAmountMoney = response.response.data.errors.amount_money ? response.response.data.errors.amount_money[0] : ''
+    }
+
+    if(response.status === 200){
+        showToast('success', 'Success', 'Order registered successfully.')
+
+        productFormOptions('close')
+    }
+}
+
 const deleteOrderUser = async () => {
     await orderUserStore.deleteOrderUser(orderUserProductData.value.order_user_id)
+}
+
+const clearProductForm = () => {
+    orderUserProductData.value.product = ''
+    orderUserProductData.value.quantity = 1
+    orderUserProductData.value.description = ''
+    orderUserProductData.value.final_price = 0
+
+    orderUserProductData.value.errorDescription = ''
+    orderUserProductData.value.errorPrice = ''
+    orderUserProductData.value.errorProduct = ''
+}
+
+const createOrderUserProduct = async () => {
+    let data = {
+        order_user_id: orderUserProductData.value.order_user_id,
+        product_id: orderUserProductData.value.product_id,
+        product_name: orderUserProductData.value.product,
+        quantity: orderUserProductData.value.quantity,
+        final_price: orderUserProductData.value.final_price,
+        description: orderUserProductData.value.description,
+    }
+
+    if(orderUserProductData.value.product_id === 0){        
+        const response = await productStore.createProduct({
+            name: data.product_name,
+            reference_price: data.final_price,
+        })
+              
+        if(response.status === 422){
+            orderUserProductData.value.errorProduct = response.response.data.errors.name ? response.response.data.errors.name[0] : ''
+            orderUserProductData.value.errorPrice = response.response.data.errors.reference_price ? response.response.data.errors.reference_price[0] : ''
+            return
+        }
+
+        if(response.status === 201){
+            showToast('success', 'Success', 'New product registered')
+            
+            orderUserProductData.value.errorProduct = ''
+            orderUserProductData.value.errorPrice = ''
+
+            data.product_id = response.data.product.id
+
+            fetchProducts()
+        }
+    }
+
+    const response = await orderUserProductStore.createOrderUserProduct(data)
+        
+    if(response.status === 200){
+        showToast('info', 'Information', 'Product added to cart')
+        
+        clearProductForm()
+    }
+    
+    await fetchOrder()
+    await fetchOrderUser()
 }
 
 const showToast = (severity, summary, detail) => {
@@ -173,13 +258,23 @@ const getUserIdByName = (userName) => {
 
 const productFormOptions = (type) => {
     if(type === 'close') {
+        orderUserData.value.user_name = ''
+
         isVisibleProductForm.value = false
-fetchOrderUser()
         
+        fetchOrderUser()
+    }
+
+    if(type === 'create') {
+        createOrderUserProduct()
+    }
+
+    if(type === 'registerOrder'){
+        updateOrderUser()
     }
 }
 
-watch(() => orderUserProductData.value.product, () => {
+watch(() => orderUserProductData.value.product, () => {    
     const findProduct = productData.value.find(product => product.name.toLowerCase() === orderUserProductData.value.product.toLocaleLowerCase() )
     
     if(findProduct) {
@@ -194,10 +289,12 @@ watch(() => orderUserProductData.value.product, () => {
 })
 
 watch(orderUserProductData, () => {    
-    orderUserProductData.value.totalPrice =  orderUserProductData.value.final_price * orderUserProductData.value.quantity
+    if(orderUserProductData.value.quantity > 0 && orderUserProductData.value.quantity < 100 ){
+        orderUserProductData.value.totalPrice =  orderUserProductData.value.final_price * orderUserProductData.value.quantity
+    }
 
     if(orderUserProductData.value.final_price < 0.5) {
-        orderUserProductData.value.isButtonDisabled = true
+        orderUserProductData.value.isButtonDisabled = false
         return
     }
 
@@ -222,7 +319,7 @@ const saveOrder = (type) => {
         
         timeoutIdOrder.value = setTimeout(() => {
             createOrder()
-        }, 3000)
+        }, 5000)
         return
     }
     
@@ -234,18 +331,38 @@ const saveOrderUser = async () =>{
     createOrderUser()
 }
 
+const filterUser = () => { 
+    if(fetchOrderData.value.length > 0){
+        const filterUser = userData.value.filter(user => 
+            !fetchOrderData.value.order_users.some(orderUser => orderUser.user_id === user.id)
+        )
+        console.log(filterUser);
+        
+        return filterUser
+    }
+    console.log(userData.value);
+    
+    return userData.value
+}
+
+const fetchProducts = async () =>{
+    productData.value = await productStore.fetchProducts()
+}
+
 onMounted(async () => {
     userData.value = await userStore.fetchUsers()
 
-    productData.value = await productStore.fetchProducts()
+    fetchProducts()
 })
 </script>
 
 <template>
+    <button
+        @click="filterUser">
+        dw
+    </button>
     <div class="flex justify-center mx-2">
         <div class="relative max-w-3xl w-full">
-<!--             <StatusLine
-                /> -->
             <div 
                 :class="{
                     'absolute' : !isVisibleProductForm,
@@ -289,6 +406,10 @@ onMounted(async () => {
                             :selectData="userData"/>
                     </div>
 
+                    <UserOrdersTable
+                        v-if="fetchOrderData.order_users? fetchOrderData.order_users.length > 0 : false"
+                        :orderList="fetchOrderData.order_users"
+                        :userList="userData"/>
                 </div>
             </div>
 
@@ -300,10 +421,16 @@ onMounted(async () => {
                     v-model:quantity="orderUserProductData.quantity"
                     v-model:unitPrice="orderUserProductData.final_price"
                     v-model:totalPrice="orderUserProductData.totalPrice"
-                    v-model:isButtonDisabled="orderUserProductData.isButtonDisabled"
-                    @sentButton="(type => productFormOptions(type))"
+                    v-model:description="orderUserProductData.description"
+                    v-model:amountMoney="orderUserData.amount_money"
+                    :errorSelectedProduct="orderUserProductData.errorProduct"
+                    :errorUnitPrice="orderUserProductData.errorPrice"
+                    :errorDescription="orderUserProductData.errorDescription"
+                    :errorAmountMoney="orderUserData.errorAmountMoney"
                     :nameUser="orderUserData.user_name"
-                    :productData="productData"/>
+                    :productData="productData"
+                    :productList="fetchUserData"
+                    @clickButton="(type => productFormOptions(type))"/>
             </div>
 
             <div 
@@ -313,7 +440,4 @@ onMounted(async () => {
 
         </div>
     </div>
-    <pre class=" mt-80"> 
-        {{ fetchOrderData }}
-    </pre>
 </template>

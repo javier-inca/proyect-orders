@@ -1,14 +1,14 @@
 <script setup>
-import Title from '../../../components/Title.vue';
-import IconButton from '../../../components/IconButton.vue';
-import ProductSelectionForm from '../../components/ProductSelectionForm.vue';
-import { ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/solid';
-import InputSelect from '../../../components/InputSelect.vue';
-import ButtonAmount from '../../../components/ButtonAmount.vue';
-import Input from '../../../components/Input.vue';
-import TextArea from '../../../components/TextArea.vue';
-import Button from '../../../components/Button.vue';
-import { computed, ref } from 'vue';
+import Title from '../../../components/Title.vue'
+import IconButton from '../../../components/IconButton.vue'
+import ProductSelectionForm from '../../components/ProductSelectionForm.vue'
+import { ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/solid'
+import InputSelect from '../../../components/InputSelect.vue'
+import ButtonAmount from '../../../components/ButtonAmount.vue'
+import Input from '../../../components/Input.vue'
+import TextArea from '../../../components/TextArea.vue'
+import Button from '../../../components/Button.vue'
+import { computed, ref } from 'vue'
 
 
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
 
     productList: {
         type: Array,
-        default: [{}]
+        default: []
     },
 
     selectedProduct: {
@@ -52,9 +52,14 @@ const props = defineProps({
         default: ''
     },
 
+    amountMoney: {
+        type:Number,
+        default: 0
+    },
+
     isButtonDisabled: {
         type: Boolean,
-        default: true 
+        default: false 
     },
 
     errorSelectedProduct: String,
@@ -64,6 +69,8 @@ const props = defineProps({
     errorUnitPrice: String,
     
     errorDescription: String,
+
+    errorAmountMoney: String,
 })
 
 const emit = defineEmits() 
@@ -100,13 +107,35 @@ const inputTotalPrice = computed({
     }
 })
 
-const clickButton = (type) => {
-    emit ('sentButton', type )
+const inputDescription = computed({
+    get: () => props.description,
+
+    set: (newValue) => {
+        emit('update:description' , newValue)
+    }
+})
+
+const inputAmountMoney = computed({
+    get: ()=> props.amountMoney,
+
+    set: (newValue) => {
+        emit('update:amountMoney', newValue)
+    }
+})
+
+const clickButton = (type) => {        
+    emit ('clickButton', type )
 }
 
-const blur = () => {
-    emit ('blurInput')
-}
+const totalSum = computed(() => {
+    const sum = props.productList.reduce((total, product) => {
+        const price = parseFloat(product.final_price)
+        const quantity = product.quantity
+        return total + (quantity * price)
+    }, 0)
+
+    return (sum).toFixed(2)
+})
 const isTableVisible = ref(false)
 </script>
 
@@ -131,6 +160,8 @@ const isTableVisible = ref(false)
                         title="Product List"/>
 
                     <IconButton 
+                        @click="isTableVisible = !isTableVisible"
+                        :isButton="true"
                         :icon="ShoppingCartIcon"
                         :number="productList.length"/>
                 </div>
@@ -139,6 +170,7 @@ const isTableVisible = ref(false)
                     v-if="!isTableVisible" 
                     class="mx-5">
                     <InputSelect
+                        :errorMessage="errorSelectedProduct"
                         @blurInput="blur"
                         placeholder="Insert Product"
                         v-model:inputValue="inputProduct"
@@ -155,6 +187,7 @@ const isTableVisible = ref(false)
                     </div>
 
                     <Input
+                        :errorMessage="errorUnitPrice"
                         v-model:modelValue="inputUnitPrice"
                         class="my-3"
                         label="Unit Price"
@@ -174,11 +207,14 @@ const isTableVisible = ref(false)
                         :isDisabled="true"/>
 
                     <TextArea
+                        :errorMessage="errorDescription"
+                        v-model="inputDescription"
                         class="my-3"
                         label="Description"/>
 
                     <div class="flex flex-col items-center sm:flex-row-reverse gap-2 my-3 justify-center">
                         <Button
+                            @click="clickButton('create')"
                             :isDisabled="isButtonDisabled"
                             buttonName="Add to cart"/>
 
@@ -215,17 +251,20 @@ const isTableVisible = ref(false)
                             </thead>
 
                             <tbody>
-                                <tr class="border-b border-primary">
+                                <tr 
+                                    v-for="product in productList"
+                                    :key="product.product_id"
+                                    class="border-b border-primary">
                                     <td class="text-start p-2">
-                                        Salteña de pollo picante     
+                                        {{ product.product_name }}     
                                     </td>
 
                                     <td class="text-start p-2">
-                                        3 units
+                                        {{ product.quantity }} units
                                     </td>
 
                                     <td class="text-end p-2">
-                                        232.00 Bs.
+                                        {{ (product.final_price * product.quantity).toFixed(2) }} Bs.
                                     </td>
                                 </tr>
                             </tbody>
@@ -233,6 +272,7 @@ const isTableVisible = ref(false)
                     </div>
 
                     <Input
+                        v-model="totalSum"
                         class="my-3"
                         label="Total Price"
                         textAlignment="end"
@@ -241,6 +281,9 @@ const isTableVisible = ref(false)
                         :isPadding="false"/>
 
                     <Input
+                        :errorMessage="errorAmountMoney"
+                        v-model="inputAmountMoney"
+                        type="number"
                         class="my-3"
                         label="Amount Money"
                         textAlignment="end"
@@ -250,8 +293,8 @@ const isTableVisible = ref(false)
 
                     <div class="flex flex-col items-center sm:flex-row-reverse gap-2 my-3 justify-center">
                         <Button
-                            :isDisabled="true"
-                            buttonName="Add to cart"/>
+                            @click="clickButton('registerOrder')"
+                            buttonName="Register order"/>
 
                         <Button
                             @click="isTableVisible =  false"

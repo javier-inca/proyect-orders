@@ -34,7 +34,7 @@ const props= defineProps({
         default: true
     },
 
-    message: {
+    errorMessage: {
         type: String,
         default: ''
     },
@@ -114,7 +114,12 @@ const blur = () => {
     <div 
         class="w-full min-w-[200px] flex flex-col">
         <div 
-            :class="[selectColor]"
+            :class="[
+                selectColor,
+                {
+                    '!border-danger bg-light-danger' : errorMessage
+                }
+            ]"
             class="relative z-10 border-2 rounded-md">
             <div 
                 class="flex items-center px-2">
@@ -123,7 +128,7 @@ const blur = () => {
                     :placeholder="placeholder"
                     v-model="valueInput" 
                     @click="resetInput()"
-                    class="focus:outline-none w-full !text-black"
+                    class="focus:outline-none w-full !text-black bg-transparent"
                     type="text">
 
                 <ChevronDownIcon
@@ -139,7 +144,8 @@ const blur = () => {
 
             <div 
                 v-if="isEnabled"
-                class="!text-black p-2">
+                :class="{'!border-danger' : errorMessage}"
+                class="!text-black p-2 absolute bg-white w-full shadow-md border-2 border-primary rounded-b-md overflow-y-auto max-h-52">
                 <p
                     v-for="data in filterData"
                     @click="selectedOption(data[props.dataName])"
@@ -151,10 +157,9 @@ const blur = () => {
         </div>
 
         <p
-            class=" leading-4 text-justify"
-            :class="[ selectColor, ]"
-            v-if="!isEnabled && message">
-            {{ message }}
+            class=" leading-4 text-justify text-danger"
+            v-if="!isEnabled && errorMessage">
+            {{ errorMessage }}
         </p>
     </div>
     

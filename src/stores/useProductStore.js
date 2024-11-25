@@ -15,14 +15,15 @@ export const useProductStore = defineStore('productStore', () => {
         }
     }
 
+    //Create product
     const createProduct = async (productData) => {
         try {
-            const response = await axios.post('/api/products')
+            const response = await axios.post('/api/products', productData)
 
             if(response.status === 201){
                 return response
             }
-        } catch (error) {
+        } catch (error) {            
             return error || 'Error creating product'
         }
     } 

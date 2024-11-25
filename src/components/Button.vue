@@ -102,7 +102,8 @@ const buttonColor = computed(() => {
 </script>
 
 <template>
-    <div 
+    <button
+        :disabled="isDisabled"
         :class="[
             buttonSize,
             buttonAlignment,
@@ -123,5 +124,5 @@ const buttonColor = computed(() => {
         <component
             :is="rightIcon"
             class="size-5" />
-    </div>
+    </button>
 </template>
