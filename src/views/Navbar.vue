@@ -54,7 +54,7 @@ const showMenu = ref(false)
                 :class="{
                     ' rotate-180' : showMenu
                 }"
-                class="size-6 text-white transition-all duration-500"/>           
+            class="size-6 text-white transition-all duration-500"/>           
         </nav>
     </div>
 

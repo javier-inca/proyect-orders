@@ -31,14 +31,15 @@ onMounted( async () => {
             <div class="absolute z-0 w-full">
                 <div class="flex justify-between items-center mb-2">
                     <Title
-                        title="Order list"/>
+                        title="list of orders"/>
 
                     <router-link
+                        class="min-w-[150px]"
                         to="/orders/create">
                         <Button
                             buttonName="New Order"
                             :rightIcon="ShoppingCartIcon"
-                            class=" w-[150px]"/>
+                            class="max-w-[150px]"/>
                     </router-link>
                 </div>  
                 
