@@ -21,9 +21,9 @@ const getUserName = (userId) => {
 </script>
 
 <template>
-    <div class="w-full overflow-x-auto overflow-visible border-2 border-primary rounded-md ">
+    <div class="w-full overflow-x-auto overflow-visible border-2 border-primary rounded-md max-h-[70vh]">
         <table class="w-full min-w-[600px]">
-            <thead class=" bg-light-primary uppercase text-sm">
+            <thead class=" sticky top-0 bg-light-primary uppercase text-sm">
                 <tr>    
                     <th class="px-2 py-3 text-start w-[40%]">
                         Description

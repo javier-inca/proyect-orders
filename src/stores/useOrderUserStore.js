@@ -24,10 +24,13 @@ export const useOrderUserStore = defineStore('orderUserStore' , () => {
                 return  response
             }
         } catch (error) {
+            console.log(error);
+            
             return error || 'Error updating order user'
         }
     }
 
+    //Delete Order User
     const deleteOrderUser = async (orderUserId) => {
         try {
             const response = await axios.delete( `/api/order-users/${orderUserId}`)

@@ -12,3 +12,25 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+/* Visibility for scrollbar horizontal on aggrid */
+::-webkit-scrollbar {
+    -webkit-appearance: none !important;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 10px;
+    /* adjust the size of the vertical scroll bar, 10px is visually pleasing */
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 10px;
+    /* adjust the size of the horizontal scroll bar, 10px is visually pleasing */
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    /* the scroll bar has rounded edges, 8px is visually pleasing */
+    border: 2px solid white;
+    background-color: rgb(65, 75, 111);
+}

@@ -137,6 +137,12 @@ const totalSum = computed(() => {
     return (sum).toFixed(2)
 })
 const isTableVisible = ref(false)
+
+const viewProductList = () => {
+    if(props.productList.length > 0){
+        isTableVisible.value = !isTableVisible.value
+    }
+}
 </script>
 
 <template>
@@ -152,15 +158,17 @@ const isTableVisible = ref(false)
             <div class="bg-white p-2">
                 <div class=" flex justify-between p-2 items-center">
                     <Title
-                        v-if="!isTableVisible"
-                        title="Select Product"/>
+                        v-if="!isTableVisible">
+                        {{ userName }}'s order
+                    </Title>
 
                     <Title
-                        v-if="isTableVisible"
-                        title="Product List"/>
+                        v-if="isTableVisible">
+                        {{ userName }}'s order list
+                    </Title>
 
                     <IconButton 
-                        @click="isTableVisible = !isTableVisible"
+                        @click="viewProductList"
                         :isButton="true"
                         :icon="ShoppingCartIcon"
                         :number="productList.length"/>
@@ -170,15 +178,14 @@ const isTableVisible = ref(false)
                     v-if="!isTableVisible" 
                     class="mx-5">
                     <InputSelect
+                        label="Select Product"
                         :errorMessage="errorSelectedProduct"
-                        @blurInput="blur"
                         placeholder="Insert Product"
                         v-model:inputValue="inputProduct"
                         :selectData="productData"/>
 
                     <div class="flex justify-between my-3 items-center">
-                        <p
-                            class=" font-bold">
+                        <p>
                             Quantity
                         </p>
 
@@ -228,8 +235,8 @@ const isTableVisible = ref(false)
 
                 <div 
                     v-if="isTableVisible"
-                    class="mx-2">
-                    <div class="overflow-auto border-2 border-primary rounded h-[175px]">
+                    class="mx-5">
+                    <div class="overflow-auto border-2 border-primary rounded h-[200px]">
                         <table class="w-full min-w-[350px]">
                             <thead>
                                 <tr>

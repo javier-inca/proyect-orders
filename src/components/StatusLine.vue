@@ -2,24 +2,34 @@
 
 const props = defineProps({
     status: {
+        type: Boolean,
+        default : false
+    },
+
+    statusType: {
         type: String,
-        default : 'draft'
+        default: 'Not Saved'
     }
 })
 </script>
 
 <template>
     <div class="flex flex-col">
-        <div class="p-1 bg-primary rounded-t-md w-full"></div>
+        <div 
+            class="p-1 bg-primary rounded-t-md rounded-bl-md w-full"
+            :class="{ 'rounded-br-md': statusType === 'Not Saved'}">
+        </div>
+
         <div class="flex justify-between">
             <p
                 class="text-sm px-1 text-black">
-                Status
+                {{ status ? 'Saved' : 'Not Saved' }}
             </p>
 
             <p
-                class="text-sm bg-primary w-10 px-1 text-white rounded-b-md">
-                {{ status }}
+                v-if="statusType !== 'Not Saved'"
+                class="text-sm bg-primary px-2 text-white rounded-b-md">
+                {{ statusType }}
             </p>
         </div>
     </div>

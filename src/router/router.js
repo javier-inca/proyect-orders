@@ -13,23 +13,27 @@ const routes = [
       children: [
         {
             path: '', 
-            component: HomeStart, 
+            component: HomeStart,
         },
         {
             path: 'users',
-            component: UserHome
+            component: UserHome,
+            name: 'User Home',
         },
         {
             path : 'products',
             component : Product,
+            name: 'Product Home',
         },
         {
             path : 'orders',
             component : HomeOrder,
+            name: 'Order Home',
         },
         {
             path : 'orders/create',
             component : CreateOrder,
+            name: 'New Order',
         }
       ],
     },

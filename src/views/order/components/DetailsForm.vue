@@ -113,7 +113,7 @@ const name = ref()
         <div
             class=" transition-all"
             v-if="showForm">    
-            <div class="w-full my-3">
+            <div class="w-full my-2">
                 <TextArea
                     @blurInput="sentBlur('autosave')"
                     v-model="inputDescription"
@@ -154,7 +154,7 @@ const name = ref()
         <div 
             class="transition-all"
             v-if="!showForm">
-            <div class=" flex flex-col sm:flex-row justify-between w-full gap-2 ">
+            <div class=" flex flex-col sm:flex-row justify-between w-full gap-2 my-1">
                 <p>
                     <span class=" font-bold">
                         Order handler:

@@ -42,6 +42,11 @@ const props= defineProps({
     placeholder: {
         type: String,
         default: ''
+    },
+
+    label: {
+        type: String,
+        default: ''
     }
 })
 
@@ -70,14 +75,14 @@ const valueInput = computed({
         emit('update:inputValue', newValue)
     }
 })
-
+ 
 const selectedOption = (option) =>{
     isEnabled.value = false
 
     emit('update:inputValue', option)
 }
 
-watch( valueInput, () => {
+watch( valueInput, () => {    
     if (props.isFiltered) {
         const filtered = props.selectData.filter(
             option => option[props.dataName]?.toLowerCase().includes(props.inputValue.toLowerCase())
@@ -91,11 +96,15 @@ watch( valueInput, () => {
                 return
             }
         }
+        
+        if(filterData.value.length > 0 && filterData.value.length !== props.selectData.length){
+            isEnabled.value = true
+            return
+        }
 
-        isEnabled.value = filtered.length > 0
+        isEnabled.value =false
     }
 })
-
 
 const resetInput = () => {
     filterData.value = props.selectData
@@ -113,12 +122,15 @@ const blur = () => {
 <template>
     <div 
         class="w-full min-w-[200px] flex flex-col">
+        <label
+            :class="{'text-danger' : errorMessage}">
+            {{ label }}
+        </label>
+
         <div 
             :class="[
                 selectColor,
-                {
-                    '!border-danger bg-light-danger' : errorMessage
-                }
+                {'!border-danger bg-light-danger' : errorMessage}
             ]"
             class="relative z-10 border-2 rounded-md">
             <div 
@@ -145,7 +157,7 @@ const blur = () => {
             <div 
                 v-if="isEnabled"
                 :class="{'!border-danger' : errorMessage}"
-                class="!text-black p-2 absolute bg-white w-full shadow-md border-2 border-primary rounded-b-md overflow-y-auto max-h-52">
+                class="!text-black p-2 absolute bg-white w-full shadow-md shadow-primary border-2 border-primary rounded-b-md overflow-y-auto max-h-52">
                 <p
                     v-for="data in filterData"
                     @click="selectedOption(data[props.dataName])"

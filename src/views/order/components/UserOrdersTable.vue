@@ -56,19 +56,16 @@ const userNameById = (userId) => {
 
                     <td
                         class="p-2 text-end">
-                        {{ order.amount_money }} Bs.
+                        {{ order.amount_money? order.amount_money : '-' }} Bs.
                     </td>
 
                     <td
                         class="p-2 flex justify-center gap-2">
                         <EyeIcon
-                            class="size-6"/>
-
-                        <PencilIcon
-                            class="size-6"/>
+                            class="size-6 cursor-pointer text-primary"/>
 
                         <TrashIcon
-                            class="size-6"/>
+                            class="size-6 cursor-pointer text-danger"/>
                     </td>
                 </tr>
             </tbody>

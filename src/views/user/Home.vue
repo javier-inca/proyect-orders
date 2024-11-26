@@ -118,7 +118,6 @@ const showToast = (severity, summary, detail) => {
 onMounted(() => {
     fetchUsers()
 })
-
 </script>
 
 <template>
@@ -134,7 +133,7 @@ onMounted(() => {
                         @click="showForm"
                         buttonName="Add Person"
                         :rightIcon="UserPlusIcon"
-                        class=" max-w-[150px]"/>        
+                        class="!max-w-[150px]"/>        
                 </div>
 
                 <PeopleListCard

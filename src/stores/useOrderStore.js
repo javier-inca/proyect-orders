@@ -33,7 +33,7 @@ export const useOrderStore = defineStore('orderStore' , () => {
     const createOrder = async (orderData) => {        
         try {
             const response = await axios.post('/api/orders' , orderData)
-
+            
             if(response.status === 201) {
                 return response
             }

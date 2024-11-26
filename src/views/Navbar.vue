@@ -2,6 +2,7 @@
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router'
+import Title from '../components/Title.vue';
 
 const route = useRoute()
 
@@ -48,7 +49,11 @@ const showMenu = ref(false)
             </router-link>
         </nav>
 
-        <nav class="p-3 sm:hidden w-full flex justify-end">
+        <nav class="p-3 sm:hidden w-full flex justify-between items-center">
+            <Title
+                class="sm:hidden text-white"
+                :title="route.name"/>
+
             <Bars3Icon
                 @click="showMenu = !showMenu"
                 :class="{
