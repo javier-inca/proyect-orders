@@ -23,12 +23,12 @@ const props = defineProps({
 
     nameButtonLeft: {
         type: String,
-        default: 'Cancel'
+        default: 'cancel'
     },
 
     nameButtonRight: {
         type: String,
-        default: 'Delete'
+        default: 'delete'
     }
 })
 
@@ -45,11 +45,9 @@ const modalColor = computed(() => {
     return modalColors[props.modalColor]? modalColors[props.modalColor] : 'bg-primary'
 })
 
-const emit = defineEmits()
+const emit = defineEmits(['clickButton'])
 
-const clickButton = (type) => {
-    console.log(type);
-    
+const clickButton = (type) => {    
     emit('clickButton', type)
 }
 </script>
@@ -61,7 +59,7 @@ const clickButton = (type) => {
                 modalColor,
             ]"
             class="relative z-10 min-w-[300px] max-w-[350px] rounded-md border-2">
-            <div class=" mt-4 bg-white w-full rounded-b flex items-center flex-col p-2">
+            <div class=" bg-white w-full rounded flex items-center flex-col p-2">
                 <div class="mt-1 mb-1">
                     <InformationCircleIcon
                         :class="modalColor"
@@ -86,12 +84,14 @@ const clickButton = (type) => {
 
                 <div class="flex gap-2 my-3">
                     <Button
+                        class="capitalize"
                         @click="clickButton(nameButtonLeft)"
                         :buttonColor="props.modalColor"
                         :buttonName="nameButtonLeft"
                         buttonType="ghost"/>
 
                     <Button
+                        class="capitalize"
                         @click="clickButton(nameButtonRight)"
                         :buttonName="nameButtonRight"
                         :buttonColor="props.modalColor"/>

@@ -33,7 +33,10 @@ const props = defineProps({
         default: false
     },
 
-    icon:Object,
+    icon: {
+        type:[Object , Function],
+        default: null
+    },
 })  
 
 const solidColors = {

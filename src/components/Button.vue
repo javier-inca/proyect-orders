@@ -33,9 +33,15 @@ const props = defineProps({
         default: false
     },
 
-    leftIcon: Object,
+    leftIcon: {
+        type: [Object, Function],
+        default: null
+    },
 
-    rightIcon: Object,
+    rightIcon: {
+        type: [Object, Function],
+        default: null
+    },
 })
 
 const buttonSizes = {

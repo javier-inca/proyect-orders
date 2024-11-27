@@ -50,9 +50,12 @@ const showMenu = ref(false)
         </nav>
 
         <nav class="p-3 sm:hidden w-full flex justify-between items-center">
-            <Title
-                class="sm:hidden text-white"
-                :title="route.name"/>
+            <router-link
+                :to="route.path">
+                <Title
+                    class="sm:hidden text-white"
+                    :title="route.name"/>
+            </router-link>
 
             <Bars3Icon
                 @click="showMenu = !showMenu"

@@ -123,7 +123,7 @@ const inputAlignment = computed(() => {
     return inputAlignments[props.inputAlignment] ? inputAlignments[props.inputAlignment] : 'justify-start'
 })
 
-const emit = defineEmits(['blurInput'])
+const emit = defineEmits(['blurInput', 'update:modelValue'])
 
 const modelInput = computed({
     get: ()=>props.modelValue,
@@ -214,6 +214,7 @@ const handleKeydown = (event) => {
                         :class="{
                             'pl-2' : type !== 'number'
                         }"
+                        class="pl-2"
                         v-if="optionText">
                         {{ optionText }}
                     </p>
@@ -237,5 +238,12 @@ input[type="date"]:not([readonly]) {
 
 input[type="date"][readonly] {
     pointer-events: none
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 </style>

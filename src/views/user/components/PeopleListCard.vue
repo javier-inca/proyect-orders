@@ -37,11 +37,11 @@ const buttonOption = (type , userId) => {
             </h2>
         </div>
     
-        <div class="overflow-y-auto overflow-x-hidden max-h-[65vh]">
+        <div class="overflow-y-auto overflow-x-hidden max-h-[65vh] px-3">
             <div 
                 v-for="people in peopleList"
                 :key="people.id"
-                class="border-b p-3 border-primary flex w-full mb-2 sm:hover:scale-105 sm:transition-all">
+                class="border-b py-3 border-primary flex w-full mb-2 sm:hover:scale-105 sm:transition-all">
                 <UserIcon
                     class="size-6 text-primary w-[10%]"/>
     

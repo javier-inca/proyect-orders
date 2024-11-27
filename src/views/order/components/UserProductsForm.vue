@@ -1,7 +1,6 @@
 <script setup>
 import Title from '../../../components/Title.vue'
 import IconButton from '../../../components/IconButton.vue'
-import ProductSelectionForm from '../../components/ProductSelectionForm.vue'
 import { ShoppingCartIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import InputSelect from '../../../components/InputSelect.vue'
 import ButtonAmount from '../../../components/ButtonAmount.vue'

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
-import Product from "../views/Product.vue"
 import HomeStart from "../views/home/HomeStart.vue"
 import HomeOrder from '../views/order/Home.vue'
+import HomeProduct from '../views/product/Home.vue'
 import CreateOrder from "../views/order/Create.vue"
 import MainLayout from "../layouts/MainLayout.vue"
 import UserHome from "../views/user/Home.vue"
@@ -22,7 +22,7 @@ const routes = [
         },
         {
             path : 'products',
-            component : Product,
+            component : HomeProduct,
             name: 'Product Home',
         },
         {

@@ -26,10 +26,38 @@ export const useProductStore = defineStore('productStore', () => {
         } catch (error) {            
             return error || 'Error creating product'
         }
-    } 
+    }
+
+    /* Update Product */
+    const updateProduct = async (productId, productData) => {
+        try {
+            const response = await axios.put(`/api/products/${productId}`, productData)
+
+            if(response.status === 200){
+                return response
+            }
+        } catch (error) {
+            return error || 'Error updating product'
+        }
+    }
+
+    /* Delete Product */
+    const deleteProduct = async (productId) => {
+        try {
+            const response = await axios.delete(`/api/products/${productId}`)
+
+            if(response.status === 204){
+                return response
+            }
+        } catch (error) {
+            return error || 'Error deleting product'
+        }
+    }
 
     return {
         fetchProducts,
         createProduct,
+        updateProduct,
+        deleteProduct,
     }
 })
