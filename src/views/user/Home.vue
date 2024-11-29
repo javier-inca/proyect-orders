@@ -7,186 +7,249 @@ import { onMounted, ref } from 'vue';
 import PeopleListCard from './components/PeopleListCard.vue';
 import Input from '../../components/Input.vue';
 import { useToastStore } from '../../stores/useToastStore';
+import UserForm from './components/UserForm.vue';
+import Modal from '../../components/Modal.vue';
 
 const userStore = useUserStore()
 const toastStore = useToastStore()
 
-const fetchUserData = ref([])
+/* estado de carga y array de usuarios */
+const loadingUser = ref(true)
+const userData = ref([])
 
-const userData = ref({
+/* activar o deactivar fondo borrozo */
+const isBackgroundBlurred = ref(false)
+
+/* activar o desactivar el modal */
+const isShowModal = ref(false)
+
+/* estado formulario de producto */
+const isShowUserForm = ref(false)
+const isLoadingUserForm = ref(false)
+
+/* Usuario para editar o eliminar */
+const selectedUser = ref()
+
+/* Datos del formulario */
+const userFormData = ref({
+    title: 'Register new user',
+    buttonName: 'register',
     name: '',
-    errorName: '',
+    error: '',
 })
 
-const formTitle = ref('')
-const isViewPersonRegisterForm = ref(false)
-
-const fetchUsers = async () => {
-    fetchUserData.value = await userStore.fetchUsers()
+/* Limpiar el formulario */
+const cleanForm = () => {
+    userFormData.value = {
+        title: 'Register new user',
+        buttonName: 'register',
+        name: '',
+        error: '',
+    }
 }
 
-const createUser = async (userId) => {
+/* obtener todos los ususarios  */
+const fetchUsers = async () => {
+    loadingUser.value = true
+    userData.value = await userStore.fetchUsers()
+    loadingUser.value = false
+}
+
+/* Crear nuevo usuario */
+const createUser = async () => {
+    isLoadingUserForm.value = true
+
     const data = {
-        name: userData.value.name
+        name: userFormData.value.name
     }
 
     const response = await userStore.createUser(data)
 
     if(response.status === 422){
-        userData.value.errorName = response.response.data.errors.name[0]
+        const error = response.response.data.errors
 
-        showToast('error', 'Error', 'Person not registered.')
+        showToast('error', 'Error', 'Error registering person')
+
+        userFormData.value.error = error.name ? error.name[0] : ''
+
+        isLoadingUserForm.value =false
     }
 
     if(response.status === 201){
-        clearUserData()
+        showToast('success', 'Success', 'Person registered')
 
-        isViewPersonRegisterForm.value = false
-        
+        formOptions('cancel')
+
         fetchUsers()
-        
-        showToast('success', 'Success', 'New person registered')
-    }
-    
-}
-
-const updateUser = async (userId) => {
-    await fetchUsers()
-
-    const find = fetchUserData.value.find(user => user.id === userId)
-
-    if(find){
-        userData.value.name = find.name
-
-        formTitle.value = 'Update person'
-
-        isViewPersonRegisterForm.value = true
-        return
-    }
-
-    if(!find){
-        formTitle.value = 'Register new person'
-        
-        isViewPersonRegisterForm.value = true
     }
 }
 
+/* Actualizar usuario */
+const updateUser = async () => {
+    isLoadingUserForm.value = true
+
+    const data = {
+        name: userFormData.value.name,
+    }
+
+    const response = await userStore.updateUser(selectedUser.value.id, data)
+
+    if(response.status === 422){
+        const error = response.response.data.errors
+
+        showToast('error', 'Error', 'Error updating the person')
+
+        userFormData.value.error = error.name ? error.name[0] : ''
+
+        isLoadingUserForm.value = false
+    }
+
+    if(response.status === 200){
+        showToast('success', 'Success', 'Person updated')
+
+        formOptions('cancel')
+
+        fetchUsers()
+    }
+}
+
+/* Eliminar usuario */
 const deleteUser = async (userId) => {
     const response = await userStore.deleteUser(userId)
 
     if(response.status === 204){
-        fetchUsers()
+        showToast('success', 'Success', 'Person deleted successfully')
 
-        showToast('success', 'Success', 'Person deleted successfully.')
+        isShowModal.value = false
+
+        selectedUser.value = ''
+
+        fetchUsers()
+    }
+}
+
+/* Obtener al opcion del formulario */
+const formOptions = (action) => {
+    if(action === 'cancel'){
+        cleanForm()
+
+        isLoadingUserForm.value = false
+        isShowUserForm.value = false
+        isBackgroundBlurred.value = false
+    }
+
+    if(action === 'register'){
+        createUser()
+    }
+
+    if(action === 'update'){
+        updateUser()
+    }    
+}
+
+/* Obtener la accion de la tabla */
+const tableOptions = async (action) => {
+    await fetchUsers()
+
+    selectedUser.value = userData.value.find(user => user.id === action.userId)
+
+    if(action.type === 'delete' && selectedUser.value){
+        isShowModal.value = true
+        return
     }
     
+    if(action.type === 'update' && selectedUser.value){
+        userFormData.value = {
+            title: 'Update person',
+            buttonName: 'update',
+            name: selectedUser.value.name,
+            error: '',
+        }
+
+        showUserForm()
+        return
+    }
+    
+    showToast('warn', 'Warning', 'This person does not exist in the list')
 }
 
-const listOption = (option) => {
-    if(option.type === 'delete'){
-        deleteUser(option.id)
+/* Obtener la accion del modal */
+const modalOptions = (action) => {
+    if(action === 'cancel'){
+        selectedUser.value = ''
+
+        isShowModal.value = false
     }
 
-    if(option.type === 'update'){
-        updateUser(option.id)
+    if(action === 'delete'){
+        deleteUser(selectedUser.value.id)
     }
 }
 
-const showForm = () => {
-    formTitle.value = 'Register new person'
-
-    isViewPersonRegisterForm.value = true
+/* Mostrar el toast */
+const showToast = (type, title, description) => {
+    toastStore.showToast(type, title, description)
 }
 
-const cancelUserRegistration = () => {
-    clearUserData()
-
-    isViewPersonRegisterForm.value = false
-
-    showToast('info', 'Information', 'Registration canceled.')
+const showUserForm = () => {
+    isBackgroundBlurred.value = true
+    isShowUserForm.value = true
 }
 
-const clearUserData = () => {
-    userData.value.name = ''
-    userData.value.errorName = ''
-}
-
-const showToast = (severity, summary, detail) => {
-    toastStore.showToast(severity, summary, detail)
-}
-
-onMounted(() => {
-    fetchUsers()
-})
+/* Obtener todos los usuario al inicio */
+onMounted(
+    fetchUsers
+)
 </script>
 
 <template>
-    <div class="flex justify-center mx-2">
+    <div class="flex justify-center mx-5">
         <div class="relative max-w-3xl w-full">
-            <div
-                class="absolute z-0 w-full">
+            <div class="absolute z-0 w-full">
+                <!-- Seccion de titulo y boton de agregar nuevo usuario -->
                 <div class="flex justify-between items-center mb-2">
                     <Title
                         title="list of people"/>
 
                     <Button
-                        @click="showForm"
+                        @click="showUserForm"
                         buttonName="Add Person"
                         :rightIcon="UserPlusIcon"
                         class="!max-w-[150px]"/>        
                 </div>
 
+                <!-- Componente tabla de usuarios -->
                 <PeopleListCard
-                    @buttonOption="(option => listOption(option))"
-                    :peopleList="fetchUserData"/>    
+                    @buttonOption="(option => tableOptions(option))"
+                    :userList="userData"
+                    :dataStatus="loadingUser"/>    
             </div>
 
-            <div
-                v-if="isViewPersonRegisterForm" 
-                class="absolute z-20 flex justify-center w-full">
-                <div class=" max-w-[350px] border border-primary rounded-md w-full shadow-2xl">
-                    <div class="bg-primary p-2 rounded-t">
-                        <XMarkIcon
-                            @click="cancelUserRegistration"
-                            class="size-6 text-white cursor-pointer"/>
-                    </div>
-
-                    <div class="bg-white p-2 flex flex-col items-center gap-5 rounded-b">
-                        <Title
-                            :title="formTitle"/>
-
-                        <UserCircleIcon
-                            class=" size-28 text-primary"/>
-
-                        <Input
-                            class=" w-2/3"
-                            v-model="userData.name"
-                            :errorMessage="userData.errorName"
-                            label="Name"
-                            desing="lineBelow"
-                            :isRounded="false"
-                            :isPadding="false"
-                            placeholder="Insert Name"/>
-
-                        <div class=" flex gap-5 pb-5">
-                            <Button
-                                @click="cancelUserRegistration"
-                                buttonColor="danger"
-                                buttonType="ghost"
-                                buttonName="Cancel"/>
-
-                            <Button
-                                @click="createUser"
-                                buttonName="Register"/>
-                        </div>
-                    </div>
-                </div>
+            <!-- Formulario de usuario registro y actualizacion -->
+            <div class="absolute z-20 w-full">
+                <UserForm
+                    v-if="isShowUserForm"
+                    @clickButton="(action => formOptions(action))"
+                    v-model:userName="userFormData.name"
+                    :error="userFormData.error"
+                    :statusForm="isLoadingUserForm"
+                    :title="userFormData.title"
+                    :buttonName="userFormData.buttonName"/>
             </div>
 
-            <div
-                v-if="isViewPersonRegisterForm"
-                class="fixed top-0 left-0 w-full h-full z-10 backdrop-blur">
+            <!-- Fondo borroso -->
+            <div 
+                v-if="isBackgroundBlurred"
+                class="fixed z-10 w-full h-full top-0 right-0 backdrop-blur">
             </div>
+
+            <!-- Modal de confirmacion -->
+            <Modal
+                v-if="isShowModal"
+                title="Delete person"
+                @clickButton="(action => modalOptions(action))">
+                Are you sure you want to delete the person named "{{ selectedUser.name }}"?
+            </Modal>
         </div>
     </div>
 </template>

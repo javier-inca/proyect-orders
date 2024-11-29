@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue'
 import { useProductStore } from '../../stores/useProductStore'
 import { useToastStore } from '../../stores/useToastStore'
-import Title from '../../components/Title.vue';
-import Button from '../../components/Button.vue';
-import { ShoppingBagIcon } from '@heroicons/vue/24/solid';
-import ProductListCard from './components/ProductListCard.vue';
-import ProductForm from './components/ProductForm.vue';
-import Modal from '../../components/Modal.vue';
+import Title from '../../components/Title.vue'
+import Button from '../../components/Button.vue'
+import { ShoppingBagIcon } from '@heroicons/vue/24/solid'
+import ProductListCard from './components/ProductListCard.vue'
+import ProductForm from './components/ProductForm.vue'
+import Modal from '../../components/Modal.vue'
 
 const productStore = useProductStore()
 const toastStore = useToastStore()
@@ -93,6 +93,7 @@ const createProduct = async () => {
     }
 }
 
+/* Actualizar un producto */
 const updateProduct = async() => {
     isLoadingProductForm.value = true
 
@@ -214,11 +215,11 @@ const showProductForm = () => {
 /* Obtener todos los productos al ingreso */
 onMounted(
     fetchProducts
-);
+)
 </script>
 
 <template>
-    <div class="flex justify-center mx-2">
+    <div class="flex justify-center mx-5">
         <div class="relative max-w-3xl w-full">
             <div class="absolute z-0 w-full">
                 <!-- Seccion del titulo y boton agregar nuevo producto -->

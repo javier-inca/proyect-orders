@@ -5,6 +5,8 @@ export const useToastStore = defineStore('toast', () => {
     const toast = useToast()
 
     const showToast = (severity, summary, detail) => { 
+        toast.removeAllGroups()
+
         toast.add({
             severity,
             summary,

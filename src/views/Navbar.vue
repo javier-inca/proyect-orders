@@ -11,6 +11,7 @@ const showMenu = ref(false)
 
 <template>
     <div class="flex justify-center bg-primary border-b border-secondary">
+        <!-- Direcciones vista de computadoras -->
         <nav class="p-3 sm:flex justify-end gap-10 text-white w-full max-w-3xl hidden">
             <router-link 
                 to="/"
@@ -49,13 +50,11 @@ const showMenu = ref(false)
             </router-link>
         </nav>
 
+        <!-- Icono menu y titulo -->
         <nav class="p-3 sm:hidden w-full flex justify-between items-center">
-            <router-link
-                :to="route.path">
-                <Title
-                    class="sm:hidden text-white"
-                    :title="route.name"/>
-            </router-link>
+            <Title
+                class="sm:hidden text-white"
+                :title="route.name"/>
 
             <Bars3Icon
                 @click="showMenu = !showMenu"
@@ -66,6 +65,7 @@ const showMenu = ref(false)
         </nav>
     </div>
 
+    <!-- Menu desplegable --> 
     <div 
         v-if="showMenu"
         class=" absolute z-40 flex justify-between w-full bg-primary h-lvh bg-opacity-40">

@@ -1,28 +1,23 @@
 <script setup>
-import { XMarkIcon } from '@heroicons/vue/24/outline';
-import IconButton from '../../../components/IconButton.vue';
-import Title from '../../../components/Title.vue';
-import { ShoppingCartIcon } from '@heroicons/vue/24/solid';
-import Input from '../../../components/Input.vue';
 import { computed } from 'vue';
+import IconButton from '../../../components/IconButton.vue';
+import { XMarkIcon } from '@heroicons/vue/24/solid';
+import Title from '../../../components/Title.vue';
+import { UserIcon } from '@heroicons/vue/24/solid';
+import Input from '../../../components/Input.vue';
 import Button from '../../../components/Button.vue';
 import Spinner from '../../../components/Spinner.vue';
 
-/* Props para recibir campo de errores y campos de actualizacion */
+/* Props necesario */
 const props = defineProps({
-    productName: {
+    userName: {
         type: String,
         default: '',
-    },
-    
-    productPrice: {
-        type: [Number, String],
-        default: 0.00,
     },
 
     title: {
         type: String,
-        default: 'Register new product'
+        default: 'Register new person'
     },
 
     buttonName: {
@@ -31,41 +26,29 @@ const props = defineProps({
     },
 
     statusForm: {
-        type:Boolean,
+        type: Boolean,
         default: false,
     },
 
-    errors: {
-        type: Object,
-        default: {
-            name: '',
-            price: ''
-        }
-    }
+    error: {
+        type: String,
+        default: '',
+    },
 })
 
-const emit = defineEmits(['update:productName', 'update:productPrice' , 'clickButton'])
+const emit = defineEmits(['update:userName', 'clickButton'])
 
-/* Cambiar el valor de productName y enviar al padre */
+/* Cambiar el valor de userName y enviar al padre */
 const inputName = computed({
-    get: () => props.productName,
+    get: () => props.userName,
 
     set: (newValue) => {
-        emit('update:productName', newValue)
+        emit('update:userName', newValue)
     }
 })
 
-/* Cambiar el valir de productPrice y enviar al pabre */
-const inputPrice = computed({
-    get: () => props.productPrice,
-
-    set: (newValue) => {        
-        emit('update:productPrice', newValue)
-    }
-})
-
-/* Enviar estado de boton y accion */
-const clickButton = ( action ) => {
+/* enviar estado de boton y accion */
+const clickButton = (action) => {
     emit('clickButton', action)
 }
 </script>
@@ -80,52 +63,40 @@ const clickButton = ( action ) => {
                     :isButton="true"
                     :icon="XMarkIcon"/>
             </div>
-    
+
             <!-- Formulario -->
             <div class="px-2 flex flex-col items-center my-3">
                 <Title
                     :title="title"/>
-    
-                <ShoppingCartIcon
-                    class=" size-32 text-primary"/>
-    
+
+                <UserIcon
+                    class="size-32 text-primary"/>
+
                 <Input
-                    v-model:modelValue="inputName"
+                    v-model="inputName"
                     :isPadding="false"
                     :isRounded="false"
-                    :errorMessage="errors.name"
+                    :errorMessage="error"
                     desing="lineBelow"
-                    label="Product name"
+                    label="Person name"
                     class=" w-3/4 mb-3"/>
-    
-                <Input
-                    v-model:modelValue="inputPrice"
-                    :isPadding="false"
-                    :isRounded="false"
-                    :errorMessage="errors.price"
-                    textAlignment="end"
-                    desing="lineBelow"
-                    label="Product price"
-                    type="number"
-                    optionText="Bs."
-                    class=" w-3/4 mb-4"/>
-    
-                <!-- Botones de accion  -->
+
+                <!-- Botones de accion -->
                 <div class="flex flex-col-reverse items-center justify-center sm:flex-row gap-2 w-full sm:w-3/4">
                     <Button
                         @click="clickButton('cancel')"
                         buttonType="ghost"
                         buttonColor="danger"
                         buttonName="Cancel"/>
-    
-                    <Button
+
+                    <Button 
                         @click="clickButton(buttonName)"
                         class="capitalize"
                         :buttonName="buttonName"/>
                 </div>
             </div>
 
-            <!-- estado de carga -->
+            <!-- Estado de carga -->
             <div 
                 v-if="statusForm"
                 class=" absolute top-0 bg-gray-200 bg-opacity-70 w-full h-full flex justify-center items-center rounded">
@@ -133,5 +104,5 @@ const clickButton = ( action ) => {
                     size="md"/>
             </div>
         </div>
-    </div>
+    </div>    
 </template>

@@ -7,28 +7,33 @@ import { onMounted, ref } from 'vue';
 import OrderTable from './components/OrderTable.vue';
 import { useOrderStore } from '../../stores/useOrderStore';
 
-const userStore = useUserStore()
+/* Pinia stores */
 const orderStore = useOrderStore()
 
+/* datos y estado de carga de pedidos */
+const loadingOrders = ref(true)
 const orderData = ref([])
-const isLoadingOrderData = ref(true)
 
-const userData = ref([])
-const isLoadingUserData = ref(true)
-
-onMounted( async () => {
+/* obtener todos los pedidos */
+const fetchOrders = async () => {
+    loadingOrders.value = true
     orderData.value = await orderStore.fetchOrders()
-    isLoadingOrderData.value = false
-    
-    userData.value = await userStore.fetchUsers()
-    isLoadingUserData.value = false
+    loadingOrders.value = false
+}
+
+/* Obtener todos los pedidos al inicio */
+onMounted(() => {
+    setTimeout(() => {
+        fetchOrders()
+    }, 1)
 })
 </script>
 
 <template>
-    <div class="flex justify-center mx-2">
+    <div class="flex justify-center mx-5">
         <div class="relative max-w-3xl w-full">
             <div class="absolute z-0 w-full">
+                <!-- Titulo y botton para crear nuevo pedido -->
                 <div class="flex justify-between items-center mb-2">
                     <Title
                         title="list of orders"/>
@@ -43,11 +48,10 @@ onMounted( async () => {
                     </router-link>
                 </div>  
                 
-                <div class="my-2">
-                    <OrderTable
-                        :orderData="orderData"
-                        :userData="userData"/>
-                </div>
+                <!-- componente tabla de pedidos -->
+                <OrderTable
+                    :orderList="orderData"
+                    :dataStatus="loadingOrders"/>
             </div>
         </div>
     </div>
