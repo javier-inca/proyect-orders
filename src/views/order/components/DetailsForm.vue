@@ -9,68 +9,48 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import moment from 'moment'
 
 const props = defineProps({
-    userData:{
+    userList:{
         type: Array,
         default: []
     },
-
-    statusOrder: {
-        type: Boolean,
-        default: true
-    },
-
-    date: {
-        type: Date,
-        default: () => {
-            const today = new Date()
-            return today
-        }
-    },
-
-    delivery: {
-        type: String,
-        default : 'dw'
-    },
-
+    
     reason: {
         type: String,
         default: ''
     },
-
-    isShowForm: {
-        type: Boolean,
-        default: true
-    },
-
-    errorDelivery: String,
     
-    errorDescription: String,
-
-    errorDate: String,
-})
-const emit = defineEmits()
-
-const inputDate = computed({
-    get: () => {
-        const date = props.date
-        return date.toISOString().split('T')[0] 
+    buyer: {
+        type: String,
+        default : ''
+    },
+    
+    date: {
+        type: String,
+        default:''
     },
 
-    set: (newValue) => {
-        const newDate = new Date(newValue) 
-        emit('update:date', newDate)
+    errors: {
+        type: Object,
+        default: {
+            reason: '',
+            buyer: '',
+            date: '',
+        }
+    },
+
+    status: {
+        type: Boolean,
+        default: false,
     }
 })
 
-const inputDelivery = computed({
-    get: () => props.delivery,
+/* mostrar formulario */
+const showForm = ref(true)
 
-    set: (newValue) => {
-        emit('update:delivery' , newValue)
-    }
-})
+const emit = defineEmits(['update:reason', 'update:buyer', 'update:date', 'clickSave'])
 
-const inputDescription = computed({
+/* obtener y cambiar el valor de reason y enviar al padre */
+const inputReason = computed({
     get: () => props.reason,
 
     set: (newValue) => {
@@ -78,66 +58,68 @@ const inputDescription = computed({
     }
 })
 
-const showForm = computed({
-    get: () => props.isShowForm,
+/* obtener y cambiar el valor de buyer y enviar al padre */
+const inputBuyer = computed({
+    get: () => props.buyer,
 
     set: (newValue) => {
-        emit('update:isShowForm' , newValue)
+        emit('update:buyer', newValue)
     }
 })
 
-const sentBlur = (type) => {
-    emit('save' , type) 
-   
-}
+/* obtener y cambiar el valor de date y enviar al padre */
+const inputDate = computed({
+    get: () => props.date,
 
-const name = ref()
+    set: (newValue) => {
+        emit('update:date', newValue)
+    }
+})
+
+const clickSave = (action) => {
+    emit('clickSave' , action)
+}
 </script>
 
 <template>
     <div class="w-full p-2 border border-primary rounded my-2">
+        <!-- titulo y razon de pedido -->
         <div class="flex justify-between mb-2">
             <Title
-                :title="showForm ? 'Order Details': reason"
-                :isUppercase="true"/>
+                :title="status ? reason : 'Order Details'"
+                :isUppercase="true"
+                aling="start"/>
 
             <ChevronDownIcon
-                v-if="statusOrder"
-                :class="{
-                    'rotate-180': isShowForm
-                }"
+                v-if="status"
                 @click="showForm = !showForm"
                 class="size-6 transition-all duration-500 "/>
         </div>
 
-        <div
-            class=" transition-all"
-            v-if="showForm">    
+        <!-- Formulario -->
+        <div v-if="showForm">    
             <div class="w-full my-2">
                 <TextArea
-                    @blurInput="sentBlur('autosave')"
-                    v-model="inputDescription"
+                    v-model="inputReason"
                     label="Reason"
                     placeholder="Example: lunch, breakfast..."
-                    :errorMessage="errorDescription"/>
+                    :errorMessage="errors.reason"/>
             </div>
 
             <div class="flex flex-col gap-2 sm:flex-row my-3">
                 <div class="w-full sm:w-1/2">
                     <Select
-                        @blurInput="sentBlur('autosave')"
                         placeholder="Select"
-                        :errorMessage="errorDelivery"
-                        v-model:inputValue="inputDelivery"
-                        :selectData="userData"
-                        label="Order handler"/>
+                        :errorMessage="errors.buyer"
+                        v-model:inputValue="inputBuyer"
+                        :selectData="userList"
+                        label="Buyer"/>
                 </div>
     
                 <div class="w-full sm:w-1/2">
                     <Input
-                        @blurInput="sentBlur('autosave')"
                         v-model="inputDate"
-                        :errorMessage="errorDate"
+                        :errorMessage="errors.date"
                         label="Date"
                         type="date"/>
     
@@ -146,14 +128,12 @@ const name = ref()
     
             <div class="flex justify-center">
                 <Button
-                    @click="sentBlur('save')"
+                    @click="clickSave('save')"
                     buttonName="Save Order"/>
             </div>
         </div>
 
-        <div 
-            class="transition-all"
-            v-if="!showForm">
+        <!-- <div v-if="!showForm">
             <div class=" flex flex-col sm:flex-row justify-between w-full gap-2 my-1">
                 <p>
                     <span class=" font-bold">
@@ -171,6 +151,6 @@ const name = ref()
                 </p>
 
             </div>
-        </div>
+        </div> -->
     </div>    
 </template>
