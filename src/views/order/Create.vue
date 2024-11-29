@@ -153,7 +153,7 @@ const createOrderUser = async () => {
         user_name: orderUserData.value.user_name,
     }
 
-    response = await orderUserStore.createOrderUser(data)
+    response = await orderUserStore.createOrderwUser(data)
         
     if(response.status === 422) {        
         orderUserData.value.errorUser =  response.response.data.errors.user_id[0]

@@ -159,12 +159,6 @@ const handleBlur = () => {
         emit('update:modelValue', (parseFloat(props.modelValue)).toFixed(2))
     }
 }
-
-const handleKeydown = (event) => {
-    if (props.type === 'date' && event.key !== 'Tab') {
-        event.preventDefault()
-    }
-}
 </script>
 
 <template>
@@ -207,8 +201,7 @@ const handleKeydown = (event) => {
                         :type="type" 
                         :disabled="isDisabled"
                         v-model="modelInput"
-                        class="focus:outline-none w-full bg-transparent"
-                        @keydown="handleKeydown">
+                        class="focus:outline-none w-full bg-transparent">
 
                     <p
                         :class="{
@@ -230,20 +223,3 @@ const handleKeydown = (event) => {
     </div>
     
 </template>
-
-<style scoped>
-input[type="date"]:not([readonly]) {
-    pointer-events: auto
-}
-
-input[type="date"][readonly] {
-    pointer-events: none
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-</style>

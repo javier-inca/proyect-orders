@@ -12,7 +12,7 @@ export const useUserStore = defineStore('userStore', () => {
             }
         } 
         catch (error) {            
-            return error.message || 'Error loading users'
+            return error || 'Error loading users'
         }
     }
 

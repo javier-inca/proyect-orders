@@ -65,7 +65,7 @@ const props= defineProps({
     }
 })
 
-const emit = defineEmits(['blurInput'])
+const emit = defineEmits(['blurInput', 'update:inputValue'])
 
 const isEnabled= ref(false)
 
