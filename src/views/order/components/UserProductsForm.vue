@@ -26,7 +26,7 @@ const props = defineProps({
         default: []
     },
 
-    selectedProduct: {
+    productName: {
         type: String,
         default: ''
     },
@@ -72,15 +72,29 @@ const props = defineProps({
     errorAmountMoney: String,
 })
 
-const emit = defineEmits() 
+const emit = defineEmits(['update:productName', ]) 
 
 const inputProduct = computed({
-    get: () => props.selectedProduct,
+    get: () => props.productName,
     
     set: (newValue) => {
-        emit('update:selectedProduct', newValue)
+        if(findPriceByName(newValue)){
+            const product = findPriceByName(newValue)
+            
+            emit('update:unitPrice' , product.reference_price)
+        }
+
+        if(!findPriceByName(newValue)){
+            emit('update:unitPrice' , (0).toFixed(2))
+        }
+        
+        emit('update:productName', newValue)
     }
 })
+
+const findPriceByName = (productName) => {
+    return props.productData.find(product => product.name === productName)
+}
 
 const inputQuantity = computed({
     get: () => props.quantity,
@@ -93,16 +107,8 @@ const inputQuantity = computed({
 const inputUnitPrice = computed({
     get: () => (props.unitPrice),
 
-    set: (newValue) => {
+    set: (newValue) => {  
         emit('update:unitPrice', newValue)
-    }
-})
-
-const inputTotalPrice = computed({
-    get: () => (props.totalPrice).toFixed(2) ,
-
-    set: (newValue) => {
-        emit('update:totalPrice' , newValue)
     }
 })
 
@@ -142,6 +148,8 @@ const viewProductList = () => {
         isTableVisible.value = !isTableVisible.value
     }
 }
+
+
 </script>
 
 <template>
@@ -177,6 +185,7 @@ const viewProductList = () => {
                     v-if="!isTableVisible" 
                     class="mx-5">
                     <InputSelect
+                        :isReset="false"
                         label="Select Product"
                         :errorMessage="errorSelectedProduct"
                         placeholder="Insert Product"
@@ -203,7 +212,7 @@ const viewProductList = () => {
                         :isPadding="false"/>
 
                     <Input
-                        v-model:modelValue="inputTotalPrice"
+                        v-model:modelValue="props.totalPrice"
                         class="my-3"
                         label="Total Price"
                         type="number"

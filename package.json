@@ -14,6 +14,7 @@
     "@mdi/js": "^7.4.47",
     "@primevue/themes": "^4.2.2",
     "axios": "^1.7.7",
+    "gsap": "^3.12.5",
     "moment": "^2.30.1",
     "pinia": "^2.2.6",
     "primevue": "^4.2.2",

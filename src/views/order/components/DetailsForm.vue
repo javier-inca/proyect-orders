@@ -86,18 +86,21 @@ const clickSave = (action) => {
         <!-- titulo y razon de pedido -->
         <div class="flex justify-between mb-2">
             <Title
-                :title="status ? reason : 'Order Details'"
+                :title="showForm ? 'Order Details' : reason"
                 :isUppercase="true"
                 aling="start"/>
 
             <ChevronDownIcon
                 v-if="status"
+                :class="{ 'rotate-180' : !showForm}"
                 @click="showForm = !showForm"
-                class="size-6 transition-all duration-500 "/>
+                class="size-6 transition-all duration-500"/>
         </div>
 
         <!-- Formulario -->
-        <div v-if="showForm">    
+        <div 
+            class="relative z-10"
+            v-if="showForm">    
             <div class="w-full my-2">
                 <TextArea
                     v-model="inputReason"
@@ -133,14 +136,17 @@ const clickSave = (action) => {
             </div>
         </div>
 
-        <!-- <div v-if="!showForm">
-            <div class=" flex flex-col sm:flex-row justify-between w-full gap-2 my-1">
+        <!-- Detalles de formulario -->
+        <div 
+            class="realtive z-10"
+            v-if="!showForm">
+            <div class="flex flex-col sm:flex-row justify-between w-full gap-2 my-1">
                 <p>
                     <span class=" font-bold">
-                        Order handler:
+                        Buyer:
                     </span>
 
-                    {{ delivery }}
+                    {{ buyer }}
                 </p>
 
                 <p>
@@ -151,6 +157,6 @@ const clickSave = (action) => {
                 </p>
 
             </div>
-        </div> -->
+        </div>
     </div>    
 </template>

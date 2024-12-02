@@ -72,6 +72,7 @@ const filterBuyer = async (option) => {
     closeFilters()
 }
 
+/* filtros de status */
 const filterStatus = async (option) => {
     filteredData.value = await orderFilters.filterStatus(props.orderList, option)
 
@@ -217,14 +218,6 @@ const closeFilters = () => {
                         <EyeIcon
                             class="size-6 text-primary cursor-pointer"/>
 
-                        <button
-                            class="flex items-start"
-                            :disabled="( order.state === 'completed' || order.state === 'canceled' )">
-                            <PencilIcon
-                                :class="{' !text-gray-300 cursor-not-allowed' : order.state === 'completed' || order.state === 'canceled' }"
-                                class="size-6 text-primary"/>
-                        </button>
-
                         <TrashIcon
                             class="size-6 text-danger cursor-pointer"/>
                     </div>
@@ -273,10 +266,6 @@ const closeFilters = () => {
                             <p
                                 class="p-3 bg-gray-200">
                             </p>
-
-                            <p
-                                class="p-3 bg-gray-200">
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -288,6 +277,10 @@ const closeFilters = () => {
                             size="lg"/>
                     </div>
                 </div>
+            </div>
+
+            <div class="w-full h-[65vh]">
+
             </div>
         </div>
     </div>

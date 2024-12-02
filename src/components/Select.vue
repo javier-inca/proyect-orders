@@ -65,7 +65,7 @@ const props= defineProps({
     }
 })
 
-const emit = defineEmits(['blurInput', 'update:inputValue'])
+const emit = defineEmits(['clickOption', 'update:inputValue'])
 
 const isEnabled= ref(false)
 
@@ -99,7 +99,7 @@ const valueSelect = computed({
 
 const selectedOption = (option) => {
     emit('update:inputValue' , option)
-    emit('blurInput')
+    emit('clickOption', option)
     isEnabled.value = false
 }
 
