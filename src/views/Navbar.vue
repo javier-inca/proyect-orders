@@ -52,14 +52,17 @@ const showMenu = ref(false)
 
         <!-- Icono menu y titulo -->
         <nav class="p-3 sm:hidden w-full flex justify-between items-center">
-            <Title
-                class="sm:hidden text-white"
-                :title="route.name"/>
+            <router-link
+                to="/">
+                <Title
+                    class="sm:hidden text-white"
+                    title="Home"/>
+            </router-link>
 
             <Bars3Icon
                 @click="showMenu = !showMenu"
                 :class="{
-                    ' rotate-180' : showMenu
+                    'rotate-180' : showMenu
                 }"
             class="size-6 text-white transition-all duration-500"/>           
         </nav>

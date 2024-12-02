@@ -195,7 +195,7 @@ const closeFilters = () => {
                     :key="order.id"
                     class="border-b py-3 border-primary flex w-full mb-2 gap-2">
                     <p
-                        class="w-[30%] pl-2">
+                        class="w-[30%] pl-2 break-words">
                         {{ order.reason }}
                     </p>
 
@@ -279,7 +279,9 @@ const closeFilters = () => {
                 </div>
             </div>
 
-            <div class="w-full h-[65vh]">
+            <div 
+                v-if="orderList.length <= 0 && !dataStatus"
+                class="w-full h-[65vh]">
 
             </div>
         </div>

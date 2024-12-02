@@ -1,29 +1,34 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
-import Title from '../../components/Title.vue';
-import { useUserStore } from '../../stores/useUserStore';
-import DetailsForm from './components/DetailsForm.vue';
-import { useOrderManager } from './composables/OrderManager';
-import { useOrderStore } from '../../stores/useOrderStore';
-import { useToastStore } from '../../stores/useToastStore';
+import { computed, onMounted, ref } from 'vue'
+import Title from '../../components/Title.vue'
+import { useUserStore } from '../../stores/useUserStore'
+import DetailsForm from './components/DetailsForm.vue'
+import { useOrderManager } from './composables/OrderManager'
+import { useOrderStore } from '../../stores/useOrderStore'
+import { useToastStore } from '../../stores/useToastStore'
 import { useProductStore } from '../../stores/useProductStore'
-import Select from '../../components/Select.vue';
+import Select from '../../components/Select.vue'
 import UserProductsForm from './components/UserProductsForm.vue'
+import { useOrderUserManager } from './composables/OrderUserManager'
+import { useOrderUserStore } from '../../stores/useOrderUserStore'
+import { useOrderUserProductManager } from './composables/OrderUserProductManager'
 
 /* Stores  */
 const userStore = useUserStore()
 const productStore = useProductStore()
 const orderStore = useOrderStore()
+const orderUserStore = useOrderUserStore()
 const toastStore = useToastStore()
 const orderManager = useOrderManager(orderStore, toastStore)
+const orderUserManager = useOrderUserManager(orderUserStore, toastStore)
 
 /* Array de usuarios */
 const userData = ref([])
 const productData = ref([])
 
 /* Obtener el dia actual */
-const today = new Date();
-const formattedDate = today.toISOString().split('T')[0];
+const today = new Date()
+const formattedDate = today.toISOString().split('T')[0]
 
 /* Ocultar o ver fondo borroso */
 const isBlurryBackground = ref(false)
@@ -52,6 +57,7 @@ const orderUserFormDetails = ref({
     amountMoney: null,
 })
 
+/* Objeto del producto  */
 const orderUserProductFormDetails = ref({
     orderUserId: null,
     productName: '',
@@ -126,6 +132,18 @@ const detailsFormOptions = async (option) => {
     if(option === 'save' && orderUserFormDetails.value.orderId !== null){
         updateOrder()
     }
+}
+
+/* opciones del formulario de products */
+const userProductFormOptions = async (option) => {
+    if(option === 'create' && orderUserProductFormDetails.value.orderUserId === null){
+        const response = await orderUserManager.createOrderUser(orderUserFormDetails.value)
+        orderUserProductFormDetails.value.orderUserId = response
+    }
+
+    orderUserProductManager.createOrderUserProduct(orderUserProductFormDetails.value , productData.value)
+    
+    
 }
 
 /* seleccionar usuario a tomar pedidos */
@@ -219,10 +237,13 @@ onMounted( () => {
                     v-model:productName="orderUserProductFormDetails.productName"
                     v-model:quantity="orderUserProductFormDetails.quantity"
                     v-model:unitPrice="orderUserProductFormDetails.finalPrice"
-                    v-model:description="orderUserProductFormDetails.description"/>
+                    v-model:description="orderUserProductFormDetails.description"
+                    @clickButton="(option => userProductFormOptions(option))"/>
 
                 <pre>
                     {{ orderUserProductFormDetails }}
+
+                    {{ orderUserFormDetails }}
                 </pre>
             </div>
 

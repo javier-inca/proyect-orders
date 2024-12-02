@@ -90,7 +90,7 @@ const buttonOption = (type, id) => {
                 <!-- Animacion de carga pulse -->
                 <div class="absolute z-0 animate-pulse w-full">
                     <div 
-                        v-for="index in 12"
+                        v-for="index in 20"
                         :key="index"
                         class="border-b-2 py-3 border-gray-200 flex w-full mb-2 px-2">
                         <div 

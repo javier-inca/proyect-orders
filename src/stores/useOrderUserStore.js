@@ -6,11 +6,11 @@ export const useOrderUserStore = defineStore('orderUserStore' , () => {
     const createOrderUser = async (orderUserData) => {
         try {
             const response = await axios.post( '/api/order-users' , orderUserData)
-
+            
             if (response.status === 201){
                 return response
             }
-        } catch (error) {
+        } catch (error) {            
             return error || 'Error creating order user'
         }
     }
